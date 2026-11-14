@@ -120,8 +120,8 @@ pnpm exec electron-builder --config electron-builder.yml --publish=never
 `.github/workflows/release-windows.yml` 会在推送 `v*` 标签时构建 Windows 安装包并创建 GitHub Release。标签需要与 `app/package.json` 的版本一致：
 
 ```bash
-git tag v3.8.10
-git push origin v3.8.10
+git tag v3.8.10-simplified.1
+git push origin v3.8.10-simplified.1
 ```
 
 工作流会下载依赖、准备 OCR 资源、编译前端与内核，然后上传 `siyuan-simplified-*-win.exe`。

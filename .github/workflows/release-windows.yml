@@ -53,7 +53,8 @@ jobs:
         shell: pwsh
         run: |
           $version = (Get-Content app/package.json -Raw | ConvertFrom-Json).version
-          if ("v$version" -ne "$env:GITHUB_REF_NAME") {
+          # 允许 v3.8.10-simplified.N 这类分支后缀，基础版本必须一致。
+          if ("$env:GITHUB_REF_NAME" -notlike "v$version*") {
             throw "Tag $env:GITHUB_REF_NAME does not match app/package.json version $version"
           }
 
