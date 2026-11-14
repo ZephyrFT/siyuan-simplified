@@ -186,11 +186,11 @@ func TestAPIContractSearchEmbedConversion(t *testing.T) {
 
 func TestAPIContractSearchPathAndSubtypeCompatibility(t *testing.T) {
 	body := `{"paths":["20260101000000-abcdefg/20260101000000-hijklmn.sy","20260101000000-abcdefg/20260101000000-hijklmn.sy","bad'box/doc.sy"],"subTypes":{"heading":{"h1":true,"h2":"true"},"list":{"t":true}}}`
-	request, err := apicontract.SemanticSearchBlock.Decode(strings.NewReader(body))
+	request, err := apicontract.FullTextSearchBlock.Decode(strings.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, _, _, paths, boxes, _, subtypes, _, _, _ := parseSearchBlockRequest(request)
+	_, _, _, paths, boxes, _, subtypes, _, _, _ := parseSearchBlockRequest(request.SearchBlockRequest)
 	if !reflect.DeepEqual(paths, []string{"/20260101000000-hijklmn.sy"}) || !reflect.DeepEqual(boxes, []string{"20260101000000-abcdefg"}) || !reflect.DeepEqual(subtypes, map[string]bool{"h1": true, "list:t": true}) {
 		t.Fatalf("search path filtering changed: %v, %v, %v", paths, boxes, subtypes)
 	}

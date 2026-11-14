@@ -1,4 +1,3 @@
-import {mobileConfirmDialog} from "../../dialog/mobileConfirmDialog";
 import {toggleMenu} from "../../menus/menuToggle";
 import type {FileTreeGetDocRequestInput} from "../../types/api";
 import type {BlockBreadcrumbRequestInput, BlockQueryRequestInput, TreeStatRequestInput} from "../../types/api";
@@ -13,7 +12,6 @@ import {RecordMedia, RecordMediaInputEndedError} from "../util/RecordMedia";
 import {hideMessage, showMessage} from "../../dialog/message";
 import {uploadFiles} from "../upload";
 import {hasClosestBlock, hasTopClosestByClassName} from "../util/hasClosest";
-import {needSubscribe} from "../../util/needSubscribe";
 import {isMobile} from "../../util/functions";
 import {zoomOut} from "../../menus/protyle";
 import {getEditorRange} from "../util/selection";
@@ -39,7 +37,6 @@ import {getGlobalBreadcrumb, isBreadcrumbNotebookAvailable, type GlobalBreadcrum
 import {getBreadcrumbCustomIcon} from "./icon";
 import {listIndent, listOutdent} from "../wysiwyg/list";
 import {improveBreadcrumbAppearance} from "./appearance";
-import {getCloudURL} from "../../config/util/about";
 import {decodeHTML, escapeAttr, escapeAriaLabel, escapeHtml, escapeSearchHighlight} from "../../util/escape";
 import {refreshUndoButtons} from "../undo/globalUndo";
 import {getAllEditor} from "../../layout/getAll";
@@ -1055,34 +1052,6 @@ ${isMobile() ? `<button class="block__icon fn__flex-center ariaLabel" data-type=
                                 net2LocalAssets(protyle, "Assets");
                             }
                         }).element);
-                        window.siyuan.menus.menu.append(new MenuItem({
-                            id: "uploadAssets2CDN",
-                            label: window.siyuan.languages.uploadAssets2CDN,
-                            icon: "iconUploadAssets",
-                            click() {
-                                if (!needSubscribe()) {
-                                    mobileConfirmDialog("📦 " + window.siyuan.languages.uploadAssets2CDN, window.siyuan.languages.uploadAssets2CDNConfirmTip, () => {
-                                        fetchPost("/api/asset/uploadCloud", {id: protyle.block.id});
-                                    });
-                                }
-                            }
-                        }).element);
-                        if (window.siyuan.user && getHostCapabilities().importExport) { // 登录链滴账号后即可使用 `分享到链滴` https://github.com/siyuan-note/siyuan/issues/7392
-                            window.siyuan.menus.menu.append(new MenuItem({
-                                id: "share2Liandi",
-                                label: window.siyuan.languages.share2Liandi,
-                                icon: "iconLiandi",
-                                click() {
-                                    if (!getHostCapabilities().importExport) {
-                                        return;
-                                    }
-                                    mobileConfirmDialog("🤩 " + window.siyuan.languages.share2Liandi,
-                                        window.siyuan.languages.share2LiandiConfirmTip.replace("${accountServer}", getCloudURL("")), () => {
-                                            fetchPost("/api/export/export2Liandi", {id: protyle.block.parentID});
-                                        });
-                                }
-                            }).element);
-                        }
                     }
                     if (!protyle.scroll?.element.classList.contains("fn__none")) {
                         if (hasUnloadedDocumentBlocks(protyle.wysiwyg.element, true)) {

@@ -106,10 +106,3 @@ func mcpOAuthContentOptions() ResponseOptions {
 		HTTPContentVariant{Status: 500, ContentType: "application/json"},
 	)
 }
-
-func init() {
-	MCPOAuthToken.decodeFailure = func(error) Response[BinaryContent] {
-		return SuccessHTTPContent(400, "application/json", []byte(`{"error":"invalid_request"}`))
-	}
-	MCPOAuthRevoke.decodeFailure = MCPOAuthToken.decodeFailure
-}

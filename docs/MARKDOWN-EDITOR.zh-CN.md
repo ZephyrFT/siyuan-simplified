@@ -23,10 +23,10 @@ Vditor 锁定为 `4.0.2-alpha.1`，关闭其自带缓存。离线清单使用仓
 
 | 平台 | 独立命名空间 | 系统备份策略 |
 | --- | --- | --- |
-| 桌面 | 应用配置根目录下的 `markdown/`，默认 `~/.config/siyuan/markdown/` | 不接入思源同步；操作系统备份可能包含该目录 |
-| Android | `Context.getExternalFilesDir(null)/home/.config/siyuan/markdown/` | 在旧版备份、云备份及设备传输规则中排除此目录 |
-| iOS | `Documents/home/.config/siyuan/markdown/` | 设置 `isExcludedFromBackup` |
-| HarmonyOS | `Context.filesDir/workspaces/home/.config/siyuan/markdown/` | 在应用备份规则中排除 |
+| 桌面 | 应用配置根目录下的 `markdown/`，默认 `~/.config/siyuan-simplified/markdown/` | 不接入思源同步；操作系统备份可能包含该目录 |
+| Android | `Context.getExternalFilesDir(null)/home/.config/siyuan-simplified/markdown/` | 在旧版备份、云备份及设备传输规则中排除此目录 |
+| iOS | `Documents/home/.config/siyuan-simplified/markdown/` | 设置 `isExcludedFromBackup` |
+| HarmonyOS | `Context.filesDir/workspaces/home/.config/siyuan-simplified/markdown/` | 在应用备份规则中排除 |
 
 移动端沿用各自现有的模拟 `home`，无需启动内核即可定位配置目录。所有平台的草稿与写入恢复记录位于 `markdown/recovery/`，编辑偏好与文件树状态位于 `markdown/` 根目录，保持各原生平台的存储格式。
 

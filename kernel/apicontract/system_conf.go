@@ -25,7 +25,6 @@ type SystemAppConf struct {
 	Sync           *SystemSync           `json:"sync" api:"optional,nullable"`
 	Search         *SettingSearch        `json:"search" api:"optional,nullable"`
 	Flashcard      *SettingFlashcard     `json:"flashcard" api:"optional,nullable"`
-	AI             *SettingAI            `json:"ai" api:"optional,nullable"`
 	OCR            *SettingOCR           `json:"ocr" api:"optional,nullable"`
 	Secrets        *SettingSecrets       `json:"secrets" api:"optional,nullable"`
 	Variables      *SettingVariables     `json:"variables" api:"optional,nullable"`
@@ -41,7 +40,6 @@ type SystemAppConf struct {
 	Snippet        *SettingSnpt          `json:"snippet" api:"optional,nullable"`
 	DataIndexState int                   `json:"dataIndexState" api:"optional,nullable"`
 	CookieKey      string                `json:"cookieKey" api:"optional,nullable"`
-	MCPOAuth       string                `json:"mcpOAuth" api:"optional,nullable"`
 }
 
 type SystemLang struct {
@@ -131,13 +129,10 @@ type SystemSystem struct {
 	NetworkServe                      bool                `json:"networkServe" api:"optional,nullable"`
 	NetworkServeTLS                   bool                `json:"networkServeTLS" api:"optional,nullable"`
 	NetworkProxy                      *SystemNetworkProxy `json:"networkProxy" api:"optional,nullable"`
-	DownloadInstallPkg                bool                `json:"downloadInstallPkg" api:"optional,nullable"`
-	UpdateChannel                     string              `json:"updateChannel,omitempty" api:"optional,nullable"`
 	AutoLaunch2                       int                 `json:"autoLaunch2" api:"optional,nullable"`
 	LockScreenMode                    int                 `json:"lockScreenMode" api:"optional,nullable"`
 	EncryptedNotebookFollowSystemLock bool                `json:"encryptedNotebookFollowSystemLock" api:"optional,nullable"`
 	DisabledFeatures                  []string            `json:"disabledFeatures" api:"optional,nullable"`
-	MicrosoftDefenderExcluded         bool                `json:"microsoftDefenderExcluded" api:"optional,nullable"`
 	SafeMode                          bool                `json:"safeMode" api:"optional,nullable"`
 	SettingsWindow                    bool                `json:"settingsWindow" api:"optional,nullable"`
 }

@@ -770,6 +770,44 @@ func (tx *Transaction) processLargeInsert() (bool, *TxErr) {
 	return true, nil
 }
 
+func memoryDatabasePathID(name string) string {
+	const prefix = "/storage/av/"
+	if !strings.HasPrefix(name, prefix) || !strings.HasSuffix(name, ".json") {
+		return ""
+	}
+	id := strings.TrimSuffix(strings.TrimPrefix(name, prefix), ".json")
+	if !ast.IsNodeIDPattern(id) {
+		return ""
+	}
+	return id
+}
+
+func (tx *Transaction) changedDatabaseIDs() []string {
+	ids := map[string]bool{}
+	collect := func(file *documentSourceFile) {
+		if file == nil || file.Kind != "database" || file.Box != "" || bytes.Equal(file.Before, file.After) {
+			return
+		}
+		if id := memoryDatabasePathID(file.Path); id != "" {
+			ids[id] = true
+		}
+	}
+	if tx.sourceJournal != nil {
+		for _, file := range tx.sourceJournal.Files {
+			collect(file)
+		}
+	}
+	for _, file := range tx.sourceDatabaseBefore {
+		collect(file)
+	}
+	result := make([]string, 0, len(ids))
+	for id := range ids {
+		result = append(result, id)
+	}
+	sort.Strings(result)
+	return result
+}
+
 func (tx *Transaction) doMove(operation *Operation) (ret *TxErr) {
 	var err error
 	id := operation.ID
@@ -3354,19 +3392,16 @@ func (tx *Transaction) commit() (err error) {
 	}
 	IncSync()
 	tx.mutatedRootIDs = tx.GetMutatedRootIDs()
-	memoryDatabaseIDs := tx.memoryChangedDatabaseIDs()
 	tx.appendAutomationBlockAttrs()
 	tx.publishSourceBlockAttrs()
 	tx.state.Store(2)
 	committed = true
 	// 已提交且 trees 稳定后记录到全局撤销日志（rollback 不记录）
 	GlobalUndoLog.Record(tx)
-	tx.commitHTTPAutomations(memoryDatabaseIDs)
+	tx.commitHTTPAutomations(tx.changedDatabaseIDs())
 	tx.finishAttributeViewMutation(false)
 	tx.releaseCommittedResources()
 	tx.m.Unlock()
-	memoryCommittedSourcesChanged(tx.mutatedRootIDs)
-	QueueAIMemoryDatabaseSources(memoryDatabaseIDs)
 	if 0 < len(crossTreeMoveRefRefreshes) {
 		task.AppendAsyncTaskWithDelay(task.RefreshCrossTreeMoveRefs, util.SQLFlushInterval,
 			refreshCrossTreeMoveRefs, crossTreeMoveRefRefreshes)

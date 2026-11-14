@@ -133,10 +133,8 @@ import {removeSearchMark} from "../toolbar/util";
 import {avKeydown} from "../render/av/keydown";
 import {shouldPreserveAVSelectionOnKeyup} from "../render/av/verticalNavigation";
 import {checkFold} from "../../util/noRelyPCFunction";
-import {AIActions} from "../../ai/actions";
 import {openLink} from "../../editor/openLink";
 import {onlyProtyleCommand} from "../../boot/globalEvent/command/protyle";
-import {AIChat} from "../../ai/chat";
 import {tabCodeBlock} from "./codeBlock";
 import {getTopBarHeight} from "../../layout/getTopBarHeight";
 import {getAVTemplateInteractiveElement} from "../render/av/attributeValue";
@@ -2658,29 +2656,6 @@ export const keydown = (protyle: IProtyle, editorElement: HTMLElement) => {
                 type: "BlocksMergeSuperBlock",
                 level: "col"
             });
-            return;
-        }
-
-        if (!event.repeat && matchHotKey(window.siyuan.config.keymap.editor.general.ai, event)) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (!range.collapsed && protyle.wysiwyg.element.contains(range.startContainer) &&
-                protyle.wysiwyg.element.contains(range.endContainer)) {
-                AIActions([], protyle, range.cloneRange());
-            } else {
-                let selectsElement: HTMLElement[] = Array.from(protyle.wysiwyg.element.querySelectorAll(".protyle-wysiwyg--select"));
-                if (selectsElement.length === 0) {
-                    selectsElement = [nodeElement];
-                }
-                AIActions(selectsElement, protyle);
-            }
-            return;
-        }
-
-        if (!event.repeat && matchHotKey(window.siyuan.config.keymap.editor.general.aiWriting, event)) {
-            event.preventDefault();
-            event.stopPropagation();
-            AIChat(protyle, nodeElement);
             return;
         }
 

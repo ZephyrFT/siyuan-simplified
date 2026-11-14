@@ -44,7 +44,6 @@ import {getFileTreeIconHTML} from "../../emoji/fileTreeIcon";
 import {deleteDocTreeItems} from "../../editor/deleteFile";
 import {getDocTreeActionItems} from "../../menus/navigationSelection";
 import {escapeHtml} from "../../util/escape";
-import {syncGuide} from "../../sync/syncGuide";
 import {duplicateBlock} from "../../protyle/wysiwyg/commonHotkey";
 import {handleDocumentBoundaryHotkey} from "../../protyle/util/documentBoundaryHotkey";
 import {handleDatabaseRowShortcut} from "../../command/databaseRowShortcut";
@@ -1374,11 +1373,6 @@ export const windowKeyDown = (app: App, event: KeyboardEvent) => {
     }
     /// #endif
 
-    if (!isTabWindow && matchHotKey(window.siyuan.config.keymap.general.syncNow, event)) {
-        event.preventDefault();
-        syncGuide(app);
-        return;
-    }
     if (matchHotKey(window.siyuan.config.keymap.general.commandPanel, event)) {
         event.preventDefault();
         commandPanel(app, {openOnly: true});

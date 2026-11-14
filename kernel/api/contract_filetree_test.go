@@ -21,6 +21,15 @@ import (
 	"github.com/siyuan-note/siyuan/kernel/util"
 )
 
+func syncMarshal[T any](t *testing.T, value T) []byte {
+	t.Helper()
+	data, err := json.Marshal(value)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return data
+}
+
 func TestAPIContractFileTreeMissingDocuments(t *testing.T) {
 	previousConf, previousPath := model.Conf, util.BlockTreeDBPath
 	model.Conf = model.NewAppConf()

@@ -95,20 +95,6 @@ var diffRepoSnapshots = contractHandler(apicontract.DiffRepoSnapshots, func(c *g
 	return apicontract.Success(apicontract.RepoDiffData{AddsLeft: repoDiffFiles(diff.AddsLeft), UpdatesLeft: repoDiffFiles(diff.UpdatesLeft), UpdatesRight: repoDiffFiles(diff.UpdatesRight), RemovesRight: repoDiffFiles(diff.RemovesRight), Left: (*apicontract.RepoDiffIndex)(diff.LeftIndex), Right: (*apicontract.RepoDiffIndex)(diff.RightIndex)})
 })
 
-var getCloudSpace = contractHandler(apicontract.GetCloudSpace, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.CloudSpaceData] {
-	sync, backup, hSize, hAssetSize, hTotalSize, exchangeSize, hTrafficUploadSize, hTrafficDownloadSize, hTrafficAPIGet, hTrafficAPIPut, err := model.GetCloudSpace()
-	if err != nil {
-		util.PushErrMsg(err.Error(), 3000)
-		return apicontract.Failure[apicontract.CloudSpaceData](1, err.Error())
-	}
-	return apicontract.Success(apicontract.CloudSpaceData{
-		Sync: cloudSyncContract(sync), Backup: cloudBackupContract(backup),
-		HAssetSize: hAssetSize, HSize: hSize, HTotalSize: hTotalSize, HExchangeSize: exchangeSize,
-		HTrafficUploadSize: hTrafficUploadSize, HTrafficDownloadSize: hTrafficDownloadSize,
-		HTrafficAPIGet: hTrafficAPIGet, HTrafficAPIPut: hTrafficAPIPut,
-	})
-})
-
 var checkoutRepo = contractHandler(apicontract.CheckoutRepo, func(c *gin.Context, request apicontract.CheckoutRepoRequest) apicontract.Response[apicontract.Null] {
 
 	if request.SessionID != "" {
@@ -125,22 +111,6 @@ var checkoutRepo = contractHandler(apicontract.CheckoutRepo, func(c *gin.Context
 	}
 
 	model.CheckoutRepo(request.ID)
-
-	return apicontract.Success(apicontract.Null{})
-})
-
-var downloadCloudSnapshot = contractHandler(apicontract.DownloadCloudSnapshot, func(c *gin.Context, request apicontract.DownloadCloudSnapshotRequest) apicontract.Response[apicontract.Null] {
-	if err := model.DownloadCloudSnapshot(request.Tag, request.ID); err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
-
-	return apicontract.Success(apicontract.Null{})
-})
-
-var uploadCloudSnapshot = contractHandler(apicontract.UploadCloudSnapshot, func(c *gin.Context, request apicontract.UploadCloudSnapshotRequest) apicontract.Response[apicontract.Null] {
-	if err := model.UploadCloudSnapshot(request.Tag, request.ID); err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
 
 	return apicontract.Success(apicontract.Null{})
 })
@@ -231,33 +201,6 @@ func holdRepoFileRequest(c *gin.Context, id string) error {
 	return nil
 }
 
-var getCloudRepoSnapshots = contractHandler(apicontract.GetCloudRepoSnapshots, func(c *gin.Context, request apicontract.GetCloudRepoSnapshotsRequest) apicontract.Response[apicontract.RepoCloudSnapshotsData] {
-	snapshots, pageCount, totalCount, err := model.GetCloudRepoSnapshotsByTime(int(request.Page), request.StartTime, request.EndTime)
-	if err != nil {
-		return apicontract.Failure[apicontract.RepoCloudSnapshotsData](-1, err.Error())
-	}
-
-	return apicontract.Success(apicontract.RepoCloudSnapshotsData{Snapshots: repoLogs(snapshots), PageCount: pageCount, TotalCount: totalCount})
-})
-
-var getCloudRepoTagSnapshots = contractHandler(apicontract.GetCloudRepoTagSnapshots, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.RepoCloudTagsData] {
-	snapshots, err := model.GetCloudRepoTagSnapshots()
-	if err != nil {
-		return apicontract.Failure[apicontract.RepoCloudTagsData](-1, err.Error())
-	}
-
-	return apicontract.Success(apicontract.RepoCloudTagsData{Snapshots: repoLogs(snapshots)})
-})
-
-var removeCloudRepoTagSnapshot = contractHandler(apicontract.RemoveCloudRepoTagSnapshot, func(c *gin.Context, request apicontract.RemoveCloudRepoTagSnapshotRequest) apicontract.Response[apicontract.Null] {
-	err := model.RemoveCloudRepoTag(request.Tag)
-	if err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
-
-	return apicontract.Success(apicontract.Null{})
-})
-
 var getRepoTagSnapshots = contractHandler(apicontract.GetRepoTagSnapshots, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.RepoTagsData] {
 	snapshots, err := model.GetTagSnapshots()
 	if err != nil {
@@ -342,14 +285,6 @@ var resetRepo = contractHandler(apicontract.ResetRepo, func(c *gin.Context, requ
 
 var purgeRepo = contractHandler(apicontract.PurgeRepo, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.Null] {
 	if err := model.PurgeRepo(); err != nil {
-		return apicontract.FailureWithTimeout[apicontract.Null](-1, fmt.Sprintf(model.Conf.Language(201), err.Error()), 5000)
-	}
-
-	return apicontract.Success(apicontract.Null{})
-})
-
-var purgeCloudRepo = contractHandler(apicontract.PurgeCloudRepo, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.Null] {
-	if err := model.PurgeCloud(); err != nil {
 		return apicontract.FailureWithTimeout[apicontract.Null](-1, fmt.Sprintf(model.Conf.Language(201), err.Error()), 5000)
 	}
 

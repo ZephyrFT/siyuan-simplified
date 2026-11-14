@@ -18,8 +18,8 @@ const installLanguages = (t: {after: (callback: () => void) => void}) => {
 };
 
 const context = (options: Partial<IImageOCRMenuContext> = {}): IImageOCRMenuContext => ({
-    textAvailable: true, localAvailable: true, aiAvailable: true,
-    getStatus: async () => false, openResult: () => {}, copyText: () => {}, clearText: () => {}, runLocal: () => {}, runAI: () => {},
+    textAvailable: true, localAvailable: true,
+    getStatus: async () => false, openResult: () => {}, copyText: () => {}, clearText: () => {}, runLocal: () => {},
     ...options,
 });
 
@@ -29,36 +29,33 @@ test("OCR declarations drive catalog order, defaults and complete menu actions",
     const menu = createDeclaredMenu(IMAGE_OCR_MENU, context({
         openResult: () => { clicked.push("result"); }, copyText: () => { clicked.push("copy"); },
         clearText: () => { clicked.push("clear"); },
-        runLocal: () => { clicked.push("local"); }, runAI: () => { clicked.push("ai"); },
+        runLocal: () => { clicked.push("local"); },
     }));
     assert.equal(menu.icon, "iconOCR");
     assert.deepEqual(menu.submenu.map(item => [item.id, item.label, item.icon, item.type]), [
         ["ocrResult", "editOCRText", "iconEdit", undefined], ["copyOCRText", "copyOCRText", "iconCopy", undefined],
         ["clearOCRText", "clearOCRText", "iconTrashcan", undefined],
         ["separator_reOCR", "", undefined, "separator"], ["reOCR", "performOCR", "iconOCR", undefined],
-        ["reAIOCR", "performAIOCR", "iconSparkles", undefined],
     ]);
     const catalog = declaredMenuCatalog(IMAGE_OCR_MENU);
     assert.equal(catalog.key, "ocr");
     assert.equal(catalog.simple, false);
     assert.deepEqual(catalog.children.map(item => item.key), menu.submenu.map(item => item.id));
     assert.deepEqual(catalog.children.map(item => item.label()), menu.submenu.map(item => item.label));
-    assert.deepEqual(catalog.children.map(item => item.simple), [false, false, false, true, false, false]);
+    assert.deepEqual(catalog.children.map(item => item.simple), [false, false, false, true, false]);
     menu.submenu.forEach(item => item.click?.(undefined, undefined));
-    assert.deepEqual(clicked, ["result", "copy", "clear", "local", "ai"]);
+    assert.deepEqual(clicked, ["result", "copy", "clear", "local"]);
 });
 
 test("conditional OCR availability does not change configurable identities", t => {
     installLanguages(t);
     for (const textAvailable of [false, true]) {
         for (const localAvailable of [false, true]) {
-            for (const aiAvailable of [false, true]) {
-                const menu = createDeclaredMenu(IMAGE_OCR_MENU, context({textAvailable, localAvailable, aiAvailable}));
-                assert.equal(menu.ignore, !textAvailable);
-                assert.deepEqual(menu.submenu.map(item => item.ignore === true), [false, false, false,
-                    !localAvailable && !aiAvailable, !localAvailable, !aiAvailable]);
-                assert.deepEqual(menu.submenu.map(item => item.id), declaredMenuCatalog(IMAGE_OCR_MENU).children.map(item => item.key));
-            }
+            const menu = createDeclaredMenu(IMAGE_OCR_MENU, context({textAvailable, localAvailable}));
+            assert.equal(menu.ignore, !textAvailable);
+            assert.deepEqual(menu.submenu.map(item => item.ignore === true), [false, false, false,
+                !localAvailable, !localAvailable]);
+            assert.deepEqual(menu.submenu.map(item => item.id), declaredMenuCatalog(IMAGE_OCR_MENU).children.map(item => item.key));
         }
     }
 });
@@ -69,12 +66,11 @@ test("late OCR status updates only connected menus and preserves provider labels
         for (const status of [undefined, false, true]) {
             let resolve: (value: boolean | undefined) => void;
             const menu = createDeclaredMenu(IMAGE_OCR_MENU, context({getStatus: () => new Promise(done => { resolve = done; })}));
-            const labels = {local: {textContent: "performOCR"}, ai: {textContent: "performAIOCR"}};
-            menu.bind({isConnected: connected, querySelector: (selector: string) => selector.includes('"reOCR"') ? labels.local : labels.ai} as unknown as HTMLElement);
+            const labels = {local: {textContent: "performOCR"}};
+            menu.bind({isConnected: connected, querySelector: (selector: string) => selector.includes('"reOCR"') ? labels.local : null} as unknown as HTMLElement);
             resolve(status);
             await Promise.resolve();
             assert.equal(labels.local.textContent, connected && status === true ? "reOCR" : "performOCR");
-            assert.equal(labels.ai.textContent, connected && status === true ? "reAIOCR" : "performAIOCR");
         }
     }
 });

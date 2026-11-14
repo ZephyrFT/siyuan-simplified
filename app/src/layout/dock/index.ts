@@ -12,10 +12,8 @@ import {Graph} from "./Graph";
 import {Model} from "../Model";
 import {adjustLayout, getWndByLayout, saveLayout, setPanelFocus} from "../util";
 import {getDockByType, resizeTabs, setTabPosition} from "../tabUtil";
-import {Inbox} from "./Inbox";
 import {Protyle} from "../../protyle";
 import {Backlink} from "./Backlink";
-import {AgentChat} from "./agent/AgentChat";
 import {adjustDockPadding, resetFloatDockSize} from "./util";
 import {hasClosestByClassName} from "../../protyle/util/hasClosest";
 import type {App} from "../../index";
@@ -37,10 +35,10 @@ import {isTouchHoverInput} from "../../util/hoverInput";
 import {getDockBarWidth, isDockBarPointerOver, setDockBarHover, setDockBarPointerOver,
     syncDockBarVisibility} from "./barVisibility";
 
-const TYPES = ["file", "outline", "inbox", "bookmark", "tag", "graph", "globalGraph", "backlink", "agentChat"];
+const TYPES = ["file", "outline", "bookmark", "tag", "graph", "globalGraph", "backlink"];
 const DEFAULT_DOCK_SIZE = 232;
 const WIDE_DOCK_SIZE = 320;
-const WIDE_DOCK_TYPES = ["graph", "globalGraph", "backlink", "inbox"];
+const WIDE_DOCK_TYPES = ["graph", "globalGraph", "backlink"];
 type TDockTabData = Config.IUILayoutDockTab & {entryId?: string};
 
 export class Dock {
@@ -403,7 +401,7 @@ export class Dock {
         }
         const widePanel = Array.from(this.layout.element.querySelectorAll(".file-tree")).find((item) => {
             return (item.classList.contains("sy__backlink") || item.classList.contains("sy__graph") ||
-                item.classList.contains("sy__globalGraph") || item.classList.contains("sy__inbox")) &&
+                item.classList.contains("sy__globalGraph")) &&
                 !item.classList.contains("fn__none") && !hasClosestByClassName(item, "fn__none");
         });
         return widePanel ? WIDE_DOCK_SIZE : DEFAULT_DOCK_SIZE;
@@ -819,7 +817,7 @@ export class Dock {
                 clearTimeout(this.hideResizeTimeout);
                 this.hideDock();
             }
-            if (type === "graph" || type === "globalGraph" || type === "agentChat") {
+            if (type === "graph" || type === "globalGraph") {
                 if (this.layout.element.querySelector(".fullscreen")) {
                     document.getElementById("drag")?.classList.remove("fn__hidden");
                 }
@@ -932,24 +930,6 @@ export class Dock {
                             }
                         });
                         break;
-                    case "inbox":
-                        tab = new Tab({
-                            callback: (tab: Tab) => {
-                                tab.addModel(new Inbox(this.app, tab));
-                            }
-                        });
-                        break;
-                    case "agentChat":
-                        tab = new Tab({
-                            callback: (tab: Tab) => {
-                                tab.addModel(new AgentChat(this.app, {
-                                    element: tab.panelElement,
-                                    close: () => this.toggleModel("agentChat", false, true),
-                                    focus: () => setPanelFocus(tab.panelElement),
-                                }));
-                            }
-                        });
-                        break;
                     default:
                         tab = new Tab({
                             callback: (tab: Tab) => {
@@ -999,7 +979,7 @@ export class Dock {
                 }
                 this.layout.element.style.marginTop = "var(--b3-layout-space)";
             }
-            if ((type === "graph" || type === "globalGraph" || type === "agentChat") && this.layout.element.querySelector(".fullscreen")) {
+            if ((type === "graph" || type === "globalGraph") && this.layout.element.querySelector(".fullscreen")) {
                 document.getElementById("drag")?.classList.add("fn__hidden");
             }
             if (!this.isFloating()) {

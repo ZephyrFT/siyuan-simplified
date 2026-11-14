@@ -203,7 +203,7 @@ const createKernelBoot = ({
         const english = languageModule.loadAppMenuLanguages("en");
         const content = [...new Set([languages, english])].map((strings) => {
             const message = escapeHTML(strings.kernelUnresponsiveMessage)
-                .replace("${log}", "<a href=\"#\" data-log-path>~/.config/siyuan/app.log</a>");
+                .replace("${log}", "<a href=\"#\" data-log-path>~/.config/siyuan-simplified/app.log</a>");
             const windowsHint = "win32" === process.platform ?
                 "<div>" + escapeHTML(strings.kernelUnresponsiveWindowsHint) + "</div>" : "";
             return "<div>" + message + "</div>" + windowsHint;

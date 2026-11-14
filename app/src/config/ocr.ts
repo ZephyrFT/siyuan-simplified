@@ -8,10 +8,15 @@ import {genNumberInputHtml} from "./render/render";
 import {showMessage} from "../dialog/message";
 import {OCR_CHANGED_EVENT} from "./ocrRuntime";
 import {objEquals} from "../util/functions";
-import {AI_CONFIG_CHANGED_EVENT} from "./tabs/ai/aiRuntime";
 import type {SettingTabBuilder} from "./setting/builder";
 import {trackSettingSave} from "./setting/pending";
-import {getReasoningEffortOptions} from "../ai/reasoningEffort";
+
+// AI OCR 已移除，保留事件名和选项占位以避免触发已删除的配置通道。
+const AI_CONFIG_CHANGED_EVENT = "aiConfigChanged";
+const getReasoningEffortOptions = (languages: unknown): Array<{value: string; label: string}> => {
+    void languages;
+    return [];
+};
 
 const mounts = new WeakMap<HTMLElement, () => void>();
 
@@ -159,7 +164,7 @@ export const mountOCRSettings = (root: HTMLElement): (() => void) => {
         updateOCRTabBorders(root);
     };
     const providerOptions = () => {
-        const providers = [...data.providers].sort((left, right) => Number(right.id === "paddleocr") - Number(left.id === "paddleocr"));
+        const providers = [...data.providers].filter(item => item.id !== "ai").sort((left, right) => Number(right.id === "paddleocr") - Number(left.id === "paddleocr"));
         return providers.map(provider => `<option value="${escapeAttr(provider.id)}" ${data.config.provider === provider.id ? "selected" : ""}>${provider.id === "paddleocr" ? "PaddleOCR" : provider.id === "ai" ? "AI" : "Tesseract"}${provider.available ? "" : ` (${escapeHtml(languages.ocrUnavailable)})`}</option>`).join("");
     };
     const modelOptions = () => {

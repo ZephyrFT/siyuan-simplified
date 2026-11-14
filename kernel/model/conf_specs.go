@@ -33,7 +33,6 @@ var confSectionSpecFactories = map[string]func() registeredSection{
 		return newSectionSpec("search", &Conf.Search, conf.NormalizeSearch, searchReactions()...)
 	},
 	"flashcard":  func() registeredSection { return flashcardSectionSpec() },
-	"ai":         func() registeredSection { return newSectionSpec("ai", &Conf.AI, conf.NormalizeAI) },
 	"ocr":        func() registeredSection { return ocrSectionSpec() },
 	"secrets":    func() registeredSection { return newSectionSpec("secrets", &Conf.Secrets, conf.NormalizeSecrets) },
 	"variables":  func() registeredSection { return newSectionSpec("variables", &Conf.Variables, conf.NormalizeVariables) },

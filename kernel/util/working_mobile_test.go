@@ -55,7 +55,7 @@ func TestMigrateLegacyIOSWorkspaceMovesKnownEntries(t *testing.T) {
 		if _, err = os.Stat(from); !os.IsNotExist(err) {
 			t.Fatalf("source path [%s] should be moved", from)
 		}
-		marker := filepath.Join(workspaceBaseDir, "siyuan", name, "marker")
+		marker := filepath.Join(workspaceBaseDir, "siyuan-simplified", name, "marker")
 		if _, err = os.Stat(marker); err != nil {
 			t.Fatalf("migration marker [%s] is missing: %s", marker, err)
 		}
@@ -77,7 +77,7 @@ func TestMigrateLegacyIOSWorkspaceRejectsDestinationConflicts(t *testing.T) {
 	setMobileMigrationContainer(t, ContainerIOS)
 	workspaceBaseDir := prepareLegacyMobileWorkspace(t)
 	writeMigrationMarker(t, filepath.Join(workspaceBaseDir, "sync"))
-	destinationData := filepath.Join(workspaceBaseDir, "siyuan", "data")
+	destinationData := filepath.Join(workspaceBaseDir, "siyuan-simplified", "data")
 	writeMigrationMarker(t, destinationData)
 
 	migrated, err := migrateLegacyIOSWorkspace(workspaceBaseDir)
@@ -100,7 +100,7 @@ func TestMigrateLegacyIOSWorkspaceRejectsDestinationConflicts(t *testing.T) {
 
 func TestReplaceLegacyIOSWorkspacePath(t *testing.T) {
 	workspaceBaseDir := filepath.Join(t.TempDir(), "Documents")
-	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan")
+	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan-simplified")
 	otherWorkspaceDir := filepath.Join(workspaceBaseDir, "Todo")
 	paths := []string{workspaceBaseDir, otherWorkspaceDir, workspaceBaseDir + string(os.PathSeparator)}
 	want := []string{defaultWorkspaceDir, otherWorkspaceDir}
@@ -125,7 +125,7 @@ func TestIsMobileWorkspaceBaseDir(t *testing.T) {
 			t.Fatalf("mobile workspace base dir [%s] should be reserved", path)
 		}
 	}
-	for _, path := range []string{filepath.Dir(workspaceBaseDir), filepath.Join(workspaceBaseDir, "siyuan")} {
+	for _, path := range []string{filepath.Dir(workspaceBaseDir), filepath.Join(workspaceBaseDir, "siyuan-simplified")} {
 		if IsMobileWorkspaceBaseDir(path) {
 			t.Fatalf("path [%s] should not be treated as the mobile workspace base dir", path)
 		}
@@ -140,7 +140,7 @@ func TestIsMobileWorkspaceBaseDir(t *testing.T) {
 func prepareLegacyMobileWorkspace(t *testing.T) string {
 	t.Helper()
 	workspaceBaseDir := t.TempDir()
-	if err := os.MkdirAll(filepath.Join(workspaceBaseDir, "siyuan"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(workspaceBaseDir, "siyuan-simplified"), 0755); err != nil {
 		t.Fatal(err)
 	}
 	for _, name := range []string{"conf", "data", "temp"} {

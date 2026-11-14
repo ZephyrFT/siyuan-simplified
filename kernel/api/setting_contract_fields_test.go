@@ -29,7 +29,6 @@ func TestSettingContractFieldsMatchConf(t *testing.T) {
 		{apicontract.SettingSearch{}, conf.Search{}},
 		{apicontract.SettingFlashcard{}, conf.Flashcard{}},
 		{apicontract.SettingAppearance{}, conf.Appearance{}},
-		{apicontract.SettingAI{}, conf.AI{}},
 		{apicontract.SettingOCR{}, conf.OCR{}},
 		{apicontract.SettingSecrets{}, conf.Secrets{}},
 		{apicontract.SettingVariables{}, conf.Variables{}},

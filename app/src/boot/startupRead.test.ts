@@ -9,21 +9,21 @@ test("startup reads retry transport failures, preserve responses and never repla
         if (++calls === 1) throw new TypeError("Failed to fetch");
         return response;
     };
-    assert.equal(await fetchStartupRead("/api/petal/loadPetals", {method: "POST"}, request), response);
+    assert.equal(await fetchStartupRead("/api/system/getConf", {method: "POST"}, request), response);
     assert.equal(calls, 2);
     calls = 1;
     assert.equal(await fetchStartupRead("/api/system/getConf", {method: "POST"}, request), response);
     assert.equal(calls, 2, "HTTP errors are returned without retries");
-    for (const url of ["/api/transactions", "/api/petal/setPetalEnabled", "/api/storage/setLocalStorageVal"]) {
+    for (const url of ["/api/transactions", "/api/system/setAPIToken", "/api/storage/setLocalStorageVal"]) {
         calls = 0;
         await assert.rejects(fetchStartupRead(url, {method: "POST"}, request), TypeError);
         assert.equal(calls, 1);
     }
     calls = 0;
-    await assert.rejects(fetchStartupRead("/api/petal/loadPetals", {method: "POST"}, async () => {
+    await assert.rejects(fetchStartupRead("/api/system/getConf", {method: "POST"}, async () => {
         calls++;
         throw new TypeError("offline");
-    }), /url=\/api\/petal\/loadPetals\nattempts=3/);
+    }), /url=\/api\/system\/getConf\nattempts=3/);
     assert.equal(calls, 3);
     const signals: AbortSignal[] = [];
     await assert.rejects(fetchStartupRead("/api/system/getConf", {method: "POST"}, async (_input, init) => {
@@ -40,6 +40,6 @@ test("startup reads retry transport failures, preserve responses and never repla
     assert.equal(calls, 1, "non-transport failures are not retried");
     calls = 0;
     finishStartupReads();
-    await assert.rejects(fetchStartupRead("/api/petal/loadPetals", {method: "POST"}, request), TypeError);
+    await assert.rejects(fetchStartupRead("/api/system/getConf", {method: "POST"}, request), TypeError);
     assert.equal(calls, 1, "normal runtime requests retain their original behavior");
 });

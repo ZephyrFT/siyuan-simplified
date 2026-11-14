@@ -21,7 +21,7 @@ func setupCookieKeyTest(t *testing.T) string {
 	previousHome := util.HomeDir
 	util.HomeDir = t.TempDir()
 	t.Cleanup(func() { util.HomeDir = previousHome })
-	if err := os.MkdirAll(filepath.Join(util.HomeDir, ".config", "siyuan"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(util.HomeDir, ".config", "siyuan-simplified"), 0755); err != nil {
 		t.Fatal(err)
 	}
 	return cookieKeyPath()

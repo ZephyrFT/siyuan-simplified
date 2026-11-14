@@ -16,12 +16,10 @@ import {loadAssets, setInlineStyle, initAssets, reloadInlineStyles, refreshTheme
 import {initMessage} from "../../dialog/message";
 import {processSync, downloadProgress} from "../../dialog/processSystem";
 import {progressLoading} from "../../dialog/progress";
-import {syncCheckoutProgress} from "../../sync/checkoutProgress";
 import {setSettingsWindowHost} from "./windowContext";
 import {refreshSettingConfig} from "./sync";
 import {openSettingDialog} from "../index";
 import {switchSettingTab} from "../search/dialog";
-import {withMountedBazaar} from "../bazaarTab";
 import {appearanceConfigApi, refreshAppearance} from "../tabs/appearanceRuntime";
 import {Setting} from "../../plugin/Setting";
 import {bindMenuKeydown} from "../../menus/Menu";
@@ -29,11 +27,10 @@ import {globalClickHideMenu} from "../../menus/menuClick";
 import {isAbove} from "../../util/zIndex";
 import {windowMouseMove} from "../../boot/globalEvent/mousemove";
 import {hideTooltip, initTooltips} from "../../dialog/tooltip";
-import {applyCloudUserState} from "../tabs/accountUi";
 import {updateServerAddresses} from "../tabs/accessRuntime";
 import {installPluginStorageFetchAppId} from "../../util/fetchAppId";
 import {createSettingsPluginApp} from "../../plugin/settingsApp";
-import {afterLayoutReady, disposePlugins, loadPlugins, refreshPlugins} from "../../plugin/loader";
+import {afterLayoutReady, disposePlugins, refreshPlugins} from "../../plugin/loader";
 import {applyPluginReload} from "../../plugin/globalState";
 import {emitToPlugins} from "../../plugin/EventBusCore";
 import type {Dialog} from "../../dialog";
@@ -106,22 +103,10 @@ const initialize = async () => {
             const url = new URL(location.href);
             url.searchParams.set("tab", next.tab);
             history.replaceState(null, "", url);
-            if (next.tab === "assets" || next.aiProvider === "chatgpt") {
+            if (next.tab === "assets") {
                 await mounted;
                 if (!isActive()) return;
             }
-        }
-        if (next.tab === "ai" && next.aiProvider === "chatgpt") {
-            const {openChatGPTProvider} = await import("../tabs/ai/aiProviderUi");
-            if (isActive()) { openChatGPTProvider(); }
-        }
-        if (next.readme) {
-            const {type, from, resource} = next.readme;
-            await withMountedBazaar(({bazaar, renderReadme}) => {
-                if (!isActive()) return;
-                bazaar.switchBazaarTab(host.app, type, from);
-                renderReadme(type, from, resource);
-            });
         }
     };
     listen("siyuan-settings-command", (_event, next: ISettingsCommand) => {
@@ -153,15 +138,12 @@ const initialize = async () => {
             case "reloadInlineStyles": void reloadInlineStyles(); break;
             case "refreshtheme": refreshThemeStyle(data.data.theme); break;
             case "reloadPlugin":
-                void refreshSettingConfig("bazaar");
                 void applyPluginReload(app, data.data).catch(error => console.error("Could not update settings plugins", error));
                 break;
             case "readonly": window.siyuan.config.editor.readOnly = data.data; break;
-            case "syncProgress": syncCheckoutProgress(data); break;
             case "progress": progressLoading(data); break;
             case "downloadProgress": downloadProgress(data.data); break;
             case "syncing": processSync(data); break;
-            case "setCloudUser": applyCloudUserState(data.data.user, data.data.userName); break;
             case "setServerAddrs": updateServerAddresses(data.data); break;
         }
     }});
@@ -176,8 +158,7 @@ const initialize = async () => {
     window.siyuan.isPublish = response.data.isPublish;
     await loadDesktopHostConnection();
     if (!isActive()) return;
-    const [user, emoji] = await Promise.all([
-        fetchSyncPost("/api/setting/getCloudUser", {cached: true}),
+    const [emoji] = await Promise.all([
         fetchSyncPost("/api/system/getEmojiConf", {}),
         runtime.refreshNotebooks(),
         new Promise<void>(resolve => getLocalStorage(resolve)),
@@ -191,7 +172,7 @@ const initialize = async () => {
     if (!window.siyuan.languages || !window.DOMPurify) {
         throw new Error("Could not load settings window dependencies");
     }
-    window.siyuan.user = user.data && "userId" in user.data ? user.data : null;
+    window.siyuan.user = null;
     if (Array.isArray(emoji.data)) {
         window.siyuan.emojis = emoji.data;
     }
@@ -271,13 +252,7 @@ const initialize = async () => {
         window.addEventListener("resize", () => window.siyuan.menus.menu.resetPosition());
         await runtime.refreshSnippets();
         if (!isActive()) return;
-        try {
-            await loadPlugins(app);
-            if (!isActive()) return;
-            void afterLayoutReady(app);
-        } catch (error) {
-            console.error("Could not load settings plugins", error);
-        }
+        void afterLayoutReady(app);
         if (!isActive()) return;
         window.siyuan.isReady = true;
         ws.flushMainMessages();

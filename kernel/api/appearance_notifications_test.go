@@ -40,9 +40,6 @@ func TestAPIContractAppearanceNotifications(t *testing.T) {
 		} else if got == nil || *got != (value == "true") {
 			t.Fatalf("notification preference lost after round trip: %s", data)
 		}
-		if bazaarNotifications(config.Notifications).SelectAllIncompleteTip != got {
-			t.Fatal("bazaar response lost notification preference")
-		}
 	}
 	var legacy util.Notifications
 	if err := json.Unmarshal([]byte(`{"selectAllTip":false}`), &legacy); err != nil {

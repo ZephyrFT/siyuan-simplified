@@ -18,10 +18,7 @@ import {openByMobile, openLink} from "../../editor/openLink";
 import {bindPasswordIconaToggle, genConfigItemMainHtml} from "../render/fragments";
 import {
     genServerAddressesHTML,
-    renderPublishAuthAccounts,
-    savePublish,
-    sendAccessSetting,
-    updatePublishConfig
+    sendAccessSetting
 } from "./accessRuntime";
 import {sendAppSetting} from "./appRuntime";
 import zxcvbn = require("zxcvbn");
@@ -620,117 +617,10 @@ const registerAccessServerGroup = (tab: SettingTabBuilder) => {
     }
 };
 
-const registerAccessPublishGroup = (tab: SettingTabBuilder) => {
-    const group = tab.group("publish", window.siyuan.languages.configGroupPublish);
-
-    group.switch("publish.enable", {
-        title: window.siyuan.languages.publishService,
-        desc: window.siyuan.languages.publishServiceTip,
-        save: (value) => sendAccessSetting("publish.enable", value),
-    });
-    group.number("publish.port", {
-        title: window.siyuan.languages.publishServicePort,
-        desc: window.siyuan.languages.publishServicePortTip,
-        min: 0,
-        max: 65535,
-        save: (value) => sendAccessSetting("publish.port", value),
-    });
-    group.slot({
-        key: "publishAddresses",
-        keywords: [
-            window.siyuan.languages.publishServiceAddresses,
-            window.siyuan.languages.publishServiceAddressesTip,
-            window.siyuan.languages.publishServiceNotStarted,
-        ],
-        html: () => `<div class="b3-label config-item">
-    <div class="fn__flex">
-        ${genConfigItemMainHtml(window.siyuan.languages.publishServiceAddresses, window.siyuan.languages.publishServiceAddressesTip)}
-        <div class="fn__space"></div>
-    </div>
-    <div id="publishAddresses" class="b3-label__text"></div>
-</div>`,
-        afterMount: () => {
-            fetchPost("/api/setting/getPublish", {}, (response: IWebSocketData) => {
-                updatePublishConfig(true, response);
-            });
-        },
-    });
-    group.switch("publish.auth.enable", {
-        title: window.siyuan.languages.publishServiceAuth,
-        desc: window.siyuan.languages.publishServiceAuthTip,
-        save: (value) => sendAccessSetting("publish.auth.enable", value),
-    });
-    group.button({
-        id: "publishAuthAccountAdd",
-        title: window.siyuan.languages.publishServiceAuthAccounts,
-        desc: window.siyuan.languages.publishServiceAuthAccountsTip,
-        label: window.siyuan.languages.publishServiceAuthAccountAdd,
-        icon: "iconAdd",
-        afterMount: (root) => {
-            root.querySelector("#publishAuthAccountAdd")?.addEventListener("click", () => {
-                window.siyuan.config.publish.auth.accounts.push({
-                    username: "",
-                    password: "",
-                    memo: "",
-                });
-                renderPublishAuthAccounts();
-            });
-        },
-    });
-    group.slot({
-        key: "publishAuthAccounts",
-        keywords: [
-            window.siyuan.languages.userName,
-            window.siyuan.languages.password,
-            window.siyuan.languages.memo,
-            window.siyuan.languages.delete,
-        ],
-        html: () => '<div class="b3-label config-item fn__none"><div class="fn__flex-1" id="publishAuthAccounts" style="overflow: visible;"></div></div>',
-        afterMount: mountPublishAuthAccounts,
-    });
-};
-
-const mountPublishAuthAccounts = (root: HTMLElement) => {
-    renderPublishAuthAccounts(root);
-    const publishAuthAccounts = root.querySelector("#publishAuthAccounts");
-    publishAuthAccounts?.addEventListener("change", (event) => {
-        const input = event.target as HTMLInputElement;
-        if (input.tagName !== "INPUT" || !input.dataset.name) {
-            return;
-        }
-        const li = input.closest("li");
-        if (li) {
-            const index = parseInt(li.dataset.index);
-            const name = input.dataset.name as keyof Config.IPublishAuthAccount;
-            if (name in window.siyuan.config.publish.auth.accounts[index]) {
-                window.siyuan.config.publish.auth.accounts[index][name] = input.value;
-                savePublish(false);
-            }
-        }
-    });
-    publishAuthAccounts?.addEventListener("click", (event) => {
-        const target = event.target as Element;
-        const li = target.closest('[data-action="remove"]')?.closest("li");
-        if (li) {
-            const index = parseInt(li.dataset.index);
-            window.siyuan.config.publish.auth.accounts.splice(index, 1);
-            savePublish(true);
-            return;
-        }
-        const togglePassword = target.closest('.b3-form__icona-icon[data-action="togglePassword"]');
-        if (togglePassword) {
-            const isEye = togglePassword.firstElementChild.getAttribute("xlink:href") === "#iconEye";
-            togglePassword.firstElementChild.setAttribute("xlink:href", isEye ? "#iconEyeoff" : "#iconEye");
-            togglePassword.previousElementSibling.setAttribute("type", isEye ? "text" : "password");
-        }
-    });
-};
-
 export const registerAccessTab = (tab: SettingTabBuilder) => {
     registerAccessAuthGroup(tab);
     registerEncryptedNotebookGroup(tab);
     registerAccessServerGroup(tab);
-    registerAccessPublishGroup(tab);
 };
 
 const registerEncryptedNotebookGroup = (tab: SettingTabBuilder) => {

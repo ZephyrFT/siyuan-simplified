@@ -57,77 +57,16 @@ const loadFetchPost = (fetchImplementation: typeof fetch = () => new Promise(() 
         kernelChecks: () => kernelChecks};
 };
 
-it("editing transport attaches the live main window and schedules HTTP only after acknowledging the save", async () => {
-    const job = {id: "task", avID: "database", blockID: "carrier", sequence: 1};
-    const state = loadFetchPost(async (_url, options) => {
-        const headers = new Headers(options.headers);
-        assert.equal(headers.get("X-Siyuan-Template-App"), "app");
-        assert.equal(headers.get("X-Siyuan-Template-Session"), "main");
-        assert.equal(headers.get("X-Siyuan-Template-Execution"), null);
-        return new Response(JSON.stringify({code: 0, msg: "", data: [{doOperations: [], httpAutomationJobs: [job]}]}),
-            {headers: {"Content-Type": "application/json"}});
-    }, () => true, undefined, true);
-    let saved = false;
-    await state.fetchPost("/api/transactions", {transactions: []}, () => {
-        assert.equal(state.scheduled.length, 0);
-        saved = true;
-    });
-    assert.equal(saved, true);
-    assert.deepEqual(state.scheduled, [[job]]);
-});
-
 it("invokes the failure callback once when a request stalls", async () => {
     const {fetchPost, sends} = loadFetchPost();
     let failures = 0;
-    await fetchPost("/api/bazaar/getInstalledPlugin", {}, () => assert.fail("unexpected success"),
+    await fetchPost("/api/attr/setBlockAttrs", {}, () => assert.fail("unexpected success"),
         undefined, (response: {code: number}) => {
             failures++;
             assert.equal(response.code, 400);
         }, undefined, 30000);
     assert.equal(failures, 1);
     assert.equal(sends.length, 0);
-});
-
-it("checks template ownership synchronously before callbacks and sync response consumers", async () => {
-    for (const mode of ["callback", "sync"]) {
-        const controller = new AbortController();
-        let checks = 0;
-        let finished = 0;
-        const state = loadFetchPost(async () => new Response(JSON.stringify({code: 0, msg: "", data: {content: "old"}}), {
-            headers: {"Content-Type": "application/json"},
-        }), () => true, {signal: controller.signal, headers: {}, isCurrent: () => {
-            checks++;
-            controller.abort();
-            return false;
-        }, finish: () => {finished++;}});
-        if (mode === "callback") {
-            await state.fetchPost("/api/template/render", {id: "old"}, () => assert.fail("obsolete response applied"));
-        } else {
-            const response = await state.fetchSyncPost("/api/av/renderAttributeView", {id: "old"});
-            assert.equal(response.code, -1);
-            assert.equal(response.data, null);
-        }
-        assert.equal(checks, 1);
-        assert.equal(finished, 1);
-        assert.equal(controller.signal.aborted, true);
-    }
-});
-
-it("manual automation transport carries confirmation identity and releases the execution", async () => {
-    const controller = new AbortController();
-    let finished = 0;
-    const headers = {"X-Siyuan-Template-Execution": "manual-execution"};
-    const state = loadFetchPost(async (url, options) => {
-        assert.equal(url, "/api/av/runAttributeViewAutomation");
-        assert.equal(options.headers, headers);
-        assert.equal(options.signal, controller.signal);
-        return new Response(JSON.stringify({code: 0, msg: "", data: null}));
-    }, () => true, {signal: controller.signal, headers, isCurrent: () => true, finish: () => {finished++;}});
-    const response = await state.fetchSyncPost("/api/av/runAttributeViewAutomation", {
-        avID: "database", blockID: "carrier", ruleID: "rule",
-    }, undefined, false, controller.signal);
-    assert.equal(response.code, 0);
-    assert.equal(finished, 1);
 });
 
 it("keeps positive business errors in the callback and filters negative errors", async () => {
@@ -158,7 +97,7 @@ it("keeps asynchronous error responses and the process option", async () => {
 it("preserves notification-only RPC responses as empty callback text", async () => {
     const {fetchPost} = loadFetchPost(async () => new Response(null, {status: 204}));
     let received: unknown;
-    await fetchPost("/api/plugin/rpc", {jsonrpc: "2.0", method: "notify"}, (response: unknown) => received = response);
+    await fetchPost("/api/attr/setBlockAttrs", {jsonrpc: "2.0", method: "notify"}, (response: unknown) => received = response);
     assert.equal(received, "");
 });
 

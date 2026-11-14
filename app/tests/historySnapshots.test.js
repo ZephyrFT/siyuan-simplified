@@ -107,9 +107,7 @@ const runCases = async (sources, css, mobile, dark) => {
     const disposePanel = initRepoPanel(panel, () => {});
     await tick();
     const local = panel.querySelector('[data-repo-source="local"]');
-    const cloud = panel.querySelector('[data-repo-source="cloud"]');
     assert.ok(local.querySelector('.history__snapshot-heading [data-type="fullCheckRepo"]'), "full check belongs to local snapshots");
-    assert.equal(cloud.querySelector('[data-type="fullCheckRepo"]'), null, "cloud snapshots must not expose local checks");
     for (const font of [16, 28]) {
         panel.style.fontSize = font + "px";
         await tick();

@@ -432,16 +432,6 @@ func NormalizeOCR(ocr *OCR) *OCR {
 	return ocr
 }
 
-// NormalizeAI 补全人工智能配置并对齐模型标识；密钥解密由加载入口负责。
-func NormalizeAI(ai *AI) *AI {
-	if ai == nil {
-		ai = NewAI()
-	}
-	ai.Normalize()
-	ai.ReconcileModelIDs()
-	return ai
-}
-
 // NormalizeOIDC 补全 OpenID Connect 配置；环境变量覆盖和密钥解密由加载入口负责。
 func NormalizeOIDC(oidc *OIDC) *OIDC {
 	if oidc == nil {

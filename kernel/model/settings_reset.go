@@ -70,7 +70,6 @@ func defaultWorkspaceSettings(current *AppConf) *AppConf {
 	next.Keymap.Store(&keymap)
 	if current.System.Load() != nil {
 		system := *current.System.Load()
-		system.DownloadInstallPkg = conf.NewSystem().DownloadInstallPkg
 		system.SettingsWindow = false
 		next.System.Store(&system)
 	}
@@ -166,7 +165,6 @@ func ResetSettings() error {
 	Conf.Bazaar.Store(next.Bazaar.Load())
 	if Conf.System.Load() != nil {
 		replaceConfSectionLocked(&Conf.System, func(system *conf.System) bool {
-			system.DownloadInstallPkg = next.System.Load().DownloadInstallPkg
 			system.SettingsWindow = next.System.Load().SettingsWindow
 			return true
 		})

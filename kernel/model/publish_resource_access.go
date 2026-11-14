@@ -57,10 +57,6 @@ func CheckPluginAccessableInPublish(name string) bool {
 	return found && isPetalAccessableInPublish(petal, disabledInPublish, disallowInstall)
 }
 
-func isPetalAccessableInPublish(petal *Petal, disabledInPublish, disallowInstall bool) bool {
-	return petal != nil && petal.Enabled && !petal.UserDisabledInPublish && !disabledInPublish && !disallowInstall
-}
-
 func CheckWidgetAccessableInPublish(name string) bool {
 	if name == "" {
 		return false

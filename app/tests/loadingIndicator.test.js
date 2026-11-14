@@ -213,15 +213,6 @@ const browserCases = async (sources, entries, themes) => {
         check.equal(getComputedStyle(loading).display, "none");
     }
 
-    host.innerHTML = '<div id="packages">' + sources.bazaarLoader + "<img data-content-image>" + spinnerHTML + "</div>";
-    const messages = [];
-    const bazaar = new Function("element", "BAZAAR_PACKAGE_CONFIG", "showMessage", sources.bazaar)(host,
-        {plugins: {panelID: "packages"}}, message => messages.push(message));
-    bazaar._onBazaar({code: 1, msg: "Failed"}, "plugins", {});
-    check.equal(host.querySelector('[data-type="img-loading"]'), null, "marketplace errors remove the CSS loader container");
-    check.ok(host.querySelector("[data-content-image]"));
-    check.ok(host.querySelector(".b3-loading"), "unrelated indicators remain intact");
-    check.deepEqual(messages, ["Failed"]);
 };
 
 if (process.versions.electron && process.type === "browser") {
@@ -237,20 +228,12 @@ if (process.versions.electron && process.type === "browser") {
                 require("sass").compile(path.join(__dirname, `../src/assets/scss/${name}.scss`),
                     {logger: require("sass").Logger.silent}).css]));
             const themes = {light: read("appearance/themes/daylight/theme.css"), dark: read("appearance/themes/midnight/theme.css")};
-            const bazaarText = read("src/config/bazaar.ts");
-            const bazaarAST = ts.createSourceFile("bazaar.ts", bazaarText, ts.ScriptTarget.Latest, true);
-            const bazaarObject = bazaarAST.statements.find(statement => ts.isVariableStatement(statement) &&
-                statement.declarationList.declarations.some(item => item.name.getText(bazaarAST) === "bazaar"))
-                .declarationList.declarations[0].initializer;
-            const method = bazaarObject.properties.find(property => property.name?.getText(bazaarAST) === "_onBazaar");
             const sources = {
                 memoryButtonLabel: JSON.parse(read("appearance/langs/zh-CN.json")).aiMemoryOrganize,
                 progress: compile(read("src/dialog/progress.ts")),
                 editor: compile(declarations("src/protyle/ui/initUI.ts", ["addLoading", "removeLoading"])),
                 MobileBookmarks: compile(read("src/mobile/dock/MobileBookmarks.ts")),
                 MobileTags: compile(read("src/mobile/dock/MobileTags.ts")),
-                bazaar: compile(`const bazaar = {element, _isBazaarRequestCurrent: () => true, ${method.getText(bazaarAST)}};`) + "return bazaar;",
-                bazaarLoader: bazaarText.match(/<div data-type="img-loading"[^>]*>[\s\S]*?<\/div>/)[0],
             };
             win.webContents.debugger.attach("1.3");
             ipcMain.handle("loading-media", (_event, features) => win.webContents.debugger.sendCommand("Emulation.setEmulatedMedia", {features}));

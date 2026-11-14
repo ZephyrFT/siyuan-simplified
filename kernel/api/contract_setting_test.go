@@ -37,9 +37,6 @@ func compareSettingConfig[Request settingConfigInput, Data, Config any](t *testi
 			if !ok {
 				t.Fatal(result.Msg)
 			}
-			if endpoint.Definition().Name == "setBazaar" {
-				delete(fields, "app")
-			}
 			encoded, err := gulu.JSON.MarshalJSON(fields)
 			if err != nil {
 				t.Fatal(err)
@@ -76,8 +73,6 @@ func compareSettingConfig[Request settingConfigInput, Data, Config any](t *testi
 func TestAPIContractSettingConfigCompatibility(t *testing.T) {
 	common := []string{`null`, `{}`, `{"unknown":{"nested":[null,1.0]}}`}
 	compareSettingConfig(t, apicontract.SetConfSnippet, func() *conf.Snpt { return &conf.Snpt{} }, append(common, `{"enabledCSS":null}`, `{"enabledCSS":true}`))
-	compareSettingConfig(t, apicontract.SetBazaar, func() *conf.Bazaar { return &conf.Bazaar{} }, append(common, `{"app":false,"trust":null}`, `{"petalDisabled":"bad"}`))
-	compareSettingConfig(t, apicontract.SetAI, func() *conf.AI { return &conf.AI{} }, append(common, `{"agent":{"maxRetries":1e0},"providers":[null],"mcp":{"servers":[null]}}`, `{"mcp":{"servers":[{"env":{"KEY":null}}]}}`, `{"agent":{"maxRetries":1.1}}`, `{"mcp":"bad"}`))
 	compareSettingConfig(t, apicontract.SetSecrets, func() *conf.Secrets { return &conf.Secrets{} }, append(common, `{"items":[null,{"allowedHosts":[null,"localhost"]}]}`))
 	compareSettingConfig(t, apicontract.SetVariables, func() *conf.Variables { return &conf.Variables{} }, append(common, `{"items":[null,{"name":null}]}`))
 	compareSettingConfig(t, apicontract.SetFlashcard, conf.NewFlashcard, append(common, `{"newCardLimit":1e0}`, `{"NewCardLimit":7,"newCardLimit":2}`, `{"newCardLimit":1.5}`))
@@ -87,14 +82,9 @@ func TestAPIContractSettingConfigCompatibility(t *testing.T) {
 	compareSettingConfig(t, apicontract.SetSearch, func() *conf.Search { return &conf.Search{} }, append(common, `{"hanSensitive":null,"limit":3.0}`, `{"limit":3.2}`, `{"customBlock":true}`, `{"customBlock":false}`, `{"customBlock":null}`, `{"customBlock":"bad"}`))
 	compareSettingConfig(t, apicontract.SetAppearance, func() *conf.Appearance { return &conf.Appearance{} }, append(common, `{"bodyGradient":null}`, `{"BodyGradient":null,"globalFontFamilies":[]}`, `{"statusBar":false}`, `{"notifications":{"selectAllTip":null}}`))
 	compareSettingConfig(t, apicontract.SetEntryVisibility, func() *conf.EntryVisibility { return &conf.EntryVisibility{} }, append(common, `{"profiles":[null,{"orders":{"menu":[null,"id"]}}]}`))
-	compareSettingConfig(t, apicontract.SetPublish, func() *conf.Publish { return &conf.Publish{} }, append(common, `{"auth":null,"port":65535.0}`, `{"port":65536}`, `{"auth":{"accounts":[null]}}`))
 }
 
 func TestAPIContractSettingPreferencesCompatibility(t *testing.T) {
-	compareSettingConfig(t, apicontract.SetAI, func() *conf.AI { return &conf.AI{} }, []string{
-		`{}`, `{"agent":{"streamingMarkdown":true}}`, `{"agent":{"streamingMarkdown":false}}`,
-		`{"agent":{"streamingMarkdown":null}}`, `{"agent":{"streamingMarkdown":"true"}}`,
-	})
 	compareSettingConfig(t, apicontract.SetAppearance, conf.NewAppearance, []string{
 		`{}`, `{"compactMode":true,"menuMouseScroll":false,"outlineKeepCurrentExpand":true}`,
 		`{"pdfTheme":{"light":"dark","dark":"light","annoColor":"red"},"mobileBars":{"autoHide":false}}`,
@@ -228,8 +218,6 @@ func TestAPIContractSettingErrorsAndAdmission(t *testing.T) {
 		handler             gin.HandlerFunc
 		body, message, data string
 	}{
-		{"setBazaarPetalDisabled", setBazaarPetalDisabled, `{}`, "invalid petalDisabled", "null"},
-		{"setBazaarPetalDisabled", setBazaarPetalDisabled, `{"petalDisabled":null}`, "invalid petalDisabled", "null"},
 		{"setTheme", setTheme, `{"theme":"theme","modes":[null]}`, "[modes] is required ([0] for light, [1] for dark, [0,1] for both)", "null"},
 		{"setExport", setExport, `{"blockRefMode":1.5}`, "json: cannot unmarshal number 1.5 into Go struct field Export.blockRefMode of type int", `{"closeTimeout":5000}`},
 	} {
@@ -237,10 +225,6 @@ func TestAPIContractSettingErrorsAndAdmission(t *testing.T) {
 		if code != -1 || msg != entry.message || string(data) != entry.data {
 			t.Fatalf("%s changed: %d %s %s", entry.route, code, msg, data)
 		}
-	}
-	code, _, data := settingContractRequest(t, "getCloudUser", getCloudUser, `{invalid`)
-	if code != 0 || string(data) != "null" {
-		t.Fatalf("non-admin cloud query read body: %d %s", code, data)
 	}
 }
 
@@ -254,13 +238,6 @@ func TestAPIContractSettingEmojiAndPublishValidation(t *testing.T) {
 	code, _, data := settingContractRequest(t, "setEmoji", setEmoji, `{"emoji":[]}`)
 	if code != 0 || string(data) != "null" || model.Conf.Editor.Load().Emoji == nil || len(model.Conf.Editor.Load().Emoji) != 0 {
 		t.Fatal("empty emoji list changed")
-	}
-	priorPublish := model.Conf.Publish.Load()
-	for _, body := range []string{`{"auth":{"enable":true,"accounts":[null]}}`, `{"auth":{"enable":true,"accounts":[{"username":"u","password":"short"}]}}`, `{"auth":{"enable":true,"accounts":[{"username":"u","password":"12345678"},{"username":"u","password":"12345678"}]}}`} {
-		code, _, _ = settingContractRequest(t, "setPublish", setPublish, body)
-		if code != -1 || model.Conf.Publish.Load() != priorPublish {
-			t.Fatal("invalid publish credentials changed configuration")
-		}
 	}
 }
 
@@ -311,21 +288,6 @@ func compareSettingPayload[Source, Data any](t *testing.T, route string, convert
 		if err != nil {
 			t.Fatal(err)
 		}
-		// Decision 的旧字段只在响应中投影，持久化配置不重复存储凭证。
-		if ai, ok := any(source).(*conf.AI); ok && ai.Decision != nil {
-			var expected map[string]json.RawMessage
-			if err = json.Unmarshal(before, &expected); err != nil {
-				t.Fatal(err)
-			}
-			expected["decision"], err = json.Marshal(settingDecisionPayload(ai.Decision))
-			if err != nil {
-				t.Fatal(err)
-			}
-			before, err = json.Marshal(expected)
-			if err != nil {
-				t.Fatal(err)
-			}
-		}
 		after, err := json.Marshal(convert(source))
 		if err != nil {
 			t.Fatal(err)
@@ -356,8 +318,6 @@ func compareSettingPayload[Source, Data any](t *testing.T, route string, convert
 
 func TestAPIContractSettingCompletePayloads(t *testing.T) {
 	compareSettingPayload(t, "setSnippet", settingSnptPayload)
-	compareSettingPayload(t, "setBazaar", settingBazaarPayload)
-	compareSettingPayload(t, "setAI", settingAIPayload)
 	compareSettingPayload(t, "setSecrets", settingSecretsPayload)
 	compareSettingPayload(t, "setVariables", settingVariablesPayload)
 	compareSettingPayload(t, "setFlashcard", settingFlashcardPayload)
@@ -367,8 +327,6 @@ func TestAPIContractSettingCompletePayloads(t *testing.T) {
 	compareSettingPayload(t, "setSearch", settingSearchPayload)
 	compareSettingPayload(t, "setAppearance", settingAppearancePayload)
 	compareSettingPayload(t, "setEntryVisibility", settingEntryVisibilityPayload)
-	compareSettingPayload(t, "", settingPublishPayload)
-	compareSettingPayload(t, "getCloudUser", settingUserPayload)
 	compareSettingPayload(t, "setBootAppearance", settingBootAppearanceSelectionPayload)
 	compareSettingPayload(t, "", settingBootAppearancePayload)
 }

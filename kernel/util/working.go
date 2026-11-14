@@ -155,7 +155,7 @@ func BootWithFlags(workspacePath, wdPath, port, readOnly, accessAuthCode, lang, 
 	tryLockWorkspace()
 	clearWorkspaceStartupTemp()
 
-	bootBanner := figure.NewColorFigure("SiYuan", "isometric3", "green", true)
+	bootBanner := figure.NewColorFigure("SiYuan Simplified", "isometric3", "green", true)
 	logging.LogInfo("\n" + bootBanner.String())
 	logBootInfo()
 }
@@ -247,12 +247,12 @@ var (
 	ThemesPath         string        // 数据目录下的第三方主题 themes/ 路径
 	IconsPath          string        // 数据目录下的第三方图标 icons/ 路径
 	SnippetsPath       string        // 数据目录下的 snippets/ 路径
-	ShortcutsPath      string        // 用户家目录下的快捷方式目录路径 home/.config/siyuan/shortcuts/
+	ShortcutsPath      string        // 用户家目录下的快捷方式目录路径 home/.config/siyuan-simplified/shortcuts/
 
 	UIProcessIDs = sync.Map{} // UI 进程 ID
 )
 
-// SetHomeDir 设置用户配置基路径，配置仍保存在其 .config/siyuan 子目录中。
+// SetHomeDir 设置用户配置基路径，配置仍保存在其 .config/siyuan-simplified 子目录中。
 // 空参数保留默认目录；显式路径必须能创建配置目录，失败时不回退到系统用户主目录。
 func SetHomeDir(homeDir string) error {
 	if homeDir == "" {
@@ -262,7 +262,7 @@ func SetHomeDir(homeDir string) error {
 	if err != nil {
 		return fmt.Errorf("resolve --home-dir [%s] failed: %w", homeDir, err)
 	}
-	if err = os.MkdirAll(filepath.Join(absPath, ".config", "siyuan"), 0755); err != nil {
+	if err = os.MkdirAll(filepath.Join(absPath, ".config", "siyuan-simplified"), 0755); err != nil {
 		return fmt.Errorf("initialize --home-dir [%s] failed: %w", absPath, err)
 	}
 	HomeDir = absPath
@@ -273,12 +273,12 @@ func SetHomeDir(homeDir string) error {
 // defaultWorkspacePath 保留各平台默认布局，显式配置主目录时不再使用 Windows USERPROFILE。
 func defaultWorkspacePath(homeDir, goos, userProfile string, homeDirOverridden bool) string {
 	if goos == "windows" && !homeDirOverridden && userProfile != "" {
-		return filepath.Join(userProfile, "SiYuan")
+		return filepath.Join(userProfile, "SiYuan-Simplified")
 	}
 	if goos == "darwin" {
-		return filepath.Join(homeDir, "Library", "Application Support", "SiYuan")
+		return filepath.Join(homeDir, "Library", "Application Support", "SiYuan-Simplified")
 	}
-	return filepath.Join(homeDir, "SiYuan")
+	return filepath.Join(homeDir, "SiYuan-Simplified")
 }
 
 // MaxUIProcessCount UI 进程注册表条目数上限。
@@ -294,7 +294,7 @@ func UIProcessCount() (ret int) {
 }
 
 func initWorkspaceDir(workspaceArg string) {
-	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan")
+	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan-simplified")
 	workspaceConf := filepath.Join(userHomeConfDir, "workspace.json")
 	logging.SetLogPath(filepath.Join(userHomeConfDir, "kernel.log"))
 
@@ -411,7 +411,7 @@ func RemoveWorkspacePath(paths []string, target string) []string {
 
 func ReadWorkspacePaths() (ret []string, err error) {
 	ret = []string{}
-	workspaceConf := filepath.Join(HomeDir, ".config", "siyuan", "workspace.json")
+	workspaceConf := filepath.Join(HomeDir, ".config", "siyuan-simplified", "workspace.json")
 	data, err := os.ReadFile(workspaceConf)
 	if err != nil {
 		msg := fmt.Sprintf("read workspace conf [%s] failed: %s", workspaceConf, err)
@@ -451,7 +451,7 @@ func ReadWorkspacePaths() (ret []string, err error) {
 
 func WriteWorkspacePaths(workspacePaths []string) (err error) {
 	workspacePaths = DeduplicateWorkspacePaths(workspacePaths)
-	workspaceConf := filepath.Join(HomeDir, ".config", "siyuan", "workspace.json")
+	workspaceConf := filepath.Join(HomeDir, ".config", "siyuan-simplified", "workspace.json")
 	data, err := gulu.JSON.MarshalJSON(workspacePaths)
 	if err != nil {
 		msg := fmt.Sprintf("marshal workspace conf [%s] failed: %s", workspaceConf, err)

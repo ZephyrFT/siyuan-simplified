@@ -37,7 +37,6 @@ import {editorConfigApi} from "../../../config/tabs/editorRuntime";
 import {lockScreen} from "../../../dialog/processSystem";
 import {newFile} from "../../../util/newFile";
 import {openCard} from "../../../card/openCard";
-import {syncGuide} from "../../../sync/syncGuide";
 import {unsplitCurrentWnd, unsplitWnd} from "../../../menus/tab";
 import {openFile} from "../../../editor/util";
 import {getAssetPathWithoutFragment} from "../../../util/pathName";
@@ -65,7 +64,6 @@ export const globalCommand = (command: string, app: App, range?: Range, openOnly
         case "outline":
         case "bookmark":
         case "tag":
-        case "inbox":
             openDock(command);
             return true;
         case "backlinks":
@@ -91,7 +89,6 @@ export const globalCommand = (command: string, app: App, range?: Range, openOnly
             return true;
         case "bookmark":
         case "tag":
-        case "inbox":
             getDockByType(command).toggleModel(command);
             return true;
         case "backlinks":
@@ -478,9 +475,6 @@ export const globalCommand = (command: string, app: App, range?: Range, openOnly
             return true;
         case "selectOpen1":
             selectOpenTab();
-            return true;
-        case "syncNow":
-            syncGuide(app);
             return true;
     }
 

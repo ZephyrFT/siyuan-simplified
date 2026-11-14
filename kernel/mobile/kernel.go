@@ -22,7 +22,6 @@ import (
 	"github.com/siyuan-note/siyuan/kernel/cache"
 	"github.com/siyuan-note/siyuan/kernel/job"
 	"github.com/siyuan-note/siyuan/kernel/model"
-	"github.com/siyuan-note/siyuan/kernel/plugin"
 	"github.com/siyuan-note/siyuan/kernel/server"
 	"github.com/siyuan-note/siyuan/kernel/sql"
 	"github.com/siyuan-note/siyuan/kernel/util"
@@ -291,7 +290,7 @@ func StartKernel(container, appDir, workspaceBaseDir, timezoneID, localIPs, lang
 		// 数据库打开后重新应用搜索配置，使 PRAGMA case_sensitive_like 对新连接生效
 		model.ApplySearchRuntime()
 
-		finishMobileStartup(util.Container, model.BootSyncData, func() {
+		finishMobileStartup(util.Container, func() {}, func() {
 			model.CleanupEmptyPluginStorageDirs()
 			model.InitBoxes()
 			model.LoadFlashcards()
@@ -303,8 +302,6 @@ func StartKernel(container, appDir, workspaceBaseDir, timezoneID, localIPs, lang
 			job.StartCron()
 			go model.AutoGenerateFileHistory()
 			go cache.LoadAssets()
-			go plugin.InitManager()
-			go model.StartEmbeddingIndexer()
 		}, util.WaitForUILoaded)
 	}()
 }

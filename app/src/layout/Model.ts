@@ -42,10 +42,6 @@ export class Model {
         // 消息处理依赖面板子类，调用时加载以避免基类初始化期间形成循环依赖。
         const {processMessage}: typeof import("../util/processMessage") = require("../util/processMessage");
         const message = processMessage(JSON.parse(data));
-        if (message && message.cmd === "bazaarChanged") {
-            const {refreshMountedBazaar}: typeof import("../config/bazaarTab") = require("../config/bazaarTab");
-            void refreshMountedBazaar(message.data);
-        }
         callback.call(this, message);
     }
 
@@ -64,17 +60,11 @@ export class Model {
             this.send("ready", {});
             const {refreshSettingConfig}: typeof import("../config/setting/sync") = require("../config/setting/sync");
             void refreshSettingConfig();
-            const {reconcileSyncCheckout}: typeof import("../sync/checkoutProgress") = require("../sync/checkoutProgress");
-            void reconcileSyncCheckout(new URL(this.ws.url).searchParams.get("id"));
         }
     }
 
     public connect(options: IConnectOptions) {
         if (this.socketDisposed) return;
-        if (this.ws && this.socketType === "main") {
-            const {cancelTemplateHTTPExecutions}: typeof import("../template/http") = require("../template/http");
-            cancelTemplateHTTPExecutions();
-        }
         this.socketType = options.type;
         clearTimeout(this.reconnectTimer);
         const websocketURL = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`;
@@ -87,8 +77,6 @@ export class Model {
             }
             if (options.type === "main" && window.siyuan.isReady) {
                 this.send("ready", {});
-                const {reconcileSyncCheckout}: typeof import("../sync/checkoutProgress") = require("../sync/checkoutProgress");
-                void reconcileSyncCheckout(options.id, true);
                 const {reloadSettingsResetOnReconnect}: typeof import("../config/setting/reset") = require("../config/setting/reset");
                 if (reloadSettingsResetOnReconnect()) return;
                 const {resetSettingTaskRevision}: typeof import("../config/setting/taskBlocker") = require("../config/setting/taskBlocker");
@@ -130,10 +118,6 @@ export class Model {
         };
         ws.onclose = (ev) => {
             if (this.socketDisposed || this.ws !== ws) return;
-            if (options.type === "main") {
-                const {cancelTemplateHTTPExecutions}: typeof import("../template/http") = require("../template/http");
-                cancelTemplateHTTPExecutions();
-            }
             if (0 <= ev.reason.indexOf("unauthenticated")) {
                 return;
             }
@@ -187,10 +171,6 @@ export class Model {
         clearTimeout(this.reconnectTimer);
         this.mainMessageQueue.length = 0;
         if (this.ws) {
-            if (this.socketType === "main") {
-                const {cancelTemplateHTTPExecutions}: typeof import("../template/http") = require("../template/http");
-                cancelTemplateHTTPExecutions();
-            }
             this.ws.onopen = null;
             this.ws.onmessage = null;
             this.ws.onclose = null;

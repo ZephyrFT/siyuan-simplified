@@ -1,6 +1,6 @@
 import type {App} from "../../index";
 import {Constants} from "../../constants";
-import {isDisabledFeature, setStorageVal} from "../../protyle/util/compatibility";
+import {setStorageVal} from "../../protyle/util/compatibility";
 import {escapeAttr, escapeHtml} from "../../util/escape";
 import {newFile} from "../../util/newFile";
 import {openCard} from "../../card/openCard";
@@ -56,10 +56,6 @@ const getActionLabel = (action: MobileBottomBarBuiltInAction) => {
             return window.siyuan.languages.tag;
         case "backlink":
             return window.siyuan.languages.backlinks;
-        case "inbox":
-            return window.siyuan.languages.inbox;
-        case "agent":
-            return window.siyuan.languages.agentChat;
         case "spacedRepetition":
             return window.siyuan.languages.spaceRepetition;
         case "dailyNote":
@@ -86,16 +82,11 @@ const resolveBottomBarConfig = (
         unavailableActions.add("newDoc");
         unavailableActions.add("dailyNote");
         unavailableActions.add("newDailyNote");
-        unavailableActions.add("agent");
         unavailableActions.add("spacedRepetition");
     } else if (window.siyuan.isPublish) {
         unavailableActions.add("newDoc");
         unavailableActions.add("dailyNote");
         unavailableActions.add("newDailyNote");
-        unavailableActions.add("agent");
-    }
-    if (isDisabledFeature("ai")) {
-        unavailableActions.add("agent");
     }
     const pluginDockKeys = new Set(pluginDockEntries.map(entry => entry.key));
     config.actions.forEach((action) => {
@@ -259,18 +250,6 @@ export const initMobileBottomBar = (app: App) => {
             openDock("backlink");
         }
     });
-    bindBottomBarAction("mobileBottomBarInbox", () => {
-        if (!isMobileBlockSelecting()) {
-            openDock("inbox");
-        }
-    });
-    bindBottomBarAction("mobileBottomBarAgent", () => {
-        if (isMobileBlockSelecting()) {
-            return;
-        }
-        activeBlur();
-        void import("../agent/MobileAgentChat").then(({openMobileAgent}) => openMobileAgent(app));
-    });
     bindBottomBarAction("mobileBottomBarSpacedRepetition", () => {
         if (isMobileBlockSelecting()) {
             return;
@@ -306,7 +285,7 @@ export const initMobileBottomBar = (app: App) => {
 };
 
 const genBottomBarOptions = (pluginDockEntries: readonly IMobilePluginDockEntry[]) => [
-    ...MOBILE_BOTTOM_BAR_ACTIONS.filter(action => action !== "agent" || !isDisabledFeature("ai")).map((action) =>
+    ...MOBILE_BOTTOM_BAR_ACTIONS.map((action) =>
         `<option value="${action}">${escapeHtml(getActionLabel(action))}</option>`),
     ...pluginDockEntries.map((entry) =>
         `<option value="${escapeAttr(entry.key)}">${escapeHtml(getPluginDockLabel(entry))}</option>`),

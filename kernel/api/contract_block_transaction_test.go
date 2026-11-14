@@ -123,7 +123,6 @@ func TestAPIContractHeadingTransactions(t *testing.T) {
 	}
 	treenode.UpsertBlockTree(tree)
 	testAPIContractInsertBlockAnchors(t, box.ID, docID, paragraphID)
-	testAPIContractNativeContainers(t, box.ID)
 	engine := gin.New()
 	engine.POST("/api/block/getBlockTreeInfos", getBlockTreeInfos)
 	infoRecorder := httptest.NewRecorder()

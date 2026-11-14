@@ -11,7 +11,7 @@ const withWindow = (callback: () => void) => {
     const descriptor = Object.getOwnPropertyDescriptor(globalThis, "window");
     Object.defineProperty(globalThis, "window", {
         configurable: true,
-        value: {siyuan: {languages: {syncNow: "Sync", dailyNote: "Daily note"}}},
+        value: {siyuan: {languages: {syncNow: "Sync", dailyNote: "Daily note", goBack: "Go back"}}},
     });
     try {
         callback();
@@ -55,9 +55,9 @@ test("blank menu lists configurable entries in runtime order", () => {
         const ids = items.map((item) => item.id);
         assert.equal(ids[0], "topBar.barMode");
         assert.ok(!ids.includes("topBar.barExit"));
-        assert.ok(ids.includes("topBar.barSync"));
-        assert.ok(ids.includes("topBar.toolbarVIP"));
-        assert.ok(ids.includes("topBar.toolbarTitle"));
+        assert.ok(ids.includes("topBar.barBack"));
+        assert.ok(ids.includes("topBar.barDailyNote"));
+        assert.ok(ids.includes("topBar.barRiffCard"));
         assert.ok(!ids.includes("topBar.drag"));
         items.forEach((item) => assert.equal(item.iconHTML, ""));
     });
@@ -76,9 +76,9 @@ test("exit entry is configurable only in the native tablet top bar", () => {
 
 test("blank menu check marks follow entry visibility", () => {
     withWindow(() => {
-        const {runtime} = createRuntime({hidden: ["topBar.barSync"]});
+        const {runtime} = createRuntime({hidden: ["topBar.barBack"]});
         const items = buildEntryVisibilityMenuItems(TOP_BAR_ROOT_PATH, runtime);
-        assert.equal(items.find((item) => item.id === "topBar.barSync")!.checked, false);
+        assert.equal(items.find((item) => item.id === "topBar.barBack")!.checked, false);
         assert.equal(items.find((item) => item.id === "topBar.barDailyNote")!.checked, true);
     });
 });
@@ -89,7 +89,7 @@ test("dock blank menu lists configurable dock entries only", () => {
         const items = buildEntryVisibilityMenuItems("dock", runtime);
         const ids = items.map((item) => item.id);
         assert.ok(ids.includes("dock.file"));
-        assert.ok(ids.includes("dock.inbox"));
+        assert.ok(ids.includes("dock.bookmark"));
         assert.ok(!ids.some((id) => id.includes("separator")));
     });
 });
@@ -113,12 +113,12 @@ test("blank menu applies entry icons", () => {
 
 test("menu item click toggles the entry visibility", () => {
     withWindow(() => {
-        const {runtime, calls} = createRuntime({hidden: ["topBar.barSync"]});
+        const {runtime, calls} = createRuntime({hidden: ["topBar.barBack"]});
         const items = buildEntryVisibilityMenuItems(TOP_BAR_ROOT_PATH, runtime);
-        items.find((item) => item.id === "topBar.barSync")!.click!(undefined as never, undefined as never);
+        items.find((item) => item.id === "topBar.barBack")!.click!(undefined as never, undefined as never);
         items.find((item) => item.id === "topBar.barDailyNote")!.click!(undefined as never, undefined as never);
         assert.deepEqual(calls, [
-            {path: "topBar.barSync", visible: true},
+            {path: "topBar.barBack", visible: true},
             {path: "topBar.barDailyNote", visible: false},
         ]);
     });
@@ -127,9 +127,9 @@ test("menu item click toggles the entry visibility", () => {
 test("toggle item hides visible entries and shows hidden ones", () => {
     withWindow(() => {
         const {runtime, calls} = createRuntime({hidden: ["topBar.barDailyNote"]});
-        const visible = buildEntryVisibilityToggleItem("topBar.barSync", runtime)!;
-        assert.equal(visible.label, "Hide Sync");
-        assert.notEqual(visible.id, "topBar.barSync");
+        const visible = buildEntryVisibilityToggleItem("topBar.barBack", runtime)!;
+        assert.equal(visible.label, "Hide Go back");
+        assert.notEqual(visible.id, "topBar.barBack");
         assert.equal(visible.icon, "iconEyeoff");
         visible.click!(undefined as never, undefined as never);
         const hidden = buildEntryVisibilityToggleItem("topBar.barDailyNote", runtime)!;
@@ -139,7 +139,7 @@ test("toggle item hides visible entries and shows hidden ones", () => {
         assert.equal(buildEntryVisibilityToggleItem("topBar.drag", runtime), undefined);
         assert.equal(buildEntryVisibilityToggleItem("topBar.missing", runtime), undefined);
         assert.deepEqual(calls, [
-            {path: "topBar.barSync", visible: false},
+            {path: "topBar.barBack", visible: false},
             {path: "topBar.barDailyNote", visible: true},
         ]);
     });
@@ -151,7 +151,7 @@ test("readonly disables entry visibility menu items", () => {
         const items = buildEntryVisibilityMenuItems(TOP_BAR_ROOT_PATH, runtime);
         assert.ok(items.length > 0);
         items.forEach((item) => assert.equal(item.disabled, true));
-        assert.equal(buildEntryVisibilityToggleItem("topBar.barSync", runtime)!.disabled, true);
+        assert.equal(buildEntryVisibilityToggleItem("topBar.barBack", runtime)!.disabled, true);
     });
 });
 

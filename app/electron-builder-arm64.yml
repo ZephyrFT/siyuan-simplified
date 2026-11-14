@@ -1,11 +1,11 @@
 extends: "./electron-builder-common.yml"
-productName: "SiYuan"
-appId: "org.b3log.siyuan"
+productName: "SiYuan Simplified"
+appId: "org.zephyrft.siyuan-simplified"
 publish: null
 asar: false
 compression: "normal"
 copyright: "© 2020-present Yunnan Liandi Technology Co., Ltd."
-artifactName: "siyuan-${version}-${os}-arm64.${ext}"
+artifactName: "siyuan-simplified-${version}-${os}-arm64.${ext}"
 extraMetadata:
   main: "electron-dist/main.js"
 directories:
@@ -43,7 +43,7 @@ nsis:
   deleteAppDataOnUninstall: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: "SiYuan"
+  shortcutName: "SiYuan Simplified"
   license: "../LICENSE"
   include: "nsis/installer.nsh"
   warningsAsErrors: false

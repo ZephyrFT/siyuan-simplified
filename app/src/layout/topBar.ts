@@ -6,13 +6,11 @@ import {
 } from "../protyle/util/compatibility";
 import {exitSiYuan, processSync} from "../dialog/processSystem";
 import {goBack, goForward} from "../util/backForward";
-import {syncGuide} from "../sync/syncGuide";
 import {workspaceMenu} from "../menus/workspace";
 import {initTopBarMenu} from "../menus/topBar";
 import {MenuItem} from "../menus/Menu";
 import {hideTooltip} from "../dialog/tooltip";
 import {setMode} from "../util/assets";
-import {openSetting} from "../config";
 import {openSearch} from "../search/spread";
 import type {App} from "../index";
 /// #if !BROWSER
@@ -20,13 +18,9 @@ import {ipcRenderer, webFrame} from "electron";
 /// #endif
 import {Constants} from "../constants";
 import {isBrowser, isWindow, setToolbarLeftMac} from "../util/functions";
-import {fetchPost} from "../util/fetch";
-import {needSubscribe} from "../util/needSubscribe";
-import dayjs from "dayjs";
 import {exportLayout, resizeTopBar} from "./util";
 import {setTabPosition} from "./tabUtil";
 import {commandPanel} from "../boot/globalEvent/command/panel";
-import {openTopBarMenu} from "../plugin/openTopBarMenu";
 import {newDailyNote} from "../util/mount";
 import {openCard} from "../card/openCard";
 import {getWorkspaceName, setTitle} from "../util/processTitle";
@@ -85,9 +79,6 @@ export const initBar = (app: App) => {
     <span class="toolbar__text">${getWorkspaceName()}</span>
     <svg class="toolbar__svg"><use xlink:href="#iconDown"></use></svg>
 </div>
-<div id="barSync" data-topbar-entry="barSync" class="ariaLabel toolbar__item${window.siyuan.config.readonly ? " fn__none" : ""}">
-    <svg><use xlink:href="#iconCloudSucc"></use></svg>
-</div>
 <button id="barDailyNote" data-topbar-entry="barDailyNote" class="ariaLabel toolbar__item${window.siyuan.config.readonly ? " fn__none" : ""}" aria-label="${window.siyuan.languages.dailyNote} ${updateHotkeyTip(window.siyuan.config.keymap.general.dailyNote.custom)}">
     <svg><use xlink:href="#iconCalendarPlus"></use></svg>
 </button>
@@ -101,11 +92,6 @@ export const initBar = (app: App) => {
     <svg><use xlink:href="#iconForward"></use></svg>
 </button>
 <div class="fn__flex-1 fn__ellipsis" id="drag"><span class="fn__none">开发版，使用前请进行备份 Development version, please backup before use</span></div>
-<div id="toolbarVIP" data-topbar-entry="toolbarVIP" class="fn__flex${window.siyuan.config.readonly ? " fn__none" : ""}" aria-label="${window.siyuan.languages.accountDisplayVIP}"></div>
-<div id="toolbarTitle" data-topbar-entry="toolbarTitle" class="fn__flex${window.siyuan.config.readonly ? " fn__none" : ""}" aria-label="${window.siyuan.languages.accountDisplayTitle}"></div>
-<div id="barPlugins" data-topbar-entry="barPlugins" class="toolbar__item ariaLabel" aria-label="${window.siyuan.languages.plugin}">
-    <svg><use xlink:href="#iconPlugin"></use></svg>
-</div>
 <div id="barCommand" data-topbar-entry="barCommand" class="toolbar__item ariaLabel" aria-label="${window.siyuan.languages.commandPanel} ${updateHotkeyTip(window.siyuan.config.keymap.general.commandPanel.custom)}">
     <svg><use xlink:href="#iconTerminal"></use></svg>
 </div>
@@ -202,10 +188,6 @@ ${isInMobileApp() ? `<div id="barExit" data-topbar-entry="barExit" class="ft__er
                 openCard(app);
                 event.stopPropagation();
                 break;
-            } else if (targetId === "barSync") {
-                syncGuide(app);
-                event.stopPropagation();
-                break;
             } else if (targetId === "barWorkspace") {
                 workspaceMenu(app, target.getBoundingClientRect(), false, target);
                 event.stopPropagation();
@@ -259,21 +241,11 @@ ${isInMobileApp() ? `<div id="barExit" data-topbar-entry="barExit" class="ft__er
                 });
             event.stopPropagation();
                 break;
-            } else if (targetId === "toolbarVIP" || targetId === "toolbarTitle") {
-                if (!window.siyuan.config.readonly) {
-                    openSetting(app, "sync");
-                }
-                event.stopPropagation();
-                break;
             } else if (targetId === "barSearch") {
                 openSearch({
                     app,
                     hotkey: Constants.DIALOG_GLOBALSEARCH
                 });
-                event.stopPropagation();
-                break;
-            } else if (targetId === "barPlugins") {
-                openTopBarMenu(app, target);
                 event.stopPropagation();
                 break;
             } else if (targetId === "barCommand") {
@@ -324,36 +296,6 @@ ${isInMobileApp() ? `<div id="barExit" data-topbar-entry="barExit" class="ft__er
             target = target.parentElement;
         }
     });
-    const barSyncElement = toolbarElement.querySelector("#barSync");
-    barSyncElement.addEventListener("mouseenter", (event) => {
-        event.stopPropagation();
-        event.preventDefault();
-        fetchPost("/api/sync/getSyncInfo", {}, (response) => {
-            let html = "";
-            if (!window.siyuan.config.sync.enabled || (0 === window.siyuan.config.sync.provider && needSubscribe(""))) {
-                html = response.data.stat;
-            } else {
-                html = window.siyuan.languages._kernel[82].replace("%s", dayjs(response.data.synced).format("YYYY-MM-DD HH:mm")) + "<br>";
-                html += "&emsp;" + response.data.stat;
-                if (response.data.kernels.length > 0) {
-                    html += "<br>";
-                    html += window.siyuan.languages.currentKernel + "<br>";
-                    html += "&emsp;" + response.data.kernel + "/" + window.siyuan.config.system.kernelVersion + " (" + window.siyuan.config.system.os + "/" + window.siyuan.config.system.name + ")<br>";
-                    html += window.siyuan.languages.otherOnlineKernels + "<br>";
-                    response.data.kernels.forEach((item: {
-                        os: string;
-                        ver: string;
-                        hostname: string;
-                        id: string;
-                    }) => {
-                        html += `&emsp;${item.id}/${item.ver} (${item.os}/${item.hostname}) <br>`;
-                    });
-                }
-            }
-            barSyncElement.setAttribute("aria-label", html);
-        });
-    });
-    barSyncElement.setAttribute("aria-label", window.siyuan.config.sync.stat || (window.siyuan.languages.syncNow + " " + updateHotkeyTip(window.siyuan.config.keymap.general.syncNow.custom)));
     if (window.siyuan.config.appearance.hideToolbar) {
         document.body.classList.add("body--toolbar-hide");
     }

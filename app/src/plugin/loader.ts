@@ -1,4 +1,3 @@
-import {fetchSyncPost} from "../util/fetch";
 import type {App} from "../index";
 import {markPluginDisposed, Plugin, type TPluginDataChangeReason} from "./index";
 /// #if !MOBILE
@@ -11,7 +10,7 @@ import {
 } from "../mobile/dock/pluginDockState";
 /// #endif
 import {getAPI} from "./API";
-import {getFrontend, isMobile, isWindow} from "../util/functions";
+import {isMobile, isWindow} from "../util/functions";
 import {Constants} from "../constants";
 import {beginPluginTeardown, destroyPlugin, destroyPluginByName} from "./uninstall";
 import {rememberCustomTabPlugins, setCustomTabCatalogAvailable} from "./customTabOwner";
@@ -30,7 +29,6 @@ import {
 } from "./customBlockRender";
 import {getHostCapabilities} from "../util/hostCapabilities";
 import {isSettingsWindow} from "../config/setting/windowContext";
-import {ensureLute} from "../protyle/util/lute";
 
 const requireFunc = (key: string) => {
     if (key === "siyuan") {
@@ -126,18 +124,9 @@ const getLifecycleManager = (app: App) => {
     return manager;
 };
 
-const fetchPluginData = async (names?: string[]) => {
-    const settingsWindow = isSettingsWindow();
-    const response = await fetchSyncPost("/api/petal/loadPetals", {
-        frontend: getFrontend(), ...(names ? {names} : {}), ...(settingsWindow ? {settingsWindow: true} : {}),
-    });
-    if (settingsWindow && response.code !== 0) {
-        throw new Error(response.msg || "Could not read settings plugins");
-    }
-    const items = response.code === 0 && Array.isArray(response.data) ?
-        response.data.filter(item => !settingsWindow || item.settingsWindow === true) : [];
-    if (settingsWindow && items.length) await ensureLute({reloadOnFailure: false});
-    return items;
+const fetchPluginData = async (names?: string[]): Promise<IPluginData[]> => {
+    void names;
+    return [];
 };
 
 const createPluginDataLoader = (names: string[]) => {
@@ -176,15 +165,6 @@ export const loadPlugins = async (app: App, names?: string[], init = true) => {
 const rememberInstalledPlugins = async (app: App) => {
     if (isSettingsWindow() || isMobile()) { return; }
     setCustomTabCatalogAvailable(app, false);
-    try {
-        const response = await fetchSyncPost("/api/bazaar/getInstalledPlugin", {frontend: getFrontend(), keyword: ""});
-        if (response.code === 0 && Array.isArray(response.data?.packages)) {
-            rememberCustomTabPlugins(app, response.data.packages.map(plugin => plugin.name));
-            setCustomTabCatalogAvailable(app, true);
-        }
-    } catch (error) {
-        console.error("Could not read installed plugins for custom tabs:", error);
-    }
 };
 
 const getPluginsStyle = () => {

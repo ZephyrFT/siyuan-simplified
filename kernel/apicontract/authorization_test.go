@@ -23,10 +23,8 @@ func TestAuthorizationContracts(t *testing.T) {
 	}
 	expected := map[string]Authorization{
 		"/api/system/version":          PublicAccess,
-		"/oauth/mcp/token":             PublicAccess,
 		"/api/block/getBlockDOM":       AuthenticatedAccess,
 		"/api/av/changeAttrViewLayout": AuthenticatedAccess | AdminAccess | WritableAccess,
-		"/api/network/forwardProxy":    AuthenticatedAccess | AdminAccess,
 	}
 	for _, definition := range Definitions() {
 		if !definition.Authorization.Valid() {

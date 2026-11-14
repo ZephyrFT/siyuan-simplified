@@ -493,3 +493,6 @@ func getPetals0() (ret []*Petal) {
 	}
 	return
 }
+func isPetalAccessableInPublish(petal *Petal, disabledInPublish, disallowInstall bool) bool {
+	return petal != nil && petal.Enabled && !petal.UserDisabledInPublish && !disabledInPublish && !disallowInstall
+}

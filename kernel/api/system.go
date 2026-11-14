@@ -48,22 +48,6 @@ var rebuildDataIndex = contractHandler(apicontract.RebuildDataIndex, func(c *gin
 	return apicontract.Success(apicontract.Null{})
 })
 
-var addMicrosoftDefenderExclusion = contractHandler(apicontract.AddMicrosoftDefenderExclusion, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.Null] {
-	if gulu.OS.IsWindows() {
-		if err := model.AddMicrosoftDefenderExclusion(); err != nil {
-			return apicontract.Failure[apicontract.Null](-1, err.Error())
-		}
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
-var ignoreAddMicrosoftDefenderExclusion = contractHandler(apicontract.IgnoreAddMicrosoftDefenderExclusion, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.Null] {
-	if gulu.OS.IsWindows() {
-		model.UpdateSystemConf(func(s *conf.System) { s.MicrosoftDefenderExcluded = true })
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
 var getWorkspaceInfo = contractHandler(apicontract.GetWorkspaceInfo, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.WorkspaceInfoData] {
 	return apicontract.Success(apicontract.WorkspaceInfoData{WorkspaceDir: util.WorkspaceDir, SiyuanVer: util.Ver})
 })
@@ -84,8 +68,6 @@ var getNetwork = contractHandler(apicontract.GetNetwork, func(c *gin.Context, re
 	return apicontract.Success(apicontract.NetworkData{Proxy: proxy})
 })
 
-var getReleaseChangelog = model.GetReleaseChangelog
-
 var getChangelog = contractHandler(apicontract.SystemGetChangelog, func(c *gin.Context, request apicontract.SystemChangelogRequest) apicontract.Response[apicontract.SystemChangelogData] {
 	return loadChangelog(c.Request.Context(), request.Force, util.Ver)
 })
@@ -95,15 +77,7 @@ func loadChangelog(ctx context.Context, force bool, version string) (ret apicont
 	ret = apicontract.Success(data)
 
 	if !util.IsReleaseVer(version) {
-		if !force {
-			return
-		}
-		content, err := getReleaseChangelog(ctx, version)
-		if err != nil {
-			logging.LogWarnf("get changelog for v%s failed: %s", version, err)
-			return apicontract.Failure[apicontract.SystemChangelogData](-1, "release changelog is unavailable")
-		}
-		return apicontract.Success(apicontract.SystemChangelogData{Show: true, HTML: content, Version: version})
+		return
 	}
 
 	changelogsDir := filepath.Join(util.WorkingDir, "changelogs")
@@ -330,7 +304,7 @@ func readCustomEmojiData(request apicontract.SystemCustomEmojiRequest) ([]byte, 
 	if rawURL == "" {
 		return nil, fmt.Errorf("field [file] or [url] must not be empty")
 	}
-	return downloadCustomEmojiData(rawURL)
+	return nil, fmt.Errorf("custom emoji URL download is not available in this build")
 }
 
 func downloadCustomEmojiData(rawURL string) ([]byte, error) {
@@ -419,22 +393,6 @@ func normalizeCustomEmojiPath(name, ext string) (string, error) {
 	return strings.Join(parts, "/"), nil
 }
 
-var checkUpdate = contractHandler(apicontract.SystemCheckUpdate, func(c *gin.Context, request apicontract.SystemCheckUpdateRequest) (ret apicontract.Response[apicontract.Null]) {
-	ret = apicontract.Success(apicontract.Null{})
-
-	showMsg := request.ShowMsg
-	model.CheckUpdate(showMsg)
-	return
-})
-
-var downloadUpdate = contractHandler(apicontract.SystemDownloadUpdate, func(c *gin.Context, request apicontract.SystemDownloadUpdateRequest) apicontract.Response[apicontract.Null] {
-	if err := model.DownloadUpdate(request.Version); err != nil {
-		logging.LogWarnf("download selected update failed: %s", err)
-		return apicontract.Failure[apicontract.Null](-1, model.Conf.Language(104))
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
 var exportLog = contractHandler(apicontract.SystemExportLog, func(c *gin.Context, request apicontract.EmptyRequest) (ret apicontract.Response[apicontract.SystemZipData]) {
 	ret = apicontract.Success(apicontract.SystemZipData{})
 
@@ -477,9 +435,6 @@ var exportConf = contractHandler(apicontract.SystemExportConf, func(c *gin.Conte
 		}
 		clonedConf.Appearance.Load().GlobalFontFamilies = fonts
 	}
-	if clonedConf.AI.Load() != nil {
-		clonedConf.AI.Load().ClearChatGPTAccountIDs()
-	}
 	if nil != clonedConf.Editor.Load() {
 		clonedConf.Editor.Load().Emoji = []string{}
 		fonts := make([]*conf.EditorFont, 0, len(clonedConf.Editor.Load().FontFamilies))
@@ -513,8 +468,6 @@ var exportConf = contractHandler(apicontract.SystemExportConf, func(c *gin.Conte
 		clonedConf.System.Load().OSPlatform = ""
 		clonedConf.System.Load().Container = ""
 		clonedConf.System.Load().IsMicrosoftStore = false
-		clonedConf.System.Load().UpdateChannel = ""
-		clonedConf.System.Load().MicrosoftDefenderExcluded = false
 	}
 	clonedConf.Sync.Store(nil)
 	clonedConf.Stat.Store(nil)
@@ -525,39 +478,10 @@ var exportConf = contractHandler(apicontract.SystemExportConf, func(c *gin.Conte
 	clonedConf.Onboarding.Store(nil)
 	clonedConf.Publish.Store(nil)
 	clonedConf.CookieKey = ""
-	clonedConf.MCPOAuth = ""
 	clonedConf.CloudRegion = 0
 	if nil != clonedConf.OIDC {
 		clonedConf.OIDC.ClientSecret = ""
 	}
-	if nil != clonedConf.AI.Load() {
-		if clonedConf.AI.Load().Web != nil {
-			clonedConf.AI.Load().Web.APIKey = ""
-			clonedConf.AI.Load().Web.ExaAPIKey = ""
-		}
-		for _, provider := range clonedConf.AI.Load().Providers {
-			if nil != provider {
-				provider.APIKey = ""
-				provider.Headers = nil
-			}
-		}
-		if nil != clonedConf.AI.Load().Embedding {
-			clonedConf.AI.Load().Embedding.APIKey = ""
-		}
-		if nil != clonedConf.AI.Load().Rerank {
-			clonedConf.AI.Load().Rerank.APIKey = ""
-		}
-		if nil != clonedConf.AI.Load().Decision {
-			clonedConf.AI.Load().Decision.APIKey = ""
-			for _, profile := range clonedConf.AI.Load().Decision.Profiles {
-				if profile != nil {
-					profile.APIKey = ""
-				}
-			}
-		}
-		clonedConf.AI.Load().MCP = nil
-	}
-
 	data, err := gulu.JSON.MarshalIndentJSON(clonedConf, "", "  ")
 	if err != nil {
 		logging.LogErrorf("export conf failed: %s", err)
@@ -698,24 +622,12 @@ var importConf = contractHandler(apicontract.SystemImportConf, func(c *gin.Conte
 	importVariables := importedConf.Variables.Load() != nil
 	// 导入的旧版配置与启动加载执行相同的格式迁移。
 	model.ApplyImportedConfMigrations(importedConf, data)
-	preserveImportedAISecrets(importedConf.AI.Load(), model.Conf.AI.Load())
-	if err = validateAIProviderHeaders(importedConf.AI.Load()); err != nil {
-		ret = apicontract.Failure[apicontract.Null](-1, err.Error())
-		return
-	}
-	if nil != importedConf.System.Load() && nil != model.Conf.System.Load(
-	// 更新通道是应用级全局设置，导入工作空间配置时保持不变。
-	) {
-
-		importedConf.System.Load().UpdateChannel = model.Conf.System.Load().UpdateChannel
+	if nil != importedConf.System.Load() && nil != model.Conf.System.Load() {
 		// 网络代理依赖本机环境，导入设置时保持不变。
 		importedConf.System.Load().NetworkProxy = model.Conf.System.Load().NetworkProxy
 	}
 
 	model.NormalizeAppConf(importedConf)
-	if err = model.LoadChatGPTAccountBindings(importedConf.AI.Load()); err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
 	// 旧版包缺失的新增配置段保持不变；外观资源列表仍以目标工作空间为准。
 	if importAppearance {
 		appearance := importedConf.Appearance.Load()
@@ -753,7 +665,6 @@ var importConf = contractHandler(apicontract.SystemImportConf, func(c *gin.Conte
 	model.Conf.Keymap.Store(importedConf.Keymap.Load())
 	model.Conf.Search.Store(importedConf.Search.Load())
 	model.Conf.Flashcard.Store(importedConf.Flashcard.Load())
-	model.Conf.AI.Store(importedConf.AI.Load())
 	model.Conf.Bazaar.Store(importedConf.Bazaar.Load())
 	model.Conf.Save()
 	model.ApplyConfRuntime()
@@ -761,54 +672,6 @@ var importConf = contractHandler(apicontract.SystemImportConf, func(c *gin.Conte
 	logging.LogInfof("imported conf")
 	return
 })
-
-func preserveImportedAISecrets(imported, current *conf.AI) {
-	if imported == nil || current == nil {
-		return
-	}
-	if imported.Web != nil && current.Web != nil {
-		if imported.Web.APIKey == "" {
-			imported.Web.APIKey = current.Web.APIKey
-		}
-		if imported.Web.ExaAPIKey == "" {
-			imported.Web.ExaAPIKey = current.Web.ExaAPIKey
-		}
-	}
-
-	currentProviders := map[string]*conf.Provider{}
-	for _, provider := range current.Providers {
-		if provider != nil && provider.ID != "" {
-			currentProviders[provider.ID] = provider
-		}
-	}
-	for _, provider := range imported.Providers {
-		if provider != nil {
-			if currentProvider := currentProviders[provider.ID]; currentProvider != nil &&
-				currentProvider.BaseURL == provider.BaseURL && currentProvider.Protocol == provider.Protocol {
-				if provider.APIKey == "" {
-					provider.APIKey = currentProvider.APIKey
-				}
-				if provider.Headers == nil {
-					provider.Headers = currentProvider.Headers
-				}
-			}
-		}
-	}
-
-	if imported.Embedding != nil && current.Embedding != nil && imported.Embedding.APIKey == "" &&
-		imported.Embedding.ID != "" && imported.Embedding.ID == current.Embedding.ID &&
-		imported.Embedding.BaseURL == current.Embedding.BaseURL {
-		imported.Embedding.APIKey = current.Embedding.APIKey
-	}
-	if imported.Rerank != nil && current.Rerank != nil && imported.Rerank.APIKey == "" &&
-		imported.Rerank.ID != "" && imported.Rerank.ID == current.Rerank.ID &&
-		imported.Rerank.Endpoint == current.Rerank.Endpoint {
-		imported.Rerank.APIKey = current.Rerank.APIKey
-	}
-	if imported.MCP == nil {
-		imported.MCP = current.MCP
-	}
-}
 
 var getConf = contractHandler(apicontract.SystemGetConf, func(c *gin.Context, request apicontract.EmptyRequest) (ret apicontract.Response[apicontract.SystemConfData]) {
 	ret = apicontract.Success(apicontract.SystemConfData{})
@@ -1353,20 +1216,8 @@ var setAutoLaunch = contractHandler(apicontract.SetAutoLaunch, func(c *gin.Conte
 	return apicontract.Success(apicontract.Null{})
 })
 
-var setDownloadInstallPkg = contractHandler(apicontract.SetDownloadInstallPkg, func(c *gin.Context, request apicontract.DownloadInstallPkgRequest) apicontract.Response[apicontract.Null] {
-	model.UpdateSystemConf(func(s *conf.System) { s.DownloadInstallPkg = request.DownloadInstallPkg })
-	return apicontract.Success(apicontract.Null{})
-})
-
 var setSettingsWindow = contractHandler(apicontract.SetSettingsWindow, func(c *gin.Context, request apicontract.SettingsWindowRequest) apicontract.Response[apicontract.Null] {
 	model.UpdateSystemConf(func(s *conf.System) { s.SettingsWindow = request.SettingsWindow })
-	return apicontract.Success(apicontract.Null{})
-})
-
-var setUpdateChannel = contractHandler(apicontract.SetUpdateChannel, func(c *gin.Context, request apicontract.UpdateChannelRequest) apicontract.Response[apicontract.Null] {
-	if err := model.SetUpdateChannel(request.UpdateChannel); err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
 	return apicontract.Success(apicontract.Null{})
 })
 

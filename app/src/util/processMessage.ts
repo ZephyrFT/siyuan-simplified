@@ -5,7 +5,6 @@ import {closeSettingsWindow} from "../config/setting/windowContext";
 import {reloadMobileUI} from "../mobile/util/reloadUI";
 /// #endif
 import {hideMessage, showMessage} from "../dialog/message";
-import {fetchPost} from "./fetch";
 import {isBrowser} from "./functions";
 import {applySettingTask} from "../config/setting/taskBlocker";
 import {notifyOCRChanged} from "../config/ocrRuntime";
@@ -16,15 +15,8 @@ export const processMessage = (response: IWebSocketData) => {
         updateNotebookBreadcrumbIcon(response.data.boxID, response.data.icon);
     }
     if (response.cmd === "closeBox" || response.cmd === "removeBox") {
-        const {clearTemplateHTTPConfirmations}: typeof import("../template/httpConfirmHandoff") = require("../template/httpConfirmHandoff");
-        clearTemplateHTTPConfirmations();
         const {invalidateRelatedAVSecurity}: typeof import("../protyle/render/av/relatedView") = require("../protyle/render/av/relatedView");
         invalidateRelatedAVSecurity();
-    }
-    if (response.cmd === "templateHTTPConfirm" || response.cmd === "templateHTTPStatus") {
-        const {processTemplateHTTPEvent}: typeof import("../template/http") = require("../template/http");
-        processTemplateHTTPEvent(response.cmd, response.data);
-        return false;
     }
     if (response.cmd === "assetContentIndexCompleted" && response.code === 0) {
         const {refreshAssetContentSearch}: typeof import("../search/assets") = require("../search/assets");
@@ -52,26 +44,7 @@ export const processMessage = (response: IWebSocketData) => {
         return false;
     }
     if ("msg" === response.cmd) {
-        const id = showMessage(response.msg, response.data.closeTimeout, response.code === 0 ? "info" : "error", response.data.id);
-        document.querySelector("#message #addMicrosoftDefenderExclusion")?.addEventListener("click", (event) => {
-            const button = event.currentTarget as HTMLButtonElement;
-            if (button.disabled) {
-                return;
-            }
-            const content = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = '<svg class="fn__rotate" style="margin-right: 0;"><use xlink:href="#iconRefresh"></use></svg>';
-            fetchPost("/api/system/addMicrosoftDefenderExclusion", {}, () => {
-                hideMessage(id);
-            }).finally(() => {
-                button.disabled = false;
-                button.innerHTML = content;
-            });
-        });
-        document.querySelector("#message #ignoreAddMicrosoftDefenderExclusion")?.addEventListener("click", () => {
-            hideMessage(id);
-            fetchPost("/api/system/ignoreAddMicrosoftDefenderExclusion");
-        }, {once: true});
+        showMessage(response.msg, response.data.closeTimeout, response.code === 0 ? "info" : "error", response.data.id);
         return false;
     }
     if ("cmsg" === response.cmd) {

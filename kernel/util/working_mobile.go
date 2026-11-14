@@ -30,7 +30,7 @@ func BootMobile(container, appDir, workspaceBaseDir, lang string) {
 
 	WorkingDir = filepath.Join(appDir, "app")
 	HomeDir = filepath.Join(workspaceBaseDir, "home")
-	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan")
+	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan-simplified")
 	logging.SetLogPath(filepath.Join(userHomeConfDir, "kernel.log"))
 
 	if !gulu.File.IsExist(userHomeConfDir) {
@@ -40,7 +40,7 @@ func BootMobile(container, appDir, workspaceBaseDir, lang string) {
 		}
 	}
 
-	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan")
+	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan-simplified")
 	if err := os.MkdirAll(defaultWorkspaceDir, 0755); err != nil && !os.IsExist(err) {
 		logging.LogErrorf("create default workspace folder [%s] failed: %s", defaultWorkspaceDir, err)
 		os.Exit(logging.ExitCodeInitWorkspaceErr)
@@ -49,7 +49,7 @@ func BootMobile(container, appDir, workspaceBaseDir, lang string) {
 	initWorkspaceDirMobile(workspaceBaseDir)
 
 	initPathDir()
-	bootBanner := figure.NewFigure("SiYuan", "", true)
+	bootBanner := figure.NewFigure("SiYuan Simplified", "", true)
 	logging.LogInfo("\n" + bootBanner.String())
 	logBootInfo()
 }
@@ -60,9 +60,9 @@ func initWorkspaceDirMobile(workspaceBaseDir string) {
 		logging.LogErrorf("migrate legacy iOS workspace [%s] failed: %s", workspaceBaseDir, err)
 	}
 
-	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan")
+	userHomeConfDir := filepath.Join(HomeDir, ".config", "siyuan-simplified")
 	workspaceConf := filepath.Join(userHomeConfDir, "workspace.json")
-	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan")
+	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan-simplified")
 
 	var workspacePaths []string
 	if !gulu.File.IsExist(workspaceConf) {
@@ -148,7 +148,7 @@ func migrateLegacyIOSWorkspace(workspaceBaseDir string) (migrated bool, err erro
 		}
 	}
 
-	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan")
+	defaultWorkspaceDir := filepath.Join(workspaceBaseDir, "siyuan-simplified")
 	destinationEntries, readErr := os.ReadDir(defaultWorkspaceDir)
 	if readErr != nil {
 		return false, fmt.Errorf("read destination [%s] failed: %w", defaultWorkspaceDir, readErr)

@@ -115,17 +115,6 @@ type SettingThemeRequest struct {
 }
 
 func init() {
-	SetBazaarPetalDisabled.decodeRequest = func(reader io.Reader) (r SettingPetalDisabledRequest, err error) {
-		fields, err := blockRequestFields(reader, SetBazaarPetalDisabled.Definition().Path)
-		if err != nil {
-			return r, err
-		}
-		r.PetalDisabled, err = legacyField[bool](fields, "petalDisabled", "Boolean", true)
-		if err != nil {
-			err = errors.New("invalid petalDisabled")
-		}
-		return
-	}
 	SetTheme.decodeRequest = func(reader io.Reader) (r SettingThemeRequest, err error) {
 		fields, err := blockRequestFields(reader, SetTheme.Definition().Path)
 		if err != nil {

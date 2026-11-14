@@ -7,8 +7,6 @@ package model
 import (
 	"context"
 	"errors"
-	"fmt"
-	"html"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -85,15 +83,10 @@ func (config *AppConf) GetOCR() conf.OCR {
 }
 
 func validateOCRSetting(value *conf.OCR) error {
-	switch value.ReasoningEffort {
-	case "", "none", "low", "medium", "high", "xhigh", "max":
-	default:
-		return errors.New("invalid OCR reasoning effort")
-	}
 	if err := (ocr.Thresholds(value.Thresholds)).Validate(); err != nil {
 		return err
 	}
-	if value.Provider != string(ocr.Tesseract) && value.Provider != string(ocr.PaddleOCR) && value.Provider != "ai" {
+	if value.Provider != string(ocr.Tesseract) && value.Provider != string(ocr.PaddleOCR) {
 		return errors.New("unknown OCR provider")
 	}
 	if value.Model != "tiny" {
@@ -104,13 +97,6 @@ func validateOCRSetting(value *conf.OCR) error {
 	if value.Provider == string(ocr.PaddleOCR) {
 		if err := ocr.ValidateModels(ocrModelDirectory(value.Model)); err != nil {
 			return err
-		}
-	}
-	previous := Conf.OCR.Load()
-	if value.Provider == "ai" && (previous == nil || previous.AIModelID == "" || previous.AIModelID != value.AIModelID) {
-		provider, model := getOCRAIModel(*value)
-		if provider == nil || model == nil {
-			return errors.New(Conf.Language(414))
 		}
 	}
 	return nil
@@ -183,8 +169,7 @@ func OCRAsset(ctx context.Context, path string) (string, []map[string]string, er
 
 func ocrAsset(ctx context.Context, path string, value conf.OCR, automatic bool) (_ string, _ []map[string]string, resultErr error) {
 	if value.Provider == "ai" {
-		text, err := aiOCRAsset(ctx, path, value, automatic)
-		return text, []map[string]string{}, err
+		return "", nil, errors.New("AI OCR is not available in this build")
 	}
 	path = strings.SplitN(strings.TrimSpace(path), "#", 2)[0]
 	canonical, boxID, err := assetPathAndBox(path, "")
@@ -299,16 +284,10 @@ func autoOCRAssets() {
 	ctx, cancel := context.WithTimeout(context.Background(), automaticOCRTimeout(value))
 	defer cancel()
 	assets := cache.FilterAssets(func(path string, asset *cache.Asset) bool {
-		if value.Provider == "ai" {
-			return isAIOCRPath(asset.Path)
-		}
 		return util.IsTesseractExtractable(asset.Path)
 	})
 	generation := ocrRetry.prepare(value, assets)
 	limit := 7
-	if value.Provider == "ai" {
-		limit = 1
-	}
 	processed := 0
 	for _, asset := range assets {
 		if ctx.Err() != nil || processed >= limit || !automaticOCRMatches(value) {
@@ -334,16 +313,6 @@ func autoOCRAssets() {
 		if _, _, err = ocrAsset(ctx, asset.Path, value, true); err != nil {
 			if ocrRetry.record(generation, asset, version, err, time.Now()) && !errors.Is(err, ocr.ErrUnsupportedImage) {
 				logging.LogWarnf("automatic OCR [provider=%s, path=%s] failed: %s", value.Provider, asset.Path, err)
-				if value.Provider == "ai" && automaticOCRProviderFailure(err) {
-					provider, _ := getOCRAIModel(value)
-					if provider != nil {
-						name := provider.DisplayName
-						if name == "" {
-							name = provider.ID
-						}
-						util.PushErrMsg(html.EscapeString(fmt.Sprintf(Conf.Language(466), name, err)), 0)
-					}
-				}
 			}
 		} else {
 			ocrRetry.record(generation, asset, version, nil, time.Now())
@@ -379,21 +348,13 @@ func OCRModels() []string {
 
 func OCRProviderAvailable(id string) bool {
 	if id == "ai" {
-		value := Conf.GetOCR()
-		if value.Provider != "ai" {
-			return len(OCRAIModels()) > 0
-		}
-		provider, model := getOCRAIModel(value)
-		return provider != nil && model != nil
+		return false
 	}
 	InitOCR()
 	return ocrRegistry.Available(ocr.ProviderID(id))
 }
 
-func automaticOCRTimeout(value conf.OCR) time.Duration {
-	if value.Provider == "ai" {
-		return 2 * time.Minute
-	}
+func automaticOCRTimeout(_ conf.OCR) time.Duration {
 	return 30 * time.Second
 }
 

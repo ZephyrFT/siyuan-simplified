@@ -549,7 +549,7 @@ func ExportSystemLog() (zipPath string) {
 	copyOptionalSystemLog(filepath.Join(util.TempDir, util.OperationStallLogName),
 		filepath.Join(exportFolder, util.OperationStallLogName), 0)
 
-	appLog := filepath.Join(util.HomeDir, ".config", "siyuan", "app.log")
+	appLog := filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "app.log")
 	if gulu.File.IsExist(appLog) {
 		to := filepath.Join(exportFolder, "app.log")
 		if err := util.CopyUserFile(appLog, to); err != nil {
@@ -557,7 +557,7 @@ func ExportSystemLog() (zipPath string) {
 		}
 	}
 
-	kernelLog := filepath.Join(util.HomeDir, ".config", "siyuan", "kernel.log")
+	kernelLog := filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "kernel.log")
 	if gulu.File.IsExist(kernelLog) {
 		to := filepath.Join(exportFolder, "kernel.log")
 		if err := util.CopyUserFile(kernelLog, to); err != nil {
@@ -581,7 +581,7 @@ func ExportSystemLog() (zipPath string) {
 		}
 	}
 
-	collectOptionalSystemLogs(filepath.Join(util.HomeDir, ".config", "siyuan"),
+	collectOptionalSystemLogs(filepath.Join(util.HomeDir, ".config", "siyuan-simplified"),
 		util.SystemTempDir, exportFolder, gulu.OS.IsWindows())
 
 	zipPath = exportFolder + ".zip"
@@ -1711,7 +1711,7 @@ func ProcessPDF(id, p string, merge, removeAssets, watermark, exportAssets bool,
 		}
 
 		api.DisableConfigDir()
-		font.UserFontDir = filepath.Join(util.HomeDir, ".config", "siyuan", "fonts")
+		font.UserFontDir = filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "fonts")
 		if mkdirErr := os.MkdirAll(font.UserFontDir, 0755); nil != mkdirErr {
 			logging.LogErrorf("mkdir [%s] failed: %s", font.UserFontDir, mkdirErr)
 			if exportAssets {

@@ -192,7 +192,7 @@ if (process.versions.electron && process.type === "browser") {
             assert.doesNotMatch(entry.statements.filter(statement => !ts.isClassDeclaration(statement))
                 .map(statement => statement.getText(entry)).join("\n"), /ipcRenderer\.send\(Constants\.SIYUAN_READY_TO_SHOW/,
             "module evaluation must not show a window while its loading screen is present");
-            sources.ready[name] = source.slice(source.indexOf("await initWindowWithLoading("), source.indexOf("                        onSetaccount();"));
+            sources.ready[name] = source.slice(source.indexOf("await initWindowWithLoading("), source.indexOf("                        setTitle(\"\", true);"));
         }
         // 主进程模块已是 TypeScript：锚点仍按源码文本选取，但执行前必须先去掉类型标注。
         const main = fs.readFileSync(path.join(__dirname, "../electron/window/mainWindow.ts"), "utf8");

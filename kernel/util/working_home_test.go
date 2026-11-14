@@ -32,7 +32,7 @@ func TestSetHomeDir(t *testing.T) {
 		if HomeDir != want || !homeDirOverridden {
 			t.Fatalf("home=%q, overridden=%v, want %q", HomeDir, homeDirOverridden, want)
 		}
-		if stat, err := os.Stat(filepath.Join(HomeDir, ".config", "siyuan")); err != nil || !stat.IsDir() {
+		if stat, err := os.Stat(filepath.Join(HomeDir, ".config", "siyuan-simplified")); err != nil || !stat.IsDir() {
 			t.Fatalf("configuration directory was not created: %v", err)
 		}
 	}
@@ -85,13 +85,13 @@ func TestDefaultWorkspacePath(t *testing.T) {
 		override            bool
 		want                string
 	}{
-		{"linux default", "linux", "profile", false, filepath.Join("home", "SiYuan")},
-		{"linux override", "linux", "profile", true, filepath.Join("home", "SiYuan")},
-		{"windows default", "windows", "profile", false, filepath.Join("profile", "SiYuan")},
-		{"windows no profile", "windows", "", false, filepath.Join("home", "SiYuan")},
-		{"windows override", "windows", "profile", true, filepath.Join("home", "SiYuan")},
-		{"mac default", "darwin", "profile", false, filepath.Join("home", "Library", "Application Support", "SiYuan")},
-		{"mac override", "darwin", "profile", true, filepath.Join("home", "Library", "Application Support", "SiYuan")},
+		{"linux default", "linux", "profile", false, filepath.Join("home", "SiYuan-Simplified")},
+		{"linux override", "linux", "profile", true, filepath.Join("home", "SiYuan-Simplified")},
+		{"windows default", "windows", "profile", false, filepath.Join("profile", "SiYuan-Simplified")},
+		{"windows no profile", "windows", "", false, filepath.Join("home", "SiYuan-Simplified")},
+		{"windows override", "windows", "profile", true, filepath.Join("home", "SiYuan-Simplified")},
+		{"mac default", "darwin", "profile", false, filepath.Join("home", "Library", "Application Support", "SiYuan-Simplified")},
+		{"mac override", "darwin", "profile", true, filepath.Join("home", "Library", "Application Support", "SiYuan-Simplified")},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			if got := defaultWorkspacePath("home", test.goos, test.profile, test.override); got != test.want {
@@ -137,7 +137,7 @@ func testBootHomeDir(t *testing.T, fixedPort bool) {
 			t.Fatalf("missing %q in BootWithFlags output:\n%s", expected, output)
 		}
 	}
-	registry := filepath.Join(home, ".config", "siyuan", "workspace.json")
+	registry := filepath.Join(home, ".config", "siyuan-simplified", "workspace.json")
 	if _, err = os.Stat(registry); err != nil {
 		t.Fatalf("workspace registry was not written under the configured home: %v", err)
 	}
@@ -234,7 +234,7 @@ func TestIsSensitivePathWithHomeDirOverride(t *testing.T) {
 	homeDirOverridden = true
 	WorkspaceDir = filepath.Join(HomeDir, "SiYuan")
 	for _, home := range []string{systemHomeDir, HomeDir} {
-		for _, rel := range []string{filepath.Join(".ssh", "config"), filepath.Join(".config", "siyuan", "cookie.key"), ".netrc", ".npmrc"} {
+		for _, rel := range []string{filepath.Join(".ssh", "config"), filepath.Join(".config", "siyuan-simplified", "cookie.key"), ".netrc", ".npmrc"} {
 			if path := filepath.Join(home, rel); !IsSensitivePath(path) {
 				t.Errorf("credential path is no longer protected: %s", path)
 			}

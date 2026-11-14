@@ -129,6 +129,26 @@ func TestAPIContractOCRNotebookIsolation(t *testing.T) {
 	}
 }
 
+func requestOCRProvider(t *testing.T, engine *gin.Engine, route, body string, data any) int {
+	t.Helper()
+	recorder := httptest.NewRecorder()
+	engine.ServeHTTP(recorder, httptest.NewRequest("POST", route, strings.NewReader(body)))
+	requireAPIContract(t, "POST", route, recorder)
+	var response struct {
+		Code int
+		Data json.RawMessage
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &response); err != nil {
+		t.Fatal(err)
+	}
+	if data != nil && response.Code == 0 {
+		if err := json.Unmarshal(response.Data, data); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return response.Code
+}
+
 func TestAPIContractOCRPermissions(t *testing.T) {
 	setupAssetContractWorkspace(t)
 	previousReadOnly := util.ReadOnly
@@ -141,7 +161,6 @@ func TestAPIContractOCRPermissions(t *testing.T) {
 		{"/api/asset/getOCRConfig", false, getOCRConfig},
 		{"/api/asset/setOCRConfig", true, setOCRConfig},
 		{"/api/asset/importOCRModels", true, importOCRModels},
-		{"/api/ai/ocr", true, aiOCR},
 	} {
 		for _, role := range []model.Role{model.RoleReader, model.RoleEditor, model.RoleAdministrator} {
 			for _, readonly := range []bool{false, true} {

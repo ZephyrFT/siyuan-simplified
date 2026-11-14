@@ -23,9 +23,7 @@ export const getRepoSnapshotRange = (pane: Element): RepoTimeRange =>
 
 export const getRepoSnapshotType = (pane: Element) => {
     const tagged = states.get(pane.closest(".history__snapshots"))?.tagged;
-    return pane.getAttribute("data-repo-source") === "local" ?
-        (tagged ? "getRepoTagSnapshots" : "getRepoSnapshots") :
-        (tagged ? "getCloudRepoTagSnapshots" : "getCloudRepoSnapshots");
+    return tagged ? "getRepoTagSnapshots" : "getRepoSnapshots";
 };
 
 export const updateRepoSelection = (pane: Element) => {
@@ -118,17 +116,14 @@ export const initRepoPanel = (root: HTMLElement, render: (pane: Element, page: n
 </div>
 <div class="history__snapshot-message fn__none" data-role="result" aria-live="polite"></div>`;
     const columns = root.querySelector(".history__snapshot-columns");
-    for (const source of ["local", "cloud"] as const) {
+    for (const source of ["local"] as const) {
         const pane = document.createElement("div");
         pane.className = "history__repo history__snapshot-pane";
         pane.dataset.repoSource = source;
         pane.innerHTML = `<div class="history__snapshot-toolbar history__snapshot-heading">
-    <span class="history__snapshot-label">${source === "local" ? lang.localSnapshot : lang.cloudSnapshot}</span>
-    <div class="history__snapshot-sources">
-        <button class="b3-button b3-button--text" data-action="local" aria-pressed="true">${lang.localSnapshot}</button>
-        <button class="b3-button b3-button--text" data-action="cloud" aria-pressed="false">${lang.cloudSnapshot}</button>
-    </div><span class="fn__flex-1"></span>
-    <button class="b3-button b3-button--text${canPurgeRepo(source, window.siyuan.config.sync.provider) ? "" : " fn__none"}" data-action="purge">${source === "local" ? lang.dataRepoPurge : lang.cloudStoragePurge}</button>
+    <span class="history__snapshot-label">${lang.localSnapshot}</span>
+    <span class="fn__flex-1"></span>
+    <button class="b3-button b3-button--text${canPurgeRepo(source, window.siyuan.config.sync.provider) ? "" : " fn__none"}" data-action="purge">${lang.dataRepoPurge}</button>
     <button class="block__icon block__icon--show history__snapshot-mobile-control" data-action="source-more" aria-label="${lang.more}"><svg><use xlink:href="#iconMore"></use></svg></button>
 </div>
 <label class="history__snapshot-toolbar fn__none"><input type="checkbox" class="history__snapshot-check" data-repo-all> ${lang.selectAll}</label>${template}`;
@@ -143,10 +138,6 @@ export const initRepoPanel = (root: HTMLElement, render: (pane: Element, page: n
         pagination.className = "history__snapshot-toolbar history__snapshot-footer";
         pagination.append(pane.querySelector(".history__repo-pagination"));
         pane.append(pagination);
-        if (source === "cloud") {
-            pane.querySelector('[data-type="compare"]').classList.add("fn__none");
-            pane.querySelector(".history__action").classList.add("fn__none");
-        }
         pane.querySelector("[data-repo-all]").addEventListener("change", (event) => {
             const checked = (event.target as HTMLInputElement).checked;
             pane.querySelectorAll<HTMLElement>('li[data-type="repoitem"]').forEach(row => {

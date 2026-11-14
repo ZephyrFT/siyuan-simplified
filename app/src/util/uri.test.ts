@@ -231,7 +231,7 @@ test("missing blocks show feedback on desktop and mobile while preserving plugin
     }
 });
 
-test("legacy plugin and bazaar links preserve destinations and original event URLs", async () => {
+test("legacy plugin links preserve destinations while bazaar links are rejected", async () => {
     for (const URLClass of [URL, LegacyURL]) {
         for (const mobile of [false, true]) {
             for (const protocol of ["siyuan", "web+siyuan"]) {
@@ -241,13 +241,10 @@ test("legacy plugin and bazaar links preserve destinations and original event UR
                 assert.deepEqual(context.events, [{type: "open-siyuan-url-plugin", url: uri}]);
                 for (const target of ["readme", "readme-installed"]) {
                     assert.equal(context.exports.processSiYuanUri(context.app,
-                        `${protocol}://bazaar/plugins/plugin-sample/${target}`), true);
+                        `${protocol}://bazaar/plugins/plugin-sample/${target}`), false);
                 }
                 await new Promise(resolve => setImmediate(resolve));
-                assert.deepEqual(context.bazaar, [
-                    {type: "plugins", name: "plugin-sample", from: "bazaar"},
-                    {type: "plugins", name: "plugin-sample", from: "downloaded"},
-                ]);
+                assert.deepEqual(context.bazaar, []);
                 assert.equal(context.requests.length, 0);
             }
         }

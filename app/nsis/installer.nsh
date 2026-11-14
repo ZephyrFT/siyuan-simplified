@@ -2,7 +2,7 @@
 !include FileFunc.nsh
 Caption "${PRODUCT_NAME} ${VERSION}"
 
-!define MARKDOWN_PROG_ID "org.b3log.siyuan.markdown"
+!define MARKDOWN_PROG_ID "org.zephyrft.siyuan-simplified.markdown"
 
 !macro RegisterMarkdownOpenWith
     # 只加入打开方式，不修改扩展名默认值或用户的 UserChoice。

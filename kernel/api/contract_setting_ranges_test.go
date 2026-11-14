@@ -46,14 +46,6 @@ func TestAPIContractSettingValueRanges(t *testing.T) {
 			map[string]float64{"maxListCount": 10240, "largeFileWarningSize": 10240}},
 		{"search", "setSearch", setSearch, `{"limit":1000000}`, map[string]float64{"limit": 10240}},
 		{"flashcard", "setFlashcard", setFlashcard, `{"reviewMode":7}`, map[string]float64{"reviewMode": 0}},
-		{"ai", "setAI", setAI, `{"agent":{"maxToolCallRounds":-7,"confirmTimeout":-9,"temperature":-3,"maxCompletionTokens":-2}}`,
-			map[string]float64{"agent.maxToolCallRounds": 0, "agent.confirmTimeout": 600, "agent.temperature": 1, "agent.maxCompletionTokens": 0}},
-		{"ai", "setAI", setAI, `{"embedding":{"concurrency":2147483647,"batchSize":2147483647}}`,
-			map[string]float64{"embedding.concurrency": 64, "embedding.batchSize": 128}},
-		{"ai", "setAI", setAI, `{"embedding":{"concurrency":-1,"batchSize":0}}`,
-			map[string]float64{"embedding.concurrency": 8, "embedding.batchSize": 10}},
-		{"ai", "setAI", setAI, `{"embedding":{"concurrency":null,"batchSize":null}}`,
-			map[string]float64{"embedding.concurrency": 8, "embedding.batchSize": 10}},
 		{"system", "", nil, `{"autoLaunch2":9,"lockScreenMode":3}`, map[string]float64{"autoLaunch2": 0, "lockScreenMode": 0}},
 		{"repo", "", nil, `{"indexRetentionDays":100000}`, map[string]float64{"indexRetentionDays": 100000}},
 	} {
@@ -91,20 +83,5 @@ func TestAPIContractSettingValueRanges(t *testing.T) {
 				}
 			})
 		}
-	}
-}
-
-func TestAPIContractSettingPatchRejectsInvalidAssetDownloadMode(t *testing.T) {
-	previous, readonly := model.Conf, util.ReadOnly
-	t.Cleanup(func() { model.Conf, util.ReadOnly = previous, readonly })
-	model.Conf = model.NewAppConf()
-	model.NormalizeAppConf(model.Conf)
-	util.ReadOnly = true
-	before := model.Conf.Sync.Load()
-	revision := model.ConfNamespaceRevision("sync")
-	code, message, _ := settingContractRequest(t, "patch", patchSetting, `{"sync":{"assetDownloadMode":7}}`)
-	if code == 0 || message != "invalid asset download mode" || model.Conf.Sync.Load() != before ||
-		model.ConfNamespaceRevision("sync") != revision {
-		t.Fatalf("invalid mode was accepted or modified configuration: %d %s", code, message)
 	}
 }

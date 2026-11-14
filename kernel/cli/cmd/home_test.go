@@ -21,7 +21,7 @@ func TestHomeDirCLI(t *testing.T) {
 	if err := os.MkdirAll(registered, 0755); err != nil {
 		t.Fatal(err)
 	}
-	confDir := filepath.Join(home, ".config", "siyuan")
+	confDir := filepath.Join(home, ".config", "siyuan-simplified")
 	if err := os.MkdirAll(confDir, 0755); err != nil {
 		t.Fatal(err)
 	}

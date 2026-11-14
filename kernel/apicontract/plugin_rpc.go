@@ -229,13 +229,3 @@ func DecodePluginRPC(reader io.Reader) (request PluginRPCBatchRequest, err error
 	}
 	return request, nil
 }
-
-func init() {
-	for _, endpoint := range []*Endpoint[PluginRPCBatchRequest, PluginRPCResponse]{&PluginRPCHTTP, &PluginRPCHTTPByName} {
-		endpoint.decodeRequest = DecodePluginRPC
-		endpoint.decodeFailure = func(err error) Response[PluginRPCResponse] {
-			failure := RPCErrorResponse(-32603, "Internal error", "Failed to read request body: "+err.Error())
-			return SuccessDirectJSON(RPCSingleResponse(RPCFailureReply(failure)))
-		}
-	}
-}

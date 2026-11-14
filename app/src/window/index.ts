@@ -25,13 +25,11 @@ import {
     transactionError
 } from "../dialog/processSystem";
 import {progressLoading} from "../dialog/progress";
-import {syncCheckoutProgress} from "../sync/checkoutProgress";
 import {initMessage} from "../dialog/message";
 import {getAllTabs} from "../layout/getAll";
 import {getLocalStorage} from "../protyle/util/compatibility";
 import {init} from "./init";
 import {loadDesktopHostConnection} from "../boot/onGetConfig";
-import {loadPlugins} from "../plugin/loader";
 import {applyPluginReload, syncGlobalPluginConfig} from "../plugin/globalState";
 import {hideAllElements} from "../protyle/ui/hideElements";
 import {reloadEmoji} from "../emoji";
@@ -44,7 +42,6 @@ import {ensureUILayout} from "../util/ensureUILayout";
 import {applyEntryVisibility} from "../config/entryVisibility/runtime";
 import {removeBlockPanelEditors} from "../block/panelRemoval";
 import {updateServerAddresses} from "../config/tabs/accessRuntime";
-import {applyCloudUserState} from "../config/tabs/accountUi";
 import {emitToPlugins} from "../plugin/EventBusCore";
 import {initializeEnglishCommandTranslations} from "../command/english";
 import {loadLanguages} from "../boot/loadLanguages";
@@ -124,14 +121,8 @@ class App {
                                 window.siyuan.config = data.data;
                                 syncGlobalPluginConfig(this, data.data.bazaar.petalDisabled);
                                 break;
-                            case "setCloudUser":
-                                applyCloudUserState(data.data.user, data.data.userName);
-                                break;
                             case "setServerAddrs":
                                 updateServerAddresses(data.data);
-                                break;
-                            case "syncProgress":
-                                syncCheckoutProgress(data);
                                 break;
                             case "progress":
                                 progressLoading(data);
@@ -252,9 +243,8 @@ class App {
             setBodyHighlight();
             window.siyuan.isPublish = response.data.isPublish;
             await notebookPromise;
-            await loadPlugins(this);
             getLocalStorage(() => {
-                void loadLanguages(window.siyuan.config.appearance.lang, Constants.SIYUAN_VERSION, (languages: IObject) => {
+                void loadLanguages(window.siyuan.config.appearance.lang, Constants.SIYUAN_VERSION, async (languages: IObject) => {
                     window.siyuan.languages = languages;
                     void initializeEnglishCommandTranslations(
                         window.siyuan.config.appearance.lang,
@@ -262,15 +252,12 @@ class App {
                         Constants.SIYUAN_VERSION,
                     );
                     window.siyuan.menus = new Menus(this);
-                    fetchPost("/api/setting/getCloudUser", {cached: true}, async userResponse => {
-                        window.siyuan.user = userResponse.data && "userId" in userResponse.data ? userResponse.data : null;
-                        await initWindowWithLoading(() => init(this), setTabPosition);
-                        setTitle("", true);
-                        initMessage();
-                        window.siyuan.isReady = true;
-                        mainWs.flushMainMessages();
-                        fetchPost("/api/setting/getCloudUser", {});
-                    });
+                    window.siyuan.user = null;
+                    await initWindowWithLoading(() => init(this), setTabPosition);
+                    setTitle("", true);
+                    initMessage();
+                    window.siyuan.isReady = true;
+                    mainWs.flushMainMessages();
                 });
             });
         });

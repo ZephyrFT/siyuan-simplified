@@ -20,10 +20,8 @@ func TestAPIContractRemovedEntriesKeepNullSuccessData(t *testing.T) {
 	util.DataDir, util.ConfDir, model.Conf = t.TempDir(), t.TempDir(), model.NewAppConf()
 	t.Cleanup(func() { util.DataDir, util.ConfDir, model.Conf = previousDir, previousConfDir, previousConf })
 	engine := gin.New()
-	engine.POST("/api/ai/editor/removeAction", removeAIEditorAction)
 	engine.POST("/api/storage/removeViewState", removeViewState)
 	for _, scenario := range []struct{ path, body string }{
-		{"/api/ai/editor/removeAction", `{"id":"20261028000000-abcdefg"}`},
 		{"/api/storage/removeViewState", `{"key":"review-fixture"}`},
 	} {
 		t.Run(scenario.path, func(t *testing.T) {

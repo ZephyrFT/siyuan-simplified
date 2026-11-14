@@ -6,7 +6,6 @@ package apicontract
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"mime/multipart"
 	"reflect"
@@ -182,16 +181,5 @@ func init() {
 		}
 		_ = json.Unmarshal(fromHTMLPaste, &request.FromHTMLPaste)
 		return request, nil
-	}
-	AssetUploadCloudByAssetsPaths.decodeRequest = func(reader io.Reader) (request AssetPathsCloudUploadRequest, err error) {
-		fields, err := blockRequestFields(reader, "/api/asset/uploadCloudByAssetsPaths")
-		if err != nil {
-			return request, err
-		}
-		if len(fields["paths"]) == 0 || string(fields["paths"]) == "null" {
-			return request, errors.New("[paths] is required")
-		}
-		err = decodeRequestFields(reflect.ValueOf(&request).Elem(), fields)
-		return request, err
 	}
 }

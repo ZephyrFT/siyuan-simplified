@@ -2,7 +2,6 @@ import {genUUID} from "../util/genID";
 import {Constants} from "../constants";
 import {getHostCapabilities, sanitizeKernelHTML} from "../util/hostCapabilities";
 import {progressLoading} from "./progress";
-import {fetchPost} from "../util/fetch";
 
 export const initMessage = () => {
     const messageElement = document.getElementById("message");
@@ -13,21 +12,6 @@ export const initMessage = () => {
             if (target.classList.contains("b3-snackbar__close")) {
                 hideMessage(target.parentElement.getAttribute("data-id"));
                 event.preventDefault();
-                break;
-            } else if (target.tagName === "BUTTON" && target.dataset.type === "download-update") {
-                event.preventDefault();
-                const button = target as HTMLButtonElement;
-                if (!button.disabled && getHostCapabilities().ownsKernel &&
-                    button.closest('.b3-snackbar[data-id="update-notify"]')) {
-                    button.disabled = true;
-                    void fetchPost("/api/system/downloadUpdate", {version: button.dataset.version}, () => {
-                        hideMessage("update-notify");
-                    }).catch((error: Error) => {
-                        showMessage(error.message, 7000, "error");
-                    }).finally(() => {
-                        button.disabled = false;
-                    });
-                }
                 break;
             } else if (target.tagName === "A" || target.tagName === "BUTTON") {
                 break;

@@ -322,32 +322,6 @@ func init() {
 		}
 		return request, nil
 	}
-	DownloadCloudSnapshot.decodeRequest = func(reader io.Reader) (request DownloadCloudSnapshotRequest, err error) {
-		fields, err := repoRequestFields(reader, "/api/repo/downloadCloudSnapshot")
-		if err != nil {
-			return request, err
-		}
-		if request.ID, err = requestFieldString(fields, "id", true, true); err != nil {
-			return request, err
-		}
-		if request.Tag, err = requestFieldString(fields, "tag", true, false); err != nil {
-			return request, err
-		}
-		return request, nil
-	}
-	UploadCloudSnapshot.decodeRequest = func(reader io.Reader) (request UploadCloudSnapshotRequest, err error) {
-		fields, err := repoRequestFields(reader, "/api/repo/uploadCloudSnapshot")
-		if err != nil {
-			return request, err
-		}
-		if request.ID, err = requestFieldString(fields, "id", true, true); err != nil {
-			return request, err
-		}
-		if request.Tag, err = requestFieldString(fields, "tag", true, false); err != nil {
-			return request, err
-		}
-		return request, nil
-	}
 	GetRepoSnapshots.decodeRequest = func(reader io.Reader) (request GetRepoSnapshotsRequest, err error) {
 		fields, err := repoRequestFields(reader, "/api/repo/getRepoSnapshots")
 		if err != nil {
@@ -405,29 +379,6 @@ func init() {
 			return request, err
 		}
 		if request.ID, err = requestFieldString(fields, "id", true, true); err != nil {
-			return request, err
-		}
-		return request, nil
-	}
-	GetCloudRepoSnapshots.decodeRequest = func(reader io.Reader) (request GetCloudRepoSnapshotsRequest, err error) {
-		fields, err := repoRequestFields(reader, "/api/repo/getCloudRepoSnapshots")
-		if err != nil {
-			return request, err
-		}
-		if request.Page, err = legacyField[float64](fields, "page", "Number", true); err != nil {
-			return request, err
-		}
-		if request.RepoSnapshotTimeRange, err = decodeRepoSnapshotTimeRange(fields); err != nil {
-			return request, err
-		}
-		return request, nil
-	}
-	RemoveCloudRepoTagSnapshot.decodeRequest = func(reader io.Reader) (request RemoveCloudRepoTagSnapshotRequest, err error) {
-		fields, err := repoRequestFields(reader, "/api/repo/removeCloudRepoTagSnapshot")
-		if err != nil {
-			return request, err
-		}
-		if request.Tag, err = requestFieldString(fields, "tag", true, true); err != nil {
 			return request, err
 		}
 		return request, nil

@@ -64,13 +64,8 @@ const createBoot = (plugin = false, failed = "", waitForStyles = false) => {
         "../../util/zIndex": {isAbove: (element, reference) => Number(element.style.zIndex) > Number(reference.style.zIndex)},
         "../../dialog/tooltip": {initTooltips: () => calls.push("tooltips"), hideTooltip() {}},
         "../../util/genID": {genUUID: () => "id"},
-        "../../util/fetch": {fetchSyncPost: async (url, data) => {
+        "../../util/fetch": {fetchSyncPost: async (url) => {
             if (url === "/api/system/getConf") return {code: 0, data: {conf: {appearance: {lang: "en"}}}};
-            if (url === "/api/setting/getCloudUser") {
-                assert.equal(data.cached, true);
-                await wait("user");
-                return {data: {userId: "user"}};
-            }
             assert.equal(url, "/api/system/getEmojiConf");
             await wait("emoji");
             return {data: []};
@@ -94,7 +89,7 @@ const createBoot = (plugin = false, failed = "", waitForStyles = false) => {
         }},
         "../systemConfig": {systemConfig: config => config},
         "../index": {openSettingDialog: () => {
-            assert.equal(window.siyuan.user.userId, "user");
+            assert.equal(window.siyuan.user, null);
             calls.push("render");
             const dialog = {element: {querySelectorAll: () => [], querySelector: () => ({style: {zIndex: "11"}})},
                 destroy: () => calls.push("close-settings"),
@@ -225,17 +220,12 @@ for (const plugin of [false, true]) {
         const boot = createBoot(plugin);
         const initialized = boot.initialize();
         await new Promise(resolve => setImmediate(resolve));
-        assert.deepEqual(boot.calls, ["user", "emoji", "notebooks", "storage", "html", "languages", ...(plugin ? ["lute"] : [])]);
-        for (const [name, complete] of boot.pending) if (name !== "user") complete();
-        await new Promise(resolve => setImmediate(resolve));
-        assert.equal(boot.calls.includes("render"), false);
-        boot.pending.get("user")();
+        assert.deepEqual(boot.calls, ["emoji", "notebooks", "storage", "html", "languages", ...(plugin ? ["lute"] : [])]);
+        for (const [, complete] of boot.pending) complete();
         await initialized;
         assert.ok(boot.calls.indexOf("render") < boot.calls.indexOf("siyuan-settings-ready"));
         assert.ok(boot.calls.indexOf("render") < boot.calls.indexOf("tooltips"));
         assert.ok(boot.calls.indexOf("tooltips") < boot.calls.indexOf("siyuan-settings-ready"));
-        assert.ok(boot.calls.indexOf("render") < boot.calls.indexOf("load-plugins"));
-        assert.ok(boot.calls.indexOf("load-plugins") < boot.calls.indexOf("plugin-layout"));
         assert.ok(boot.calls.indexOf("plugin-layout") < boot.calls.indexOf("siyuan-settings-ready"));
     });
 }

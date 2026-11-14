@@ -41,7 +41,6 @@ const start = (failure?: string, render: (target: EventTarget) => Promise<void> 
         Constants: {SIYUAN_VERSION: "test", SIYUAN_EMPTY_LAYOUT: {}, SIYUAN_READY_TO_SHOW: "show"},
         systemConfig: (config: unknown) => config,
         loadDesktopHostConnection: async () => {}, ensureUILayout() {}, setBodyHighlight() {},
-        loadPlugins: async () => fail("plugins"),
         getLocalStorage: (callback: () => unknown, onError: (error: unknown) => unknown) =>
             failure === "storage" ? onError(new Error("storage")) : callback(),
         loadLanguages: async (_lang: string, _version: string, callback: (value: unknown) => unknown,
@@ -76,7 +75,7 @@ test("desktop startup records each phase and completes only after the interface 
     const fixture = start(undefined, () => rendering);
     try {
         await settle();
-        assert.deepEqual(fixture.stages, ["configuration", "engine", "plugins", "storage", "language", "interface"]);
+        assert.deepEqual(fixture.stages, ["configuration", "engine", "storage", "language", "interface"]);
         assert.equal(fixture.language(), "zh-CN");
         assert.equal(fixture.ready(), false);
         finish();
@@ -88,16 +87,14 @@ test("desktop startup records each phase and completes only after the interface 
 });
 
 test("desktop startup reports failed dependencies without claiming successful initialization", async () => {
-    for (const failure of ["/api/system/getConf", "engine", "plugins", "storage", "language",
-        "/api/setting/getCloudUser", "interface"]) {
+    for (const failure of ["/api/system/getConf", "engine", "storage", "language", "interface"]) {
         const fixture = start(failure);
         try {
             await settle();
             assert.equal(fixture.ready(), false, failure);
             assert.equal(fixture.errors.length, 1, failure);
             assert.equal((fixture.errors[0] as Error).message, failure);
-            assert.equal(fixture.stages.at(-1), failure === "/api/system/getConf" ? "configuration" :
-                failure === "/api/setting/getCloudUser" ? "interface" : failure);
+            assert.equal(fixture.stages.at(-1), failure === "/api/system/getConf" ? "configuration" : failure);
         } finally { fixture.dispose(); }
     }
 });

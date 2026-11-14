@@ -390,7 +390,7 @@ const renderRepo = async (element: Element, currentPage: number) => {
     const keyword = hasRange ? "" : searchInputElement.value.trim();
     const searchSnapshot = selectValue === "getRepoSnapshots" && /^[0-9a-f]{7,40}$/i.test(keyword);
     let searching = Boolean(keyword && selectValue === "getRepoSnapshots" && !searchSnapshot);
-    const tagged = selectValue === "getRepoTagSnapshots" || selectValue === "getCloudRepoTagSnapshots";
+    const tagged = selectValue === "getRepoTagSnapshots";
     const listElement = element.querySelector('[data-type="repoList"]');
     const pageBtn = element.querySelector('button[data-type="jumpRepoPage"]');
     const previousElement = element.querySelector('[data-type="previous"]');
@@ -1022,61 +1022,15 @@ const bindEvent = (app: App, element: Element, dialog?: Dialog) => {
                 event.stopPropagation();
                 event.preventDefault();
                 break;
-            } else if (type === "uploadSnapshot") {
-                fetchPost("/api/repo/uploadCloudSnapshot", {
-                    tag: target.parentElement.getAttribute("data-tag"),
-                    id: target.parentElement.getAttribute("data-id")
-                }, () => {
-                    const cloudPane = repoRoot.querySelector('[data-repo-source="cloud"]');
-                    renderRepo(cloudPane, parseInt(cloudPane.getAttribute("data-page")) || 1);
-                });
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-            } else if (type === "downloadSnapshot") {
-                fetchPost("/api/repo/downloadCloudSnapshot", {
-                    tag: target.parentElement.getAttribute("data-tag"),
-                    id: target.parentElement.getAttribute("data-id")
-                }, () => {
-                    const localPane = repoRoot.querySelector('[data-repo-source="local"]');
-                    renderRepo(localPane, parseInt(localPane.getAttribute("data-page")) || 1);
-                });
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-            } else if (type === "downloadRollback" && !window.siyuan.config.readonly) {
-                mobileConfirmDialog("⚠️ " + window.siyuan.languages.downloadRollback, window.siyuan.languages.rollbackConfirm.replace("${name}", window.siyuan.languages.workspaceData)
-                    .replace("${time}", (isMobile() ? target.parentElement.parentElement : target.parentElement).querySelector("span[data-type='hCreated']").textContent.trim()), async () => {
-                    const repoId = target.parentElement.getAttribute("data-id");
-                    if (isMobile()) {
-                        const response = await fetchSyncPost("/api/repo/downloadCloudSnapshot", {
-                            tag: target.parentElement.getAttribute("data-tag"), id: repoId,
-                        });
-                        if (response.code !== 0) return false;
-                        return (await fetchSyncPost("/api/repo/checkoutRepo", {id: repoId})).code === 0;
-                    }
-                    fetchPost("/api/repo/downloadCloudSnapshot", {
-                        tag: target.parentElement.getAttribute("data-tag"),
-                        id: repoId
-                    }, () => {
-                        fetchPost("/api/repo/checkoutRepo", {
-                            id: repoId
-                        });
-                    });
-                }, undefined, false, undefined, undefined, {awaitConfirm: true});
-                event.stopPropagation();
-                event.preventDefault();
-                break;
             } else if (type === "genTag") {
                 let taggedValue: string;
-                const submitTag = async (value: string, upload: boolean) => {
+                const submitTag = async (value: string) => {
                     const id = target.parentElement.getAttribute("data-id");
                     if (taggedValue !== value) {
                         if ((await fetchSyncPost("/api/repo/tagSnapshot", {id, name: value})).code !== 0) return false;
                         taggedValue = value;
                     }
-                    if (upload && (await fetchSyncPost("/api/repo/uploadCloudSnapshot", {tag: value, id})).code !== 0) return false;
-                    renderRepo(upload ? repoRoot : repoElement, 1);
+                    renderRepo(repoElement, 1);
                     return true;
                 };
                 const genTagDialog = mobileInputDialog({
@@ -1085,30 +1039,8 @@ const bindEvent = (app: App, element: Element, dialog?: Dialog) => {
                     placeholder: window.siyuan.languages.tagSnapshotTip,
                     confirmText: window.siyuan.languages.tagSnapshot,
                     awaitConfirm: isMobile(),
-                    actions: [{
-                        text: window.siyuan.languages.tagSnapshotUpload,
-                        position: "afterConfirm",
-                        onClick: (value, genTagDialog) => {
-                            if (isMobile()) {
-                                void genTagDialog.runPending(() => submitTag(value, true));
-                                return;
-                            }
-                            fetchPost("/api/repo/tagSnapshot", {
-                                id: target.parentElement.getAttribute("data-id"),
-                                name: value
-                            }, () => {
-                                fetchPost("/api/repo/uploadCloudSnapshot", {
-                                    tag: value,
-                                    id: target.parentElement.getAttribute("data-id")
-                                }, () => {
-                                    renderRepo(repoRoot, 1);
-                                });
-                            });
-                            genTagDialog.destroy();
-                        },
-                    }],
                     onConfirm: (value, genTagDialog) => {
-                        if (isMobile()) return submitTag(value, false);
+                        if (isMobile()) return submitTag(value);
                         fetchPost("/api/repo/tagSnapshot", {
                             id: target.parentElement.getAttribute("data-id"),
                             name: value

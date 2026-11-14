@@ -6,7 +6,7 @@ import {test} from "node:test";
 // 独立资源、工作空间切换、布局和同步来源事务保留其专用协议。
 const dedicated = new Set([
     "/api/setting/setBootAppearance",
-    "/api/sync/setSyncProvider", "/api/repo/setSnapshotMemo",
+    "/api/repo/setSnapshotMemo",
 ]);
 
 test("desktop and mobile configuration writes use the shared gateway", () => {

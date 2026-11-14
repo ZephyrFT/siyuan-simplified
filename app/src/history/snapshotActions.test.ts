@@ -6,9 +6,7 @@ test("snapshot actions retain platform presentation, order and read-only behavio
     const languages = {download: "Download", downloadRollback: "Download and rollback", remove: "Remove",
         upload: "Upload", rollback: "Rollback", tagSnapshot: "Tag", editSnapshotMemo: "Edit memo"};
     const cases = {
-        getCloudRepoTagSnapshots: ["downloadSnapshot", "downloadRollback", "removeCloudRepoTagSnapshot"],
-        getCloudRepoSnapshots: ["downloadSnapshot", "downloadRollback"],
-        getRepoTagSnapshots: ["uploadSnapshot", "rollback", "removeRepoTagSnapshot"],
+        getRepoTagSnapshots: ["rollback", "removeRepoTagSnapshot"],
         getRepoSnapshots: ["genTag", "rollback"],
     };
     for (const [type, expected] of Object.entries(cases)) {

@@ -6,7 +6,6 @@ package conf
 
 import (
 	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/siyuan-note/siyuan/kernel/util"
@@ -21,7 +20,7 @@ func TestConfigurationDefaultsAndNormalizationArePure(t *testing.T) {
 		util.LargeFileWarningSize.Store(previousLarge)
 	})
 	construct := func() []any {
-		return []any{NewEditor(), NewFileTree(), NewAPI(), NewAI(), NewSystem(), NewAppearance(), NewSync(),
+		return []any{NewEditor(), NewFileTree(), NewAPI(), NewSystem(), NewAppearance(), NewSync(),
 			NewExport(), NewSearch(), NewFlashcard(), NewRepo(), NewOCR(), NewPublish(), NewBazaar(), NewSnpt(),
 			NewSecrets(), NewVariables(), NewOIDC(), NewGraph(), NewStat(), NewTag(), NewNotebookCrypto()}
 	}
@@ -29,9 +28,6 @@ func TestConfigurationDefaultsAndNormalizationArePure(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("SIYUAN_OPENAI_API_KEY", "environment-key")
-	t.Setenv("SIYUAN_OPENAI_API_MODEL", "environment-model")
-	t.Setenv("SIYUAN_OPENAI_AGENT_TIMEOUT", "150")
 	markdown := util.NewMarkdown()
 	markdown.InlineMath = false
 	util.MarkdownSettings.Store(markdown)
@@ -40,11 +36,6 @@ func TestConfigurationDefaultsAndNormalizationArePure(t *testing.T) {
 	after, err := json.Marshal(construct())
 	if err != nil || string(before) != string(after) {
 		t.Fatal("defaults depend on mutable globals, environment or randomness")
-	}
-	first := &AI{MCP: &MCP{Servers: []MCPServer{{Name: "fixture", Type: "stdio", Command: "fixture"}}}}
-	second := &AI{MCP: &MCP{Servers: []MCPServer{{Name: "fixture", Type: "stdio", Command: "fixture"}}}}
-	if !reflect.DeepEqual(NormalizeAI(first), NormalizeAI(second)) {
-		t.Fatal("normalization depends on randomness")
 	}
 }
 

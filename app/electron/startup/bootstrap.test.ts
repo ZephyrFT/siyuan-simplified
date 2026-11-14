@@ -25,7 +25,7 @@ const createBootstrapFixture = (t: any, {
     const order: string[] = [];
     const root = home ?? fs.mkdtempSync(path.join(os.tmpdir(), "siyuan-bootstrap-"));
     // 配置目录预先建好：首次启动时它还不存在，日志写入会失败。
-    const confDir = path.join(root, ".config", "siyuan");
+    const confDir = path.join(root, ".config", "siyuan-simplified");
     fs.mkdirSync(confDir, {recursive: true});
     if (linuxInputMethodEnabled) {
         fs.writeFileSync(path.join(confDir, "linux-input-method.json"), '{"enabled":true}');

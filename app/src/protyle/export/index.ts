@@ -10,11 +10,11 @@ import {afterExport} from "./util";
 import {confirmDialog} from "../../dialog/confirmDialog";
 import {getThemeMode, setInlineStyle} from "../../util/assets";
 import {getCustomFontStyle} from "../../util/customFont";
-import {fetchPost, fetchSyncPost} from "../../util/fetch";
+import {fetchPost} from "../../util/fetch";
 import {Dialog} from "../../dialog";
 import {replaceLocalPath} from "../../editor/rename";
 import {getScreenWidth, isInMobileApp, saveExportFile, setStorageVal} from "../util/compatibility";
-import {getFrontend, isBrowser} from "../../util/functions";
+import {isBrowser} from "../../util/functions";
 import {isEncryptedBox} from "../../util/pathName";
 import {getHostCapabilities} from "../../util/hostCapabilities";
 import {getLastExportPath, setLastExportPath} from "./path";
@@ -33,16 +33,6 @@ const getExportLanguages = () => {
     const languages = Object.fromEntries(Object.entries(window.siyuan.languages)
         .filter(([key]) => keys.has(key) || key.startsWith("listMindmap")));
     return toScriptLiteral(languages);
-};
-
-const getPluginStyle = async () => {
-    const response = await fetchSyncPost("/api/petal/loadPetals", {frontend: getFrontend()});
-    let css = "";
-    // 为加快启动速度，不进行 await
-    (response.code === 0 && Array.isArray(response.data) ? response.data : []).forEach(item => {
-        css += item.css || "";
-    });
-    return css;
 };
 
 const getIconScript = (servePath: string) => {
@@ -373,7 +363,7 @@ const renderPDF = async (id: string) => {
         }
         ${await setInlineStyle(false, servePath)}
         ${getHostCapabilities().customAppearance ? await getCustomFontStyle() : ""}
-        ${await getPluginStyle()}
+        ${await Promise.resolve("")}
     </style>
     ${getSnippetCSS()}
 </head>
@@ -1245,7 +1235,7 @@ export const onExport = async (data: IWebSocketData, filePath: string, servePath
     <style>
         body {font-family: var(--b3-font-family);background-color: var(--b3-theme-background);color: var(--b3-theme-on-background)}
         ${await setInlineStyle(false, servePath, data.data.content)}
-        ${await getPluginStyle()}
+        ${await Promise.resolve("")}
         ${mobileHtml.css}
     </style>
     ${getSnippetCSS()}

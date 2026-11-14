@@ -76,8 +76,6 @@ func sectionConfPayload(value *apicontract.SystemAppConf, namespace string) *api
 		section.Search = value.Search
 	case "flashcard":
 		section.Flashcard = value.Flashcard
-	case "ai":
-		section.AI = value.AI
 	case "ocr":
 		section.OCR = value.OCR
 	case "secrets":

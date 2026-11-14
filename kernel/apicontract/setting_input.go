@@ -82,20 +82,6 @@ func init() {
 		}
 		return
 	}
-	SetBazaar.decodeRequest = func(reader io.Reader) (r SetBazaarRequest, err error) {
-		r.settingConfig, err = decodeSettingConfig(reader, SetBazaar.Definition().Path, true)
-		if err == nil {
-			r.configError = settingConfigError(json.Unmarshal(r.raw, &r.SettingBazaar))
-		}
-		return
-	}
-	SetAI.decodeRequest = func(reader io.Reader) (r SetAIRequest, err error) {
-		r.settingConfig, err = decodeSettingConfig(reader, SetAI.Definition().Path, false)
-		if err == nil {
-			r.configError = settingConfigError(json.Unmarshal(r.raw, &r.SettingAI))
-		}
-		return
-	}
 	SetSecrets.decodeRequest = func(reader io.Reader) (r SetSecretsRequest, err error) {
 		r.settingConfig, err = decodeSettingConfig(reader, SetSecrets.Definition().Path, false)
 		if err == nil {
@@ -156,13 +142,6 @@ func init() {
 		r.settingConfig, err = decodeSettingConfig(reader, SetEntryVisibility.Definition().Path, false)
 		if err == nil {
 			r.configError = settingConfigError(json.Unmarshal(r.raw, &r.SettingEntryVisibility))
-		}
-		return
-	}
-	SetPublish.decodeRequest = func(reader io.Reader) (r SetPublishRequest, err error) {
-		r.settingConfig, err = decodeSettingConfig(reader, SetPublish.Definition().Path, false)
-		if err == nil {
-			r.configError = settingConfigError(json.Unmarshal(r.raw, &r.SettingPublish))
 		}
 		return
 	}

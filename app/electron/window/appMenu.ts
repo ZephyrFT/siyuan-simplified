@@ -16,7 +16,6 @@ import type {
 } from "electron";
 import {Channel} from "../shared/channels";
 
-type TrayMenuLabels = {officialWebsite?: string; openSource?: string};
 
 type AppMenuSync = {
     lang: string;
@@ -26,9 +25,6 @@ type AppMenuSync = {
 
 // 平台与应用名只在构建模板时影响样式与文案，单独给出以便测试直接断言模板。
 type MenuContext = {platform?: NodeJS.Platform; appName?: string};
-
-const trayLabels = (languages: MenuLanguages): TrayMenuLabels | undefined =>
-    (languages as unknown as {_trayMenu?: TrayMenuLabels})._trayMenu;
 
 const APP_NAME = "SiYuan";
 
@@ -54,10 +50,6 @@ const hotKey2Electron = (key?: string): string | undefined => {
         .replace("←", "Left").replace("→", "Right").replace("↑", "Up").replace("↓", "Down").replace(" ", "Space")
         .replace("+", "Plus").replace("⇥", "Tab").replace("⌫", "Backspace").replace("⌦", "Delete").replace("↩", "Return");
 };
-
-const getFeedbackUrl = (lang: string): string => "zh-CN" === lang
-    ? "https://ld246.com/article/1649901726096"
-    : "https://liuyun.io/article/1686530886208";
 
 const withHotkey = (hotkey?: string,
     overrideRoleDefault = false): {accelerator?: string; registerAccelerator?: boolean} => {
@@ -160,24 +152,6 @@ const buildMacAppMenuTemplate = (sync: AppMenuSync, languages: MenuLanguages,
                 getAppWindow()?.webContents.send(Channel.SIYUAN_OPEN_HELP);
             },
         }]),
-        {
-            label: languages.feedback || "Feedback",
-            click: () => {
-                electron.shell.openExternal(getFeedbackUrl(sync.lang));
-            },
-        },
-        {
-            label: trayLabels(languages)?.officialWebsite || "Visit official website",
-            click: () => {
-                electron.shell.openExternal("https://b3log.org/siyuan");
-            },
-        },
-        {
-            label: trayLabels(languages)?.openSource || "Visit project on GitHub",
-            click: () => {
-                electron.shell.openExternal("https://github.com/siyuan-note/siyuan");
-            },
-        },
         getDevToolsMenuItem(languages.debug || "Developer Tools", platform),
     ],
 }];

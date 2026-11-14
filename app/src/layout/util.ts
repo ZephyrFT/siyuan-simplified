@@ -35,7 +35,6 @@ import {afterLayoutReady} from "../plugin/loader";
 import {resolveCustomModelFactory} from "../plugin/customTabOwner";
 import {newCenterEmptyTab, resizeTabs, setTabPosition} from "./tabUtil";
 import {
-    isDisabledFeature,
     isPhablet,
     isSensitiveLayoutData,
     isSensitiveSearchConfig,
@@ -381,67 +380,9 @@ export const getAllLayout = () => {
     return layoutJSON;
 };
 
-const DOCK_KEYS = ["left", "right", "bottom"] as const;
-
-// agentChat 停靠按钮：已存在则去重，不存在则按默认布局补全
-const ensureAgentChatDock = (layout: Pick<Config.IUiLayout, "left" | "right" | "bottom">) => {
-    let hasAgentChat = false;
-    for (const key of DOCK_KEYS) {
-        const sections = layout[key]?.data;
-        if (!sections) {
-            continue;
-        }
-        for (const sub of sections) {
-            if (!sub) {
-                continue;
-            }
-            for (let i = 0; i < sub.length; i++) {
-                if (sub[i]?.type !== "agentChat") {
-                    continue;
-                }
-                if (hasAgentChat) {
-                    sub.splice(i, 1);
-                    i--;
-                } else {
-                    hasAgentChat = true;
-                }
-            }
-        }
-    }
-    if (!hasAgentChat) {
-        for (const key of DOCK_KEYS) {
-            const sections = Constants.SIYUAN_EMPTY_LAYOUT[key]?.data;
-            if (!sections) {
-                continue;
-            }
-            for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
-                const sub = sections[sectionIndex];
-                if (!sub) {
-                    continue;
-                }
-                for (let itemIndex = 0; itemIndex < sub.length; itemIndex++) {
-                    const item = sub[itemIndex];
-                    if (item?.type === "agentChat") {
-                        const targetSections = layout[key]?.data;
-                        if (targetSections?.[sectionIndex]) {
-                            targetSections[sectionIndex].splice(itemIndex, 0, {...item});
-                        }
-                        return;
-                    }
-                }
-            }
-        }
-    }
-};
-
 const initInternalDock = (dockItem: Config.IUILayoutDockTab[]) => {
     for (let index = dockItem.length - 1; index >= 0; index--) {
         const existSubItem = dockItem[index];
-        if ((window.siyuan.isPublish && (existSubItem.type === "inbox" || existSubItem.type === "agentChat")) ||
-            (isDisabledFeature("ai") && existSubItem.type === "agentChat")) {
-            dockItem.splice(index, 1);
-            continue;
-        }
         if (existSubItem.hotkeyLangId) {
             existSubItem.title = window.siyuan.languages[existSubItem.hotkeyLangId];
         }
@@ -449,7 +390,6 @@ const initInternalDock = (dockItem: Config.IUILayoutDockTab[]) => {
 };
 
 const JSONToDock = (json: any, app: App) => {
-    ensureAgentChatDock(json);
     json.left.data.forEach((existItem: Config.IUILayoutDockTab[]) => {
         initInternalDock(existItem);
     });
@@ -1107,7 +1047,7 @@ export const addResize = (obj: Layout | Wnd, after = true) => {
         let minSize = 232;
         Array.from(element.querySelectorAll(".file-tree")).find((item) => {
             if (item.classList.contains("sy__backlink") || item.classList.contains("sy__graph")
-                || item.classList.contains("sy__globalGraph") || item.classList.contains("sy__inbox")) {
+                || item.classList.contains("sy__globalGraph")) {
                 if (!item.classList.contains("fn__none") && !hasClosestByClassName(item, "fn__none")) {
                     minSize = 320;
                     return true;
@@ -1320,7 +1260,7 @@ export const addResize = (obj: Layout | Wnd, after = true) => {
         const previousElement = resizeElement.previousElementSibling as HTMLElement;
         const nextElement = resizeElement.nextElementSibling as HTMLElement;
         if (previousElement && nextElement) {
-            const bigType = ["graph", "inbox", "globalGraph", "backlink"];
+            const bigType = ["graph", "globalGraph", "backlink"];
             let size = 232;
             nextElement.style.transition = "none";
             previousElement.style.transition = "none";

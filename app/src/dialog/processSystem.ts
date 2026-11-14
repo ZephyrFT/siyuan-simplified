@@ -1,8 +1,7 @@
 import {Constants} from "../constants";
 import {clearReloadSnapshot} from "../layout/reloadSnapshot";
-import {renderBazaarInstall, updateBazaarInstallProgress} from "../config/bazaar/installTask";
 import {getSettingsWindowHost} from "../config/setting/windowContext";
-import {fetchPost, fetchSyncPost} from "../util/fetch";
+import {fetchPost} from "../util/fetch";
 /// #if !MOBILE
 import {exportLayout} from "../layout/util";
 import {getDockByType} from "../layout/tabUtil";
@@ -364,50 +363,8 @@ export const progressBackgroundTask = (tasks: { action: string }[]) => {
     }
 };
 
-export const bootSync = () => {
-    fetchPost("/api/sync/getBootSync", {}, response => {
-        if (response.code === 1) {
-            const dialog = new Dialog({
-                width: isMobile() ? "92vw" : "50vw",
-                title: "🌩️ " + window.siyuan.languages.bootSyncFailed,
-                content: `<div class="b3-dialog__content">${sanitizeKernelHTML(response.msg)}</div>
-<div class="b3-dialog__action">
-    <button class="b3-button b3-button--cancel">${window.siyuan.languages.cancel}</button><div class="fn__space"></div>
-    <button class="b3-button b3-button--text">${window.siyuan.languages.syncNow}</button>
-</div>`
-            });
-            dialog.element.setAttribute("data-key", Constants.DIALOG_BOOTSYNCFAILED);
-            const btnsElement = dialog.element.querySelectorAll(".b3-button");
-            btnsElement[0].addEventListener("click", () => {
-                dialog.destroy();
-            });
-            btnsElement[1].addEventListener("click", () => {
-                if (isMobile()) {
-                    void dialog.runPending(async () => {
-                        const result = await fetchSyncPost("/api/sync/performBootSync", {});
-                        return result.code === 0;
-                    });
-                    return;
-                }
-                if (btnsElement[1].getAttribute("disabled")) {
-                    return;
-                }
-                btnsElement[1].setAttribute("disabled", "disabled");
-                fetchPost("/api/sync/performBootSync", {}, (syncResponse) => {
-                    if (syncResponse.code === 0) {
-                        dialog.destroy();
-                    }
-                    btnsElement[1].removeAttribute("disabled");
-                });
-            });
-        }
-    });
-};
-
 export const downloadProgress = (data: { id: string, percent: number }) => {
-    if (updateBazaarInstallProgress(data)) {
-        renderBazaarInstall(document);
-    }
+    void data;
 };
 
 let lastSyncResult: number;

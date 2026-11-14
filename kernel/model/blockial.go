@@ -259,9 +259,6 @@ func SetBlockAttrs(id string, nameValues map[string]string) (err error) {
 			}
 		}
 	}
-	if err == nil {
-		memoryCommittedSourcesChanged([]string{tree.ID})
-	}
 	return
 }
 

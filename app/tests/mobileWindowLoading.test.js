@@ -69,7 +69,7 @@ if (process.versions.electron && process.type === "browser") {
             }).outputText;
         }
         const entry = fs.readFileSync(path.join(__dirname, "../src/mobile/index.ts"), "utf8");
-        sources.entry = entry.slice(entry.indexOf("await initMobileWithLoading("), entry.indexOf("                            finishMobileSystemUris(this);"));
+        sources.entry = entry.slice(entry.indexOf("await initMobileWithLoading("), entry.indexOf("finishMobileSystemUris(this);"));
         const template = fs.readFileSync(path.join(__dirname, "../src/assets/template/mobile/index.tpl"), "utf8");
         const pending = [];
         const server = createServer((request, response) => {

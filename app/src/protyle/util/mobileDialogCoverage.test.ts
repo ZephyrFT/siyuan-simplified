@@ -4,9 +4,6 @@ import {test} from "node:test";
 import {createSourceFile, forEachChild, isCallExpression, isNewExpression, ScriptTarget, Node} from "typescript";
 
 const coverage: Record<string, Record<string, number>> = {
-    "protyle/breadcrumb/index.ts": {
-        "mobileConfirmDialog": 2
-    },
     "protyle/export/exportMd.ts": {
         "MobileDialog": 1,
         "mobileConfirmDialog": 1
@@ -113,23 +110,6 @@ const coverage: Record<string, Record<string, number>> = {
     "protyle/wysiwyg/taskStatusDialog.ts": {
         "mobileInputDialog": 1
     },
-    "ai/actions.ts": {
-        "MobileDialog": 2
-    },
-    "ai/chat.ts": {
-        "mobileInputDialog": 1
-    },
-    "ai/editor.ts": {
-        "mobileConfirmDialog": 1
-    },
-    "ai/memory/manager.ts": {
-        "MobileDialog": 1,
-        "mobileConfirmDialog": 2
-    },
-    "ai/skills/manager.ts": {
-        "MobileDialog": 1,
-        "mobileInputDialog": 1
-    },
     "card/makeCard.ts": {
         "MobileDialog": 1,
         "mobileConfirmDialog": 1,
@@ -177,9 +157,6 @@ test("AV sheets use one adapter and desktop-only paths remain unmodified", () =>
     }
     const exports = readFileSync("src/protyle/export/index.ts", "utf8");
     assert.match(exports, /const wordDialog = new Dialog/);
-    const skills = readFileSync("src/ai/skills/manager.ts", "utf8");
-    assert.match(skills, /mobile \? undefined : new Dialog/);
-    assert.doesNotMatch(skills, /bindSkillDialogViewport/);
     for (const file of ["card/openCard.ts", "card/viewCards.ts", "protyle/render/av/openDatabaseRow.ts"]) {
         assert.match(readFileSync("src/" + file, "utf8"), /mobileSheet: \{mode: "expanded"(?:,\s*beforeClose: [^\n]+)?\}/, file);
     }

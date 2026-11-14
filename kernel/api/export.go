@@ -148,16 +148,6 @@ var exportReStructuredText = contractHandler(apicontract.ExportReStructuredText,
 	return apicontract.Success(apicontract.ExportNamedZipData{Name: name, Zip: zipPath})
 })
 
-var export2Liandi = contractHandler(apicontract.Export2Liandi, func(c *gin.Context, request apicontract.ExportIDRequest) apicontract.Response[apicontract.Null] {
-
-	id := request.ID
-	err := model.Export2Liandi(id)
-	if err != nil {
-		return apicontract.Failure[apicontract.Null](-1, err.Error())
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
 var exportDataInFolder = contractHandler(apicontract.ExportDataInFolder, func(c *gin.Context, request apicontract.ExportFolderRequest) apicontract.Response[apicontract.ExportNameData] {
 
 	exportFolder := request.Folder

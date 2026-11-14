@@ -10,7 +10,7 @@ const entries: Record<string, number> = {
     "menus/navigation.ts": 1,
     "editor/rename.ts": 2,
     "editor/deleteFile.ts": 5,
-    "menus/commonMenuItem.ts": 6,
+    "menus/commonMenuItem.ts": 4,
     "util/fileTreeReorder.ts": 1,
     "menus/dataMigration.ts": 3,
     "menus/block.ts": 1,
@@ -22,9 +22,7 @@ const entries: Record<string, number> = {
     "util/pathName.ts": 1,
     "util/noRelyPCFunction.ts": 1,
     "mobile/dock/MobileFiles.ts": 1,
-    "layout/dock/Inbox.ts": 1,
-    "layout/dock/agent/AgentChat.ts": 3,
-    "dialog/processSystem.ts": 4,
+    "dialog/processSystem.ts": 3,
     "dialog/exitRequest.ts": 2,
 };
 

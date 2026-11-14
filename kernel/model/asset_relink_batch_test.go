@@ -172,6 +172,10 @@ func TestAssetRelinkBatchDetectsNewReferencesDuringScan(t *testing.T) {
 		t.Fatal(err)
 	}
 	writeAssetRelinkTestFile(t, tree.Box+"/20260914040002-added00.sy", original)
+	changed := time.Now().Add(time.Minute)
+	if err := os.Chtimes(filepath.Join(util.DataDir, tree.Box), changed, changed); err != nil {
+		t.Fatal(err)
+	}
 	if err := plan.apply(); err == nil {
 		t.Fatal("new document was omitted from an all-reference replacement")
 	}

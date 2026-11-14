@@ -15,7 +15,6 @@ import {getDockEntryOrderSnapshot} from "../entryVisibility/dockOrder";
 import {getEditorToolbarCatalogSnapshot} from "../../protyle/toolbar/catalogSnapshot";
 import {getBreadcrumbButtonCatalogSnapshot} from "../../plugin/breadcrumbButtonRegistry";
 import {hasNativeSettingTasks} from "./taskBlocker";
-import {openBazaarPath} from "../bazaar/openPath";
 import {acceptSettingInterfaceRevision, watchSettingInterface} from "./interface";
 import {isCompactModeEnabled} from "../tabs/compactMode";
 import type {App} from "../../index";
@@ -128,7 +127,7 @@ export const openNativeSettings = async (app: App, command: ISettingsCommand = {
             assertActive();
             return getBreadcrumbButtonCatalogSnapshot();
         },
-        openBazaarPath: (type, name, storage) => { assertActive(); openBazaarPath(type, name, storage); },
+        openBazaarPath: () => { assertActive(); },
         exit: setCurrentWorkspace => { assertActive(); return exitSiYuan(setCurrentWorkspace); },
         plugin: plugin && {
             name: plugin.name,

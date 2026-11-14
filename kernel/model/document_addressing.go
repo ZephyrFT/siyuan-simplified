@@ -127,9 +127,6 @@ func documentCheckoutPreflight(repo *dejavu.Repo, checkSources bool) func(*dejav
 				}
 			}
 		}
-		if err := memoryCheckoutPreflight(repo.DataPath, plan); err != nil {
-			return err
-		}
 		return templateHTTPCheckoutPreflight(repo.DataPath, plan)
 	}
 }

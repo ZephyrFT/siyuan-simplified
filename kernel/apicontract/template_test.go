@@ -53,19 +53,3 @@ func TestTemplateHTTPConfirmationHandoffContract(t *testing.T) {
 		t.Fatal("non-string handoff accepted")
 	}
 }
-
-func TestTemplateHTTPPermissionContracts(t *testing.T) {
-	for _, scope := range []string{"once", "template"} {
-		request, err := RespondTemplateHTTP.Decode(strings.NewReader(`{"executionID":"execution","confirmID":"confirmation","approved":true,"app":"app","session":"main","scope":"` + scope + `"}`))
-		if err != nil || request.Scope != scope {
-			t.Fatalf("confirmation scope lost: %+v %v", request, err)
-		}
-	}
-	request, err := TemplateHTTPPermission.Decode(strings.NewReader(`{"action":"get","kind":"av","avID":"database","keyID":"field","slot":"renderTemplate"}`))
-	if err != nil || request.Action != "get" || request.Slot != "renderTemplate" || request.KeyID != "field" {
-		t.Fatalf("field permission identity lost: %+v %v", request, err)
-	}
-	if _, err = TemplateHTTPPermission.Decode(strings.NewReader(`{"action":"revoke","kind":true}`)); err == nil {
-		t.Fatal("non-string source kind accepted")
-	}
-}

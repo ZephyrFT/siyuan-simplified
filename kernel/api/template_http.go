@@ -6,7 +6,6 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/siyuan-note/siyuan/kernel/apicontract"
 	"github.com/siyuan-note/siyuan/kernel/model"
 )
 
@@ -17,27 +16,3 @@ func startTemplateHTTP(c *gin.Context, scope string) (*model.TemplateHTTPExecuti
 	return model.StartTemplateHTTPExecution(c.Request.Context(), c.GetHeader("X-Siyuan-Template-Execution"),
 		c.GetHeader("X-Siyuan-Template-App"), c.GetHeader("X-Siyuan-Template-Session"), scope, requestBoxLeases(c)...)
 }
-
-var respondTemplateHTTP = contractHandler(apicontract.RespondTemplateHTTP, func(c *gin.Context, request apicontract.TemplateHTTPReplyRequest) apicontract.Response[apicontract.Null] {
-	model.RespondTemplateHTTP(request.ExecutionID, request.ConfirmID, request.App, request.Session, request.Approved, request.Scope)
-	return apicontract.Success(apicontract.Null{})
-})
-
-var cancelTemplateHTTP = contractHandler(apicontract.CancelTemplateHTTP, func(c *gin.Context, request apicontract.TemplateHTTPCancelRequest) apicontract.Response[apicontract.Null] {
-	model.CancelTemplateHTTP(request.ExecutionID, request.App, request.Session)
-	model.RevokeTemplateHTTPHandoff(request.HTTPConfirmToken, request.App, request.Session)
-	return apicontract.Success(apicontract.Null{})
-})
-
-var templateHTTPPermission = contractHandler(apicontract.TemplateHTTPPermission, func(c *gin.Context, request apicontract.TemplateHTTPPermissionRequest) apicontract.Response[apicontract.TemplateHTTPPermissionData] {
-	if request.Kind == "av" {
-		if err := holdAttributeViewRequest(c, "", request.AVID); err != nil {
-			return apicontract.Failure[apicontract.TemplateHTTPPermissionData](-1, model.Conf.Language(314))
-		}
-	}
-	allowed, err := model.ManageTemplateHTTPPermission(request.Action, request.Kind, request.Path, request.AVID, request.KeyID, request.Slot)
-	if err != nil {
-		return apicontract.Failure[apicontract.TemplateHTTPPermissionData](-1, model.Conf.Language(258))
-	}
-	return apicontract.Success(apicontract.TemplateHTTPPermissionData{Allowed: allowed})
-})

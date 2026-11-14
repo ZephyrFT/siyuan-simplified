@@ -153,7 +153,6 @@ if errorlevel 1 (
 if defined BUILD_AMD64 (
     echo.
     echo Building Electron App amd64
-    copy "%PROJECT_ROOT%\app\elevator\elevator-amd64.exe" "%PROJECT_ROOT%\app\kernel\elevator.exe"
     call pnpm run dist
     if errorlevel 1 (
         exit /b %errorlevel%
@@ -162,7 +161,6 @@ if defined BUILD_AMD64 (
 if defined BUILD_ARM64 (
     echo.
     echo Building Electron App arm64
-    copy "%PROJECT_ROOT%\app\elevator\elevator-arm64.exe" "%PROJECT_ROOT%\app\kernel-arm64\elevator.exe"
     call pnpm run dist-arm64
     if errorlevel 1 (
         exit /b %errorlevel%

@@ -14,7 +14,7 @@ const staticDir = path.join(electronRoot, "static");
 
 // 会话分区名、frameName 前缀与 Markdown 协议名不是 IPC 通道。
 const nonChannelLiterals = new Set(["siyuan-connection-manager", "siyuan-web-fetch-", "siyuan-settings-",
-    "siyuan-markdown", "siyuan-markdown-"]);
+    "siyuan-markdown", "siyuan-markdown-", "siyuan-simplified"]);
 
 // 从源码读出的字面量是普通字符串，因此集合按 string 归纳，而不是 Channel 的字面量联合类型。
 const channelValues: Set<string> = new Set(Object.values(Channel));

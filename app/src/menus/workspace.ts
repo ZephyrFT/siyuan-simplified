@@ -39,7 +39,6 @@ import type {App} from "../index";
 import {isBrowser} from "../util/functions";
 import {openRecentDocs} from "../business/openRecentDocs";
 import {openDataMigration} from "./dataMigration";
-import {openLink} from "../editor/openLink";
 import {getHostCapabilities} from "../util/hostCapabilities";
 import {openTemplateManager} from "../template/manager";
 
@@ -375,18 +374,6 @@ export const workspaceMenu = async (app: App, rect: DOMRect, openOnly = false, t
                     ignore: window.siyuan.config.readonly,
                     click: () => {
                         mountHelp();
-                    }
-                }).element);
-                window.siyuan.menus.menu.append(new MenuItem({
-                    id: "feedback",
-                    label: window.siyuan.languages.feedback,
-                    icon: "iconFeedback",
-                    click: () => {
-                        if ("zh-CN" === window.siyuan.config.lang) {
-                            openLink(app, "https://ld246.com/article/1649901726096");
-                        } else {
-                            openLink(app, "https://liuyun.io/article/1686530886208");
-                        }
                     }
                 }).element);
                 /// #if !BROWSER

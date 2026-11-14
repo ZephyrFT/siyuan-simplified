@@ -18,7 +18,6 @@ import {exitSiYuan} from "../../dialog/processSystem";
 import {isInMobileApp} from "../../protyle/util/compatibility";
 import {fetchPost, fetchSyncPost} from "../../util/fetch";
 import {ContractFormData} from "../../util/contractFormData";
-import {openLink} from "../../editor/openLink";
 import {openSnippets} from "../util/snippets";
 import {getHostCapabilities} from "../../util/hostCapabilities";
 import {confirmDialog} from "../../dialog/confirmDialog";
@@ -1319,13 +1318,6 @@ const registerAppearancePersonalizationGroup = (tab: SettingTabBuilder) => {
         afterMount: mountAppearanceCodeSnippet,
     }, (stack) => {
         stack.title(window.siyuan.languages.codeSnippet);
-        if ("zh-CN" === window.siyuan.config.lang) {
-            stack.button({
-                id: "codeSnippetCommunityShare",
-                label: window.siyuan.languages.visitCommunityShare,
-                icon: "iconUpload",
-            });
-        }
         stack.desc(window.siyuan.languages.codeSnippetTip);
         stack.button({
             id: "codeSnippet",
@@ -1336,9 +1328,6 @@ const registerAppearancePersonalizationGroup = (tab: SettingTabBuilder) => {
 };
 
 const mountAppearanceCodeSnippet = (root: HTMLElement) => {
-    root.querySelector("#codeSnippetCommunityShare")?.addEventListener("click", () => {
-        openLink(window.siyuan.ws.app, "https://ld246.com/tag/code-snippet");
-    });
     root.querySelector("#codeSnippet")?.addEventListener("click", () => {
         openSnippets();
     });

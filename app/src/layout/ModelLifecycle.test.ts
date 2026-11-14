@@ -28,7 +28,6 @@ test("destroying a main Model cancels reconnects, queued messages and late socke
         setTimeout: (callback: () => void) => { timers.set(1, callback); return 1; },
         clearTimeout: (id: number) => timers.delete(id),
         require: () => ({Constants: {SIYUAN_APPID: "test"}, processMessage: (value: unknown) => value,
-            cancelTemplateHTTPExecutions: () => calls.push("cancel-template-http"),
             refreshSettingConfig: () => calls.push("refresh")})});
     const model = new exports.Model({app: {}});
     const options = {id: "test", type: "main", callback: () => calls.push("open"), msgCallback: () => calls.push("message")};
@@ -53,7 +52,7 @@ test("destroying a main Model cancels reconnects, queued messages and late socke
     model.send("test", {});
     model.connect(options);
     assert.equal(sockets.length, 1);
-    assert.deepEqual(calls, ["cancel-template-http", "cancel-template-http", "close"]);
+    assert.deepEqual(calls, ["close"]);
     assert.equal(socket.onopen, null);
     assert.equal(socket.onmessage, null);
     assert.equal(socket.onerror, null);
@@ -102,9 +101,8 @@ test("main socket recovery is recorded and obsolete sockets cannot finish a faul
     assert.equal(diagnoses[1](), true);
 });
 
-test("main windows query their own checkout preparation on startup and reconnect", () => {
+test("main windows report readiness on startup and reconnect", () => {
     const sockets: Socket[] = [];
-    const queries: {id: string, reconnect?: boolean}[] = [];
     const messages: string[] = [];
     class Socket {
         static CONNECTING = 0;
@@ -127,10 +125,6 @@ test("main windows query their own checkout preparation on startup and reconnect
         document: {getElementById: (): null => null},
         require: (name: string) => {
             if (name === "../constants") return {Constants: {SIYUAN_APPID: "test"}};
-            if (name === "../template/http") return {cancelTemplateHTTPExecutions: () => {}};
-            if (name === "../sync/checkoutProgress") return {
-                reconcileSyncCheckout: (id: string, reconnect?: boolean) => queries.push({id, reconnect}),
-            };
             if (name === "../util/kernelConnection") return {markKernelConnectionAlive: () => {}};
             if (name === "../config/setting/reset") return {reloadSettingsResetOnReconnect: () => false};
             if (name === "../config/setting/taskBlocker") return {resetSettingTaskRevision: () => {}};
@@ -151,8 +145,6 @@ test("main windows query their own checkout preparation on startup and reconnect
     model.flushMainMessages();
     sockets[0].onopen();
     assert.deepEqual(messages.map(message => JSON.parse(message).cmd), ["ready", "ready"]);
-    assert.deepEqual(queries, [{id: "detached-window", reconnect: undefined},
-        {id: "detached-window", reconnect: undefined}, {id: "detached-window", reconnect: true}]);
     model.connect({id: "detached-window", type: "main"});
     assert.equal(new URL(sockets[1].url).searchParams.get("ready"), "false");
     sockets[1].onopen();

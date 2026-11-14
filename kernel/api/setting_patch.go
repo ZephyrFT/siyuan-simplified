@@ -141,27 +141,12 @@ var patchSetting = contractHandler(apicontract.PatchSetting, func(c *gin.Context
 		response = applySettingPatch(c, patch, apicontract.SetVariables, applyVariablesSetting)
 	case "keymap":
 		response = applySettingPatch(c, patch, apicontract.SetKeymap, applyKeymapSetting)
-	case "ai":
-		if util.IsDisabledFeature("ai") {
-			return apicontract.Failure[*apicontract.SettingPatchData](-1, util.I18nTerm(model.Conf.Lang, "agentCapabilitiesUnavailable"))
-		}
-		response = applySettingPatch(c, patch, apicontract.SetAI, applyAISetting)
 	case "ocr":
 		response = applySettingPatch(c, patch, apicontract.SetOCRConfig, applyOCRSetting)
-	case "bazaar":
-		response = applySettingPatch(c, patch, apicontract.SetBazaar, applyBazaarSetting)
-	case "publish":
-		response = applySettingPatch(c, patch, apicontract.SetPublish, applyPublishSetting)
 	case "snippet":
 		response = applySettingPatch(c, patch, apicontract.SetConfSnippet, applySnippetSetting)
-	case "system", "repo", "sync":
-		var err error
-		var issues []model.Issue
-		if request.Namespace() == "sync" {
-			issues, err = model.ApplySyncSettingPatch(patch)
-		} else {
-			issues, err = model.ApplyConfPatch(request.Namespace(), patch)
-		}
+	case "system", "repo":
+		issues, err := model.ApplyConfPatch(request.Namespace(), patch)
 		recordSettingIssues(c, issues)
 		if err != nil {
 			return apicontract.PatchSetting.FailureWithData(-1, err.Error(), settingPatchDiagnostics(c))

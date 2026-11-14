@@ -16,7 +16,7 @@ import {preventScroll} from "../../protyle/scroll/preventScroll";
 import {openModel} from "./model";
 import {getDisplayName, getNotebookIcon, getNotebookName, isEncryptedBox, movePathTo, pathPosix} from "../../util/pathName";
 import {getKeyByLiElement, getKeysByLiElement, initCriteriaMenu, moreMenu} from "../../search/menu";
-import {isDisabledFeature, isInIOS, setStorageVal} from "../../protyle/util/compatibility";
+import {isInIOS, setStorageVal} from "../../protyle/util/compatibility";
 import {escapeHtml} from "../../util/escape";
 import {unicode2Emoji} from "../../emoji";
 import {getFileTreeIconHTML} from "../../emoji/fileTreeIcon";
@@ -357,7 +357,7 @@ export const updateSearchResult = (config: Config.IUILayoutTabSearchConfig, elem
             } else {
                 previousElement.setAttribute("disabled", "disabled");
             }
-            const endpoint = requestConfig.method === 4 ? "/api/search/semanticSearchBlock" : "/api/search/fullTextSearchBlock";
+            const endpoint = "/api/search/fullTextSearchBlock";
             const searchParam = buildSearchRequest(requestConfig);
             // 限定在单个加密 box 内搜索时带 notebook，让内核走加密 db；跨 box 或全局搜索走原函数
             const idPaths = requestConfig.idPath || [];
@@ -369,7 +369,7 @@ export const updateSearchResult = (config: Config.IUILayoutTabSearchConfig, elem
             }
             return {
                 version,
-                abortable: requestConfig.method !== 4,
+                abortable: true,
                 run(signal: AbortSignal, isCurrent: () => boolean) {
                     return fetchPost(endpoint, searchParam, (response: APICallbackResponse<APIPOSTRoutes[typeof endpoint]["response"]>) => {
                         if (!isCurrent()) {
@@ -810,7 +810,7 @@ export const popSearch = (app: App, searchConfig?: Config.IUILayoutTabSearchConf
     if (currentEditor && isEncryptedBox(currentEditor.protyle.notebookId)) {
         config.sensitive = true;
     }
-    if (config.method === 4 && (isDisabledFeature("ai") || !window.siyuan.config.ai.embedding.enabled)) {
+    if (config.method === 4) {
         config.method = 0;
     }
     const rangeText = (currentEditor?.protyle.toolbar.range ||

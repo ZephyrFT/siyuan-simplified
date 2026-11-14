@@ -25,14 +25,6 @@ type confMigration struct {
 
 // confMigrations 按版本升序登记全部配置迁移。新增迁移只能追加在末尾并使用更大的版本号。
 var confMigrations = []confMigration{
-	{1, "ai", func(c *AppConf, raw []byte) (bool, error) {
-		// 旧版人工智能配置使用 openAI 字段 https://github.com/siyuan-note/siyuan/issues/14591
-		if !conf.NeedsAIMigration(raw) {
-			return false, nil
-		}
-		c.AI.Store(conf.MigrateAI(raw))
-		return true, nil
-	}},
 	{2, "entryVisibility", func(c *AppConf, raw []byte) (bool, error) {
 		// 入口可见性引入前的已有工作空间按完整方案显示全部入口
 		if bytes.Contains(raw, []byte(`"entryVisibility"`)) {

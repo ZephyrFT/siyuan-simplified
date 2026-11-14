@@ -6,18 +6,13 @@ package api
 
 import (
 	"fmt"
-	"reflect"
 	"sync"
 
 	"github.com/88250/gulu"
 	"github.com/gin-gonic/gin"
-	"github.com/siyuan-note/logging"
 	"github.com/siyuan-note/siyuan/kernel/apicontract"
 	"github.com/siyuan-note/siyuan/kernel/conf"
-	mcpserver "github.com/siyuan-note/siyuan/kernel/mcp"
-	mcpclient "github.com/siyuan-note/siyuan/kernel/mcp/client"
 	"github.com/siyuan-note/siyuan/kernel/model"
-	"github.com/siyuan-note/siyuan/kernel/server/proxy"
 	"github.com/siyuan-note/siyuan/kernel/util"
 )
 
@@ -91,158 +86,17 @@ var applyBazaarSetting = func(c *gin.Context, request apicontract.SetBazaarReque
 	return applySettingSection(c, request, "bazaar", conf.NewBazaar, model.Conf.Bazaar.Load, settingBazaarPayload)
 }
 
-var setBazaar = contractHandler(apicontract.SetBazaar, applyBazaarSetting)
-
-var setBazaarPetalDisabled = contractHandler(apicontract.SetBazaarPetalDisabled, func(c *gin.Context, request apicontract.SettingPetalDisabledRequest) apicontract.Response[apicontract.SettingPetalDisabledData] {
-	petalDisabled := request.PetalDisabled
-	bazaarPetalStateMu.Lock()
-	defer bazaarPetalStateMu.Unlock()
-	changed := model.Conf.Bazaar.Load().PetalDisabled != petalDisabled
-	model.UpdateBazaarConf(func(s *conf.Bazaar) { s.PetalDisabled = petalDisabled })
-	newPetalsEnabled := model.IsPetalsEnabled()
-	payload := model.PluginReloadPayload(newPetalsEnabled, petalDisabled, model.BazaarPetalStateRevision.Load(), changed)
-	encoded, err := gulu.JSON.MarshalJSON(payload)
-	if err != nil {
-		return apicontract.Failure[apicontract.SettingPetalDisabledData](-1, err.Error())
-	}
-	var data apicontract.SettingPetalDisabledData
-	if err = gulu.JSON.UnmarshalJSON(encoded, &data); err != nil {
-		return apicontract.Failure[apicontract.SettingPetalDisabledData](-1, err.Error())
-	}
-	return apicontract.Success(data)
-})
-
-var setAI = contractHandler(apicontract.SetAI, applyAISetting)
-
-func applyAISetting(c *gin.Context, request apicontract.SetAIRequest) (ret apicontract.Response[*apicontract.SettingAI]) {
-	if err := request.ConfigError(); err != nil {
-		return apicontract.Failure[*apicontract.SettingAI](-1, err.Error())
-	}
-	ret = apicontract.Success((*apicontract.SettingAI)(nil))
-
-	param := request.ConfigJSON()
-	var err error
-
-	ai := conf.NewAI()
-	if err = gulu.JSON.UnmarshalJSON(param, ai); err != nil {
-		ret = apicontract.Failure[*apicontract.SettingAI](-1, err.Error())
-		return
-	}
-	if ai.MCP != nil {
-		for _, server := range ai.MCP.Servers {
-			if err = mcpclient.ValidateMCPServerEnvironment(server); err != nil {
-				ret = apicontract.Failure[*apicontract.SettingAI](-1, "invalid MCP server environment: "+err.Error())
-				return
-			}
-		}
-	}
-	if err = validateAIProviderHeaders(ai); err != nil {
-		ret = apicontract.Failure[*apicontract.SettingAI](-1, err.Error())
-		return
-	}
-
-	var oldServers []conf.MCPServer
-	if model.Conf.AI.Load() != nil && model.Conf.AI.Load().MCP != nil {
-		oldServers = append(oldServers, model.Conf.AI.Load().MCP.Servers...)
-	}
-	if ai.MCP != nil {
-		preserveMCPServerIDs(oldServers, ai.MCP.Servers)
-	}
-	ai = conf.NormalizeAI(ai)
-	if err = model.Conf.SetAI(c.Request.Context(), ai); err != nil {
-		return apicontract.Failure[*apicontract.SettingAI](-1, err.Error())
-	}
-	mcpserver.RefreshToolExposure()
-
-	// MCP 配置可能变更（开关切换、编辑、增删 server），异步重连让连接立即跟上。
-	if model.Conf.AI.Load().MCP != nil {
-		newServers := model.Conf.AI.Load().MCP.Servers
-		oldByID := make(map[string]conf.MCPServer, len(oldServers))
-		newByID := make(map[string]conf.MCPServer, len(newServers))
-		for _, server := range oldServers {
-			oldByID[server.ID] = server
-		}
-		for _, server := range newServers {
-			newByID[server.ID] = server
-		}
-
-		var interactiveServerIDs []string
-		for _, server := range newServers {
-			old, existed := oldByID[server.ID]
-			if server.Enabled && server.Type == "http" && (!existed || !reflect.DeepEqual(old, server)) {
-				interactiveServerIDs = append(interactiveServerIDs, server.ID)
-			}
-		}
-		for _, server := range oldServers {
-			updated, exists := newByID[server.ID]
-			if !exists || (server.Type == "http" && (updated.Type != "http" || updated.URL != server.URL)) {
-				if revokeErr := mcpclient.DisconnectMCPOAuth(server.ID); revokeErr != nil {
-					logging.LogWarnf("mcp oauth: disconnect server [%s] failed: %s", server.Name, revokeErr)
-				}
-			}
-		}
-		if !reflect.DeepEqual(oldServers, newServers) {
-			mcpclient.ReconnectMCPAsync(newServers, nil, interactiveServerIDs)
-		}
-	}
-
-	ret = apicontract.Success(settingAIPayload(model.Conf.AI.Load()))
-	return
-}
-
-func preserveMCPServerIDs(oldServers, newServers []conf.MCPServer) {
-	oldIDsByName := make(map[string]string, len(oldServers))
-	for _, server := range oldServers {
-		oldIDsByName[server.Name] = server.ID
-	}
-	for i := range newServers {
-		if newServers[i].ID == "" {
-			newServers[i].ID = oldIDsByName[newServers[i].Name]
-		}
-	}
-}
-
 var applySecretsSetting = func(c *gin.Context, request apicontract.SetSecretsRequest) apicontract.Response[*apicontract.SettingSecrets] {
-	response := applySettingSection(c, request, "secrets", conf.NewSecrets, model.Conf.Secrets.Load, settingSecretsPayload)
-	if response.Code() == 0 {
-		reconnectStdioMCPWithEnvironment()
-	}
-	return response
+	return applySettingSection(c, request, "secrets", conf.NewSecrets, model.Conf.Secrets.Load, settingSecretsPayload)
 }
 
 var setSecrets = contractHandler(apicontract.SetSecrets, applySecretsSetting)
 
 var applyVariablesSetting = func(c *gin.Context, request apicontract.SetVariablesRequest) apicontract.Response[*apicontract.SettingVariables] {
-	response := applySettingSection(c, request, "variables", conf.NewVariables, model.Conf.Variables.Load, settingVariablesPayload)
-	if response.Code() == 0 {
-		reconnectStdioMCPWithEnvironment()
-	}
-	return response
+	return applySettingSection(c, request, "variables", conf.NewVariables, model.Conf.Variables.Load, settingVariablesPayload)
 }
 
 var setVariables = contractHandler(apicontract.SetVariables, applyVariablesSetting)
-
-func reconnectStdioMCPWithEnvironment() {
-	confAISnapshot := model.Conf.LoadAI()
-
-	if confAISnapshot == nil || confAISnapshot.MCP == nil {
-		return
-	}
-	serverIDs := stdioMCPServerIDsWithEnvironment(confAISnapshot.MCP.Servers)
-	if len(serverIDs) > 0 {
-		mcpclient.ReconnectMCPAsync(confAISnapshot.MCP.Servers, serverIDs, nil)
-	}
-}
-
-func stdioMCPServerIDsWithEnvironment(servers []conf.MCPServer) []string {
-	var serverIDs []string
-	for _, server := range servers {
-		if server.Enabled && server.Type == "stdio" && len(server.Env) > 0 {
-			serverIDs = append(serverIDs, server.ID)
-		}
-	}
-	return serverIDs
-}
 
 var applyFlashcardSetting = func(c *gin.Context, request apicontract.SetFlashcardRequest) apicontract.Response[*apicontract.SettingFlashcard] {
 	return applySettingSection(c, request, "flashcard", conf.NewFlashcard, model.Conf.Flashcard.Load, settingFlashcardPayload)
@@ -418,8 +272,6 @@ var setTheme = contractHandler(apicontract.SetTheme, func(c *gin.Context, reques
 	return apicontract.Success(apicontract.Null{})
 })
 
-var setPublish = contractHandler(apicontract.SetPublish, applyPublishSetting)
-
 func applyPublishSetting(c *gin.Context, request apicontract.SetPublishRequest) (ret apicontract.Response[apicontract.SettingPublishData]) {
 	if err := request.ConfigError(); err != nil {
 		return apicontract.Failure[apicontract.SettingPublishData](-1, err.Error())
@@ -442,55 +294,11 @@ func applyPublishSetting(c *gin.Context, request apicontract.SetPublishRequest) 
 		return apicontract.Failure[apicontract.SettingPublishData](-1, err.Error())
 	}
 
-	port, err := proxy.InitPublishService()
-	if err != nil {
-		ret = apicontract.Failure[apicontract.SettingPublishData](-1, err.Error())
-		return
-	}
-
-	ret = apicontract.Success(apicontract.SettingPublishData{Port: port, Publish: settingPublishPayload(model.Conf.Publish.Load())})
+	ret = apicontract.Success(apicontract.SettingPublishData{Port: 0, Publish: settingPublishPayload(model.Conf.Publish.Load())})
 
 	util.BroadcastByType("main", "setPublish", 0, "", model.Conf.Publish.Load())
 	return
 }
-
-var getPublish = contractHandler(apicontract.GetPublish, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.SettingPublishData] {
-	port, err := proxy.InitPublishService()
-	if err != nil {
-		return apicontract.Failure[apicontract.SettingPublishData](-1, err.Error())
-	}
-	return apicontract.Success(apicontract.SettingPublishData{Port: port, Publish: settingPublishPayload(model.Conf.Publish.Load())})
-})
-
-var getCloudUser = contractHandler(apicontract.GetCloudUser, func(c *gin.Context, request apicontract.SettingCloudUserRequest) apicontract.Response[*apicontract.SettingUser] {
-	user, err := model.GetCloudUser(request.Token, request.Cached)
-	data := settingUserPayload(user)
-	if err == nil {
-		return apicontract.Success(data)
-	}
-	if model.IsInvalidUserRefresh(err) {
-		return apicontract.GetCloudUser.FailureWithData(255, model.Conf.Language(19), nil)
-	}
-	if model.IsCloudAssetSourceChange(err) {
-		return apicontract.GetCloudUser.FailureWithData(1, err.Error(), data)
-	}
-	return apicontract.GetCloudUser.FailureWithData(1, model.Conf.Language(18), data)
-}, func(c *gin.Context) *apicontract.Response[*apicontract.SettingUser] {
-	if model.IsAdminRoleContext(c) {
-		return nil
-	}
-	ret := apicontract.Success((*apicontract.SettingUser)(nil))
-	return &ret
-})
-
-var logoutCloudUser = contractHandler(apicontract.LogoutCloudUser, func(c *gin.Context, request apicontract.EmptyRequest) apicontract.Response[apicontract.Null] {
-	model.LogoutUser()
-	return apicontract.Success(apicontract.Null{})
-})
-
-var login2faCloudUser = contractHandler(apicontract.Login2faCloudUser, func(c *gin.Context, request apicontract.SettingLogin2faRequest) apicontract.Response[apicontract.Login2faEnvelope] {
-	return apicontract.SuccessDirectJSON(*model.Login2fa(request.Token, request.Code))
-})
 
 var setEmoji = contractHandler(apicontract.SetEmoji, func(c *gin.Context, request apicontract.SettingEmojiRequest) apicontract.Response[apicontract.Null] {
 	model.UpdateEditorConf(func(s *conf.Editor) { s.Emoji = util.FilterRecentIconValues(request.Emoji) })

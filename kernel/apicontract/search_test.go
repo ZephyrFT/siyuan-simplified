@@ -34,13 +34,6 @@ func TestSearchAssetContractInput(t *testing.T) {
 }
 
 func TestSearchQueryCompatibility(t *testing.T) {
-	for _, body := range []string{`{}`, `null`, `{"page":null,"pageSize":null}`, `{"page":0.9,"pageSize":-2}`} {
-		request, err := SemanticSearchBlock.Decode(strings.NewReader(body))
-		page, size := request.Pagination()
-		if err != nil || page != 1 || size != 32 || request.Types != nil || request.SubTypes.Selected() != nil {
-			t.Fatalf("search defaults changed: %s: %+v, %v", body, request, err)
-		}
-	}
 	request, err := FullTextSearchBlock.Decode(strings.NewReader(`{"page":2.9,"pageSize":5.8,"query":" query ","types":{},"paths":[],"method":3.9,"orderBy":2.1,"groupBy":1.8,"notebook":false,"searchHPath":false}`))
 	page, size := request.Pagination()
 	if err != nil || page != 2 || size != 5 || request.Query != " query " || request.Types == nil || request.Paths == nil || int(request.Method) != 3 || request.Notebook != "" || request.SearchHPath == nil || *request.SearchHPath {
@@ -50,11 +43,6 @@ func TestSearchQueryCompatibility(t *testing.T) {
 		request, err := FullTextSearchBlock.Decode(strings.NewReader(body))
 		if err != nil || request.SearchHPath != nil {
 			t.Fatalf("ignored path flag changed: %s, %v", body, err)
-		}
-	}
-	for _, body := range []string{`{"page":"1"}`, `{"types":{"p":null}}`, `{"types":{"p":1}}`, `{"paths":[null]}`, `{"query":false}`} {
-		if _, err := SemanticSearchBlock.Decode(strings.NewReader(body)); err == nil {
-			t.Fatalf("invalid search input accepted: %s", body)
 		}
 	}
 }
@@ -70,7 +58,7 @@ func TestSearchSubtypeCompatibility(t *testing.T) {
 		{`{"heading":false,"list":[true],"listItem":"t"}`, map[string]bool{}},
 		{`{"heading":{"h1":true,"h2":"true","h3":null,"h4":false,"h5":[]},"list":{"t":true,"o":1},"listItem":{"u":true}}`, map[string]bool{"h1": true, "list:t": true, "listItem:u": true}},
 	} {
-		request, err := SemanticSearchBlock.Decode(strings.NewReader(`{"subTypes":` + entry.raw + `}`))
+		request, err := FullTextSearchBlock.Decode(strings.NewReader(`{"subTypes":` + entry.raw + `}`))
 		if err != nil || !reflect.DeepEqual(request.SubTypes.Selected(), entry.want) {
 			t.Fatalf("subtype compatibility changed: %s: %+v, %v", entry.raw, request.SubTypes.Selected(), err)
 		}

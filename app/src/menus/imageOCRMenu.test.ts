@@ -9,8 +9,7 @@ test("shared local OCR menu refreshes tooltip state after successful and failed 
     let currentPath = "assets/image.png";
     const api = loadModule<typeof import("./imageOCRMenu")>("src/menus/imageOCRMenu.ts", {
         window: {siyuan: {config: {ocr: {provider: "paddleocr"}}}}, require: () => ({
-        getImageOCRAvailability: () => ({text: true, local: true, ai: true}),
-        isDisabledFeature: () => false,
+        getImageOCRAvailability: () => ({text: true, local: true}),
         createDeclaredMenu: (_declaration: unknown, context: unknown) => context,
         fetchPost: (url: string, body: {path: string}) => {
             assert.equal(url, "/api/asset/ocr");
@@ -38,9 +37,8 @@ test("shared image menu clears the current resource with its notebook identity",
     let currentPath = "assets/image.png?box=first#preview";
     const cleared: string[] = [];
     const api = loadModule<typeof import("./imageOCRMenu")>("src/menus/imageOCRMenu.ts", {
-        window: {siyuan: {config: {ocr: {provider: "ai"}}}}, require: () => ({
-        getImageOCRAvailability: () => ({text: true, local: true, ai: true}),
-        isDisabledFeature: () => false,
+        window: {siyuan: {config: {ocr: {provider: "paddleocr"}}}}, require: () => ({
+        getImageOCRAvailability: () => ({text: true, local: true}),
         createDeclaredMenu: (_declaration: unknown, context: unknown) => context,
         clearImageOCRText: async (path: string) => { cleared.push(path); },
     })}, ScriptTarget.ES2021);

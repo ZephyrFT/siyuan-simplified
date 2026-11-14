@@ -123,45 +123,6 @@ class BuildTests(unittest.TestCase):
         self.assertNotIn("SIYUAN_SIGNING_PIN", run.call_args.kwargs["env"])
         self.assertNotIn("PSModulePath", run.call_args.kwargs["env"])
 
-    def test_preflight_signs_and_verifies_temporary_copy(self):
-        self.args.platforms = ["windows"]
-        self.builder.signing_pin = "private-pin"
-        original = self.write(self.root / "app/elevator/elevator-amd64.exe", b"original executable")
-        probes = []
-        def sign(pin, thumbprint, files):
-            self.assertEqual(pin, "private-pin")
-            probe = files[0]
-            probes.append(probe)
-            self.assertNotEqual(probe, original)
-            self.assertEqual(probe.read_bytes(), original.read_bytes())
-            probe.write_bytes(b"signed executable")
-        def verify(path, thumbprint):
-            self.assertEqual(path.read_bytes(), b"signed executable")
-        with patch.object(build, "ROOT", self.root), patch.object(build, "source_preflight"), \
-                patch.object(build, "certificate_thumbprint", return_value="A" * 40), \
-                patch.object(build, "check_signing_pin", side_effect=sign), \
-                patch.object(build, "verify_signature", side_effect=verify):
-            self.builder.preflight()
-        self.assertEqual(original.read_bytes(), b"original executable")
-        self.assertFalse(probes[0].exists())
-
-    def test_preflight_signing_failure_is_propagated_and_copy_removed(self):
-        self.args.platforms = ["windows"]
-        self.builder.signing_pin = "private-pin"
-        self.write(self.root / "app/elevator/elevator-amd64.exe")
-        probes = []
-        def fail(pin, thumbprint, files):
-            probes.extend(files)
-            raise build.BuildError("signing probe failed")
-        with patch.object(build, "ROOT", self.root), patch.object(build, "source_preflight"), \
-                patch.object(build, "certificate_thumbprint", return_value="A" * 40), \
-                patch.object(build, "check_signing_pin", side_effect=fail), \
-                patch.object(build, "verify_signature") as verify:
-            with self.assertRaisesRegex(build.BuildError, "signing probe failed"):
-                self.builder.preflight()
-        verify.assert_not_called()
-        self.assertFalse(probes[0].exists())
-
     def test_signing_preflight_retries_only_device_communication(self):
         for codes in ((20, 0), (20, 20), (1,)):
             results = [subprocess.CompletedProcess([], code, stdout="secret", stderr="secret") for code in codes]
@@ -352,8 +313,6 @@ class BuildTests(unittest.TestCase):
 
     def test_windows_uses_fresh_kernel_directories_and_forces_signing(self):
         root = self.root / "repository"
-        for arch in ("amd64", "arm64"):
-            self.write(root / "app/elevator" / f"elevator-{arch}.exe")
         self.builder.thumbprint = "A" * 40
         commands = []
 
@@ -380,7 +339,7 @@ class BuildTests(unittest.TestCase):
                 self.assertEqual(config["win"]["signtoolOptions"]["certificateSha1"], "A" * 40)
                 kernel_dir = Path(config["win"]["extraResources"][0]["from"])
                 self.assertTrue(kernel_dir.is_relative_to(self.builder.work))
-                self.assertEqual({p.name for p in kernel_dir.iterdir()}, {"SiYuan-Kernel.exe", "elevator.exe"})
+                self.assertEqual({p.name for p in kernel_dir.iterdir()}, {"SiYuan-Kernel.exe"})
                 suffix = "-arm64" if "--arm64" in command else ""
                 self.write(Path(config["directories"]["output"]) / f"siyuan-3.8.4-win{suffix}.exe")
             return ""
@@ -394,7 +353,6 @@ class BuildTests(unittest.TestCase):
 
     def test_windows_passes_pin_only_to_builder_and_references_public_signing_hook(self):
         root = self.root / "repository"
-        self.write(root / "app/elevator/elevator-amd64.exe")
         self.builder.thumbprint = "A" * 40
         self.builder.signing_pin = "private-pin"
         commands = []

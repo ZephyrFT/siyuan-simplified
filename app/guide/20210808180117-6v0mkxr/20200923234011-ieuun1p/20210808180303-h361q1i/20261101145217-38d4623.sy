@@ -650,7 +650,7 @@
 			"Children": [
 				{
 					"Type": "NodeText",
-					"Data": "On mobile devices, drafts use home/.config/siyuan/markdown/recovery/, where home is the app’s existing home directory. Editing preferences and file tree state are stored in its parent directory. Recovery drafts are stored unencrypted on this device in the Markdown editor’s private directory, outside the workspace. They are not protected by encrypted notebooks and are not included in SiYuan sync. Desktop OS backups or other backup software may include this directory. Mobile apps exclude their private Markdown directory from system backup; the original files you select remain subject to their file provider’s own backup and synchronization behavior."
+					"Data": "On mobile devices, drafts use home/.config/siyuan-simplified/markdown/recovery/, where home is the app’s existing home directory. Editing preferences and file tree state are stored in its parent directory. Recovery drafts are stored unencrypted on this device in the Markdown editor’s private directory, outside the workspace. They are not protected by encrypted notebooks and are not included in SiYuan sync. Desktop OS backups or other backup software may include this directory. Mobile apps exclude their private Markdown directory from system backup; the original files you select remain subject to their file provider’s own backup and synchronization behavior."
 				}
 			]
 		},

@@ -35,7 +35,7 @@ func writeJSON(t *testing.T, path string, value any) {
 func fixture(t *testing.T, platform string) (*Resolver, string, string, string) {
 	t.Helper()
 	root := t.TempDir()
-	config := filepath.Join(root, "home", ".config", "siyuan", "markdown")
+	config := filepath.Join(root, "home", ".config", "siyuan-simplified", "markdown")
 	workspace := filepath.Join(root, "workspace")
 	writeJSON(t, filepath.Join(workspace, "conf", "conf.json"), map[string]any{"appearance": map[string]any{"mode": 1, "modeOS": false, "globalFontFamilies": []Font{{"System Sans", 400}}}, "editor": map[string]any{"fontSize": 23, "fontFamilies": []Font{{"Editor Serif", 500}}, "codeFontFamilies": []Font{{"Mono", 400}}}})
 	writeJSON(t, filepath.Join(filepath.Dir(config), "workspace.json"), []string{workspace})
@@ -120,7 +120,7 @@ func TestIOSRelocationAndStableIDs(t *testing.T) {
 			r, root, _, id := fixture(t, platform)
 			// Model an old sandbox with a host-absolute path, including its volume on Windows.
 			oldWorkspace := filepath.Join(filepath.VolumeName(root)+string(filepath.Separator), "private", "var", "mobile", "Containers", "Data", "Application", "OLD", "Documents", "workspace")
-			writeJSON(t, filepath.Join(root, "home", ".config", "siyuan", "workspace.json"), []string{oldWorkspace})
+			writeJSON(t, filepath.Join(root, "home", ".config", "siyuan-simplified", "workspace.json"), []string{oldWorkspace})
 			ret := resolve(t, r, `{"mode":"ir","sources":{"fontSize":"`+id+`"}}`, "")
 			if platform == "ios" {
 				if ret.Appearance.FontSize != 23 || len(ret.Appearance.Workspaces) != 1 || ret.Appearance.Workspaces[0].ID != id {
@@ -153,7 +153,7 @@ func TestRegistryAndConfigurationBoundaries(t *testing.T) {
 	if ret.Appearance.FontSize != 16 || ret.Appearance.Sources["fontSize"] != "independent" {
 		t.Fatal(ret.Appearance)
 	}
-	registry := filepath.Join(root, "home", ".config", "siyuan", "workspace.json")
+	registry := filepath.Join(root, "home", ".config", "siyuan-simplified", "workspace.json")
 	if err := os.Remove(registry); err != nil {
 		t.Fatal(err)
 	}
@@ -316,7 +316,7 @@ func TestConfigurationLimitsAndEscapingWorkspace(t *testing.T) {
 	if err := os.Symlink(outside, link); err != nil {
 		t.Skip(err)
 	}
-	registry := filepath.Join(root, "home", ".config", "siyuan", "workspace.json")
+	registry := filepath.Join(root, "home", ".config", "siyuan-simplified", "workspace.json")
 	writeJSON(t, registry, []string{link, outside})
 	if len(resolve(t, r, "", "").Appearance.Workspaces) != 0 {
 		t.Fatal("external workspace accepted")

@@ -32,10 +32,9 @@ for (const available of [true, false]) {
             editor = {resize() {}, protyle: {element: panel, contentElement: panel, block: {}, databaseAttributePanel: {
                 expand() {}, afterRender(callback: (element: unknown) => void) {
                     const guard = http.guardTemplateHTTPRequest(() => panel.isConnected, panel as unknown as Element);
-                    const execution = http.beginTemplateHTTPRequest("/api/av/getAttributeViewKeys", {id: "bound"}, undefined, guard.signal);
-                    try {
-                        assert.ok(execution?.isCurrent(), "preparation must retain a live template request owner");
-                    } finally { execution?.finish(); guard.dispose(); }
+                    assert.equal(http.beginTemplateHTTPRequest("/api/av/getAttributeViewKeys", {id: "bound"}, undefined, guard.signal), undefined,
+                        "template HTTP requests are disabled");
+                    guard.dispose();
                     assert.equal(original.isConnected, !replaced, "the original remains until the replacement is ready");
                     checked++;
                     const body = document.createElement("div");

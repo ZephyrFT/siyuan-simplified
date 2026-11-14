@@ -48,7 +48,7 @@ const describeFailure = (code: number, port: number | string): KernelExitReport 
                 kind: "error",
                 titleZh: "初始化工作空间失败",
                 titleEn: "Failed to create workspace directory",
-                content: "<div>工作空间文件夹权限不足，请查看 <a href=\"#\" data-log-path>~/.config/siyuan/kernel.log</a> 获取详细报错信息</div><div>Insufficient permissions for the workspace folder. Please check <a href=\"#\" data-log-path>~/.config/siyuan/kernel.log</a> for detailed error information.</div>",
+                content: "<div>工作空间文件夹权限不足，请查看 <a href=\"#\" data-log-path>~/.config/siyuan-simplified/kernel.log</a> 获取详细报错信息</div><div>Insufficient permissions for the workspace folder. Please check <a href=\"#\" data-log-path>~/.config/siyuan-simplified/kernel.log</a> for detailed error information.</div>",
                 emoji: "⚠️",
                 logSource: "kernel",
             };

@@ -50,7 +50,6 @@ func TestAPIContractSettingSectionReadsSingleSection(t *testing.T) {
 	model.Conf.Editor.Load().FontSize = 18
 	model.Conf.FileTree.Store(conf.NewFileTree())
 	model.Conf.FileTree.Load().Sort = 3
-	model.Conf.AI.Store(conf.NewAI())
 	model.NormalizeAppConf(model.Conf)
 
 	data := requestSettingSection(t, model.RoleAdministrator, `{"namespace":"editor"}`)
@@ -61,7 +60,7 @@ func TestAPIContractSettingSectionReadsSingleSection(t *testing.T) {
 		t.Fatalf("editor section did not reflect the stored value: %+v", data.Conf.Editor)
 	}
 	// 其余配置段不随单段读取返回，避免重复传输完整配置。
-	if data.Conf.FileTree != nil || data.Conf.Appearance != nil || data.Conf.AI != nil || data.Conf.Keymap != nil {
+	if data.Conf.FileTree != nil || data.Conf.Appearance != nil || data.Conf.Keymap != nil {
 		t.Fatalf("unexpected sections in a single-section response: %+v", data.Conf)
 	}
 	if data.SettingTasks == nil {
@@ -77,25 +76,8 @@ func TestAPIContractSettingSectionVisibility(t *testing.T) {
 	util.ReadOnly = true
 	t.Cleanup(func() { model.Conf, util.ReadOnly = previousConf, previousReadOnly })
 	model.Conf = model.NewAppConf()
-	ai := conf.NewAI()
-	ai.Providers = []*conf.Provider{{ID: "20261019120000-prov001", BaseURL: "https://example.com", APIKey: "secret-key", Enabled: true}}
-	ai.Web.ExaAPIKey = "secret-exa-key"
-	model.Conf.AI.Store(ai)
 	model.Conf.System.Store(conf.NewSystem())
 	model.NormalizeAppConf(model.Conf)
-
-	admin := requestSettingSection(t, model.RoleAdministrator, `{"namespace":"ai"}`)
-	if admin.Conf == nil || admin.Conf.AI == nil || len(admin.Conf.AI.Providers) != 1 ||
-		admin.Conf.AI.Providers[0].APIKey != "secret-key" || admin.Conf.AI.Web == nil || admin.Conf.AI.Web.ExaAPIKey != "secret-exa-key" {
-		t.Fatalf("administrator did not receive AI credentials: %+v", admin.Conf)
-	}
-
-	// 非管理员使用与 getConf 相同的脱敏规则，不返回任何凭据。
-	reader := requestSettingSection(t, model.RoleReader, `{"namespace":"ai"}`)
-	if reader.Conf == nil || reader.Conf.AI == nil || len(reader.Conf.AI.Providers) != 0 || reader.Conf.AI.Web != nil {
-		t.Fatalf("non-administrator received AI credentials: %+v", reader.Conf)
-	}
-
 	system := requestSettingSection(t, model.RoleAdministrator, `{"namespace":"system"}`)
 	if system.Conf == nil || system.Conf.System == nil || system.Conf.Api == nil || system.Conf.OIDC == nil {
 		t.Fatalf("system section did not include the access authorization fields: %+v", system.Conf)

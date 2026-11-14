@@ -801,8 +801,8 @@ export const getLocalStorage = (cb: () => void, onError?: (error: unknown) => vo
         defaultStorage[Constants.LOCAL_MOBILE_BOTTOM_BAR] = createDefaultMobileBottomBarConfig();
         defaultStorage[Constants.LOCAL_MOBILE_SIDE_PANEL] = {
             version: 1,
-            left: ["file", "bookmark", "tag", "inbox", "plugin"],
-            right: ["outline", "backlink", "agent"],
+            left: ["file", "bookmark", "tag"],
+            right: ["outline", "backlink"],
         };
         defaultStorage[Constants.LOCAL_IMAGES] = {
             file: "1f4c4",

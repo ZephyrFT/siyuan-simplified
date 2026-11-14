@@ -155,11 +155,11 @@ test("both macOS packages write and copy the Markdown document icon without repl
                 await savePlistFile(path.join(directory, "Info.plist"), {CFBundleExecutable: "Electron"});
             }
             await createMacApp(packager, destination, null, false);
-            const builtContents = path.join(destination, "SiYuan.app/Contents");
+            const builtContents = path.join(destination, "SiYuan Simplified.app/Contents");
             const plist = await parsePlistFile(path.join(builtContents, "Info.plist"));
             assert.deepEqual(plist.CFBundleDocumentTypes, [{
                 CFBundleTypeExtensions: ["md", "markdown"],
-                CFBundleTypeName: "SiYuan Markdown",
+                CFBundleTypeName: "SiYuan Simplified Markdown",
                 CFBundleTypeRole: "Editor",
                 LSHandlerRank: "Alternate",
                 CFBundleTypeIconFile: "markdown.icns",

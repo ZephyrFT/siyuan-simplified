@@ -24,7 +24,7 @@ export const workspaceLockedMessage: StaticMessage = {
     titleZh: "工作空间已被锁定",
     titleEn: "The workspace is locked",
     content: "<div>该工作空间正在被使用，请尝试在任务管理器中结束 SiYuan-Kernel 进程或者重启操作系统后再启动思源。</div>" +
-        "<div>The workspace is being used, please try to end the SiYuan-Kernel process in the task manager or restart the operating system and then start SiYuan.</div>",
+        "<div>The workspace is being used, please try to end the SiYuan-Kernel process in the task manager or restart the operating system and then start SiYuan Simplified.</div>",
 };
 
 export const kernelPortUnavailableMessage: StaticMessage = {

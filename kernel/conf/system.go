@@ -23,17 +23,13 @@ type System struct {
 	NetworkServeTLS bool          `json:"networkServeTLS"` // 是否开启 HTTPS 网络伺服
 	NetworkProxy    *NetworkProxy `json:"networkProxy"`
 
-	DownloadInstallPkg bool   `json:"downloadInstallPkg"`
-	UpdateChannel      string `json:"updateChannel,omitempty"`
-	AutoLaunch2        int    `json:"autoLaunch2"`    // 0：不自动启动，1：自动启动，2：自动启动+隐藏主窗口
-	LockScreenMode     int    `json:"lockScreenMode"` // 0：手动，1：手动+跟随系统 https://github.com/siyuan-note/siyuan/issues/9087
-	SettingsWindow     bool   `json:"settingsWindow"` // 是否在独立窗口中打开设置界面，仅桌面端生效
+	AutoLaunch2    int  `json:"autoLaunch2"`    // 0：不自动启动，1：自动启动，2：自动启动+隐藏主窗口
+	LockScreenMode int  `json:"lockScreenMode"` // 0：手动，1：手动+跟随系统 https://github.com/siyuan-note/siyuan/issues/9087
+	SettingsWindow bool `json:"settingsWindow"` // 是否在独立窗口中打开设置界面，仅桌面端生效
 
 	EncryptedNotebookFollowSystemLock bool `json:"encryptedNotebookFollowSystemLock"` // 系统锁屏时锁定加密笔记本，默认关闭
 
 	DisabledFeatures []string `json:"disabledFeatures"`
-
-	MicrosoftDefenderExcluded bool `json:"microsoftDefenderExcluded"` // 是否已加入 Microsoft Defender 排除项 https://github.com/siyuan-note/siyuan/issues/13650
 
 	SafeMode bool `json:"safeMode"` // 是否以安全模式运行（纯运行时状态，由 --safe-mode 注入，不随 conf.json 持久化）
 }
@@ -60,9 +56,7 @@ type Onboarding struct {
 
 func NewSystem() *System {
 	return &System{
-		NetworkProxy:       &NetworkProxy{},
-		DownloadInstallPkg: true,
-		UpdateChannel:      UpdateChannelStable,
+		NetworkProxy: &NetworkProxy{},
 	}
 }
 

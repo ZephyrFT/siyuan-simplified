@@ -68,8 +68,14 @@ test("custom fonts require selected workspace capability, valid hash and no syml
     await fs.unlink(file);
     const outside = path.join(root, "outside.ttf");
     await fs.writeFile(outside, bytes);
-    await fs.symlink(outside, file);
-    assert.equal(await host.readFont(token), undefined);
+    try {
+        await fs.symlink(outside, file);
+        assert.equal(await host.readFont(token), undefined);
+    } catch (error) {
+        // Windows 未开启开发者模式时无法创建符号链接，跳过该分支。
+        if ((error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        t.diagnostic("symlink rejection is skipped without Windows symlink privilege");
+    }
     await host.load({fonts: "independent"});
     assert.equal(await host.readFont(token), undefined);
     host.close();

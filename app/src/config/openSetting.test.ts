@@ -40,24 +40,6 @@ const fixture = (browser = false, mobile = false) => {
         setNative: () => { native = true; }};
 };
 
-test("settings and marketplace readmes follow the current workspace preference", async () => {
-    const f = fixture();
-    const app = {};
-    f.entry.openSetting(app, "app");
-    await f.entry.openBazaarReadme(app, "plugins", "plugin", "downloaded");
-    assert.deepEqual(f.calls.map(item => item[0]), ["dialog", "dialog", "readme"]);
-    f.calls.length = 0;
-    f.setPreference(true);
-    f.entry.openSetting(app, "app");
-    await f.entry.openBazaarReadme(app, "plugins", "plugin", "downloaded");
-    assert.deepEqual(f.calls.map(item => item[0]), ["native", "native"]);
-    f.calls.length = 0;
-    f.setNative();
-    f.entry.openSetting(app, "app");
-    assert.deepEqual(f.calls.map(item => item[0]), ["switch"]);
-});
-
-
 test("only a truthy workspace preference opens the independent settings window", () => {
     for (const [stored, expected] of [[false, "dialog"], [0, "dialog"], ["", "dialog"],
         [true, "native"], [1, "native"]] as const) {
@@ -75,18 +57,4 @@ test("browser and mobile keep their own settings UI regardless of the native pre
         f.entry.openSetting({});
         assert.equal(f.calls[0][0], expected);
     }
-});
-
-test("ChatGPT navigation reaches the native settings command and dialog entry", () => {
-    const f = fixture();
-    f.setPreference(true);
-    f.entry.openSetting({}, "ai", {aiProvider: "chatgpt"});
-    assert.equal(JSON.stringify(f.calls[0][2]), JSON.stringify({tab: "ai", aiProvider: "chatgpt"}));
-    f.calls.length = 0;
-    f.setPreference(false);
-    f.entry.openSetting({}, "ai", {aiProvider: "chatgpt"});
-    assert.deepEqual(f.calls.map(item => item[0]), ["dialog", "chatgpt"]);
-    const mobile = fixture(true, true);
-    mobile.entry.openSetting({}, "ai", {aiProvider: "chatgpt"});
-    assert.deepEqual(mobile.calls.map(item => item[0]), ["mobile", "chatgpt"]);
 });

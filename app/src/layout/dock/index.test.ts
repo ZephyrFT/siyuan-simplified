@@ -293,15 +293,15 @@ describe("dock minimum width on panel changes", () => {
             for (const index of [0, 1]) {
                 it(`${position} ${pin ? "fixed" : "floating"} grows when opening a wide panel in scope ${index}`, () => {
                     const {dock, element, add, open, close} = createWidthFixture(position, pin);
-                    add("agentChat", 0);
+                    add("bookmark", 0);
                     add("backlink", index);
-                    open("agentChat");
+                    open("bookmark");
                     assert.equal(element.style.width, "232px");
                     open("backlink");
                     assert.equal(element.style.width, "320px");
                     assert.equal(dock.getResponsiveMinimumSize(), 320);
                     assert.equal(dock.hasResponsiveManualOverride(), false);
-                    open("agentChat");
+                    open("bookmark");
                     if (index === 1) {
                         close("backlink");
                     }
@@ -312,7 +312,7 @@ describe("dock minimum width on panel changes", () => {
         }
     }
 
-    for (const type of ["graph", "globalGraph", "backlink", "inbox"]) {
+    for (const type of ["graph", "globalGraph", "backlink"]) {
         it(`restores an undersized saved ${type} panel at its minimum width`, () => {
             const {element, add, open} = createWidthFixture("Right");
             element.style.width = "0px";
@@ -357,9 +357,9 @@ describe("dock minimum width on panel changes", () => {
 
     it("allows a newly widened panel to float when the window is too narrow", () => {
         const {dock, add, open} = createWidthFixture("Right");
-        add("agentChat", 0);
+        add("bookmark", 0);
         add("backlink", 1);
-        open("agentChat");
+        open("bookmark");
         open("backlink");
         const result = resolveDockResponsiveLayout({
             availableSize: 750, centerMinimumSize: 480, gapSize: 8, hysteresis: 32,

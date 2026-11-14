@@ -1,6 +1,5 @@
 import {config as configApi} from "../util/configApi";
 import {escapeHtmlTextAndAttr} from "../../util/escape";
-import {fetchPost} from "../../util/fetch";
 import {isMobile} from "../../util/functions";
 
 /** 访问授权 Tab 根节点，供 send 回调更新局部 UI */
@@ -53,7 +52,6 @@ export const savePublish = (
             accounts: window.siyuan.config.publish.auth.accounts,
         },
     }, () => {
-        fetchPost("/api/setting/getPublish", {}, response => updatePublishConfig(reloadAccounts, response));
     });
 };
 

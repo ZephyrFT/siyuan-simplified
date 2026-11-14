@@ -1,8 +1,4 @@
 const actions: Record<string, {icon: string, label: string}> = {
-    downloadSnapshot: {icon: "Download", label: "download"},
-    downloadRollback: {icon: "Undo", label: "downloadRollback"},
-    removeCloudRepoTagSnapshot: {icon: "Trashcan", label: "remove"},
-    uploadSnapshot: {icon: "Upload", label: "upload"},
     rollback: {icon: "Undo", label: "rollback"},
     removeRepoTagSnapshot: {icon: "Trashcan", label: "remove"},
     genTag: {icon: "Tag", label: "tagSnapshot"},
@@ -10,9 +6,7 @@ const actions: Record<string, {icon: string, label: string}> = {
 };
 
 const snapshotActions: Record<string, string[]> = {
-    getCloudRepoTagSnapshots: ["downloadSnapshot", "downloadRollback", "removeCloudRepoTagSnapshot"],
-    getCloudRepoSnapshots: ["downloadSnapshot", "downloadRollback"],
-    getRepoTagSnapshots: ["uploadSnapshot", "rollback", "removeRepoTagSnapshot"],
+    getRepoTagSnapshots: ["rollback", "removeRepoTagSnapshot"],
     getRepoSnapshots: ["genTag", "rollback"],
 };
 

@@ -427,40 +427,6 @@ var resolveAssetPath = contractHandler(apicontract.ResolveAssetPath, func(c *gin
 	return apicontract.Success(p)
 })
 
-var uploadCloud = contractHandler(apicontract.AssetUploadCloud, func(c *gin.Context, request apicontract.AssetCloudUploadRequest) apicontract.Response[apicontract.Null] {
-
-	ignorePushMsg := request.IgnorePushMsg
-	id := request.ID
-
-	app := resolveRequestAppID(c, "")
-	count, err := model.UploadAssets2CloudWithApp(id, ignorePushMsg, app)
-	if err != nil {
-		return apicontract.FailureWithTimeout[apicontract.Null](-1, err.Error(), 3000)
-	}
-
-	util.PushMsgWithApp(app, fmt.Sprintf(model.Conf.Language(41), count), 3000)
-
-	return apicontract.Success(apicontract.Null{})
-})
-
-var uploadCloudByAssetsPaths = contractHandler(apicontract.AssetUploadCloudByAssetsPaths, func(c *gin.Context, request apicontract.AssetPathsCloudUploadRequest) apicontract.Response[apicontract.Null] {
-
-	assets := append([]string(nil), request.Paths...)
-	ignorePushMsg := request.IgnorePushMsg
-
-	app := resolveRequestAppID(c, "")
-	count, err := model.UploadAssets2CloudByAssetsPathsWithApp(assets, ignorePushMsg, app)
-	if err != nil {
-		return apicontract.FailureWithTimeout[apicontract.Null](-1, err.Error(), 3000)
-	}
-
-	if !ignorePushMsg {
-		util.PushMsgWithApp(app, fmt.Sprintf(model.Conf.Language(41), count), 3000)
-	}
-
-	return apicontract.Success(apicontract.Null{})
-})
-
 var insertLocalAssets = contractHandler(apicontract.InsertLocalAssets, func(c *gin.Context, request apicontract.InsertLocalAssetsRequest) apicontract.Response[apicontract.AssetUploadData] {
 
 	assetPaths := append([]string(nil), request.AssetPaths...)

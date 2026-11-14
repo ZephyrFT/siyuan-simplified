@@ -17,6 +17,8 @@ import (
 	"github.com/siyuan-note/siyuan/kernel/apicontract"
 	"github.com/siyuan-note/siyuan/kernel/av"
 	"github.com/siyuan-note/siyuan/kernel/cache"
+	"github.com/siyuan-note/siyuan/kernel/conf"
+	"github.com/siyuan-note/siyuan/kernel/sql"
 	"github.com/siyuan-note/siyuan/kernel/treenode"
 	"github.com/siyuan-note/siyuan/kernel/util"
 )
@@ -102,6 +104,26 @@ func TestAssetRelinkAttributeView(t *testing.T) {
 func setupAssetRelinkTest(t *testing.T) string {
 	t.Helper()
 	previousData, previousWorkspace, previousHistory := util.DataDir, util.WorkspaceDir, util.HistoryDir
+	previousConf := Conf
+	previousTimeLang, hadTimeLang := util.TimeLangs["en"]
+	Conf = NewAppConf()
+	Conf.Lang = "en"
+	Conf.Sync.Store(conf.NewSync())
+	Conf.Repo.Store(conf.NewRepo())
+	util.TimeLangs["en"] = map[string]any{
+		"albl": "ago", "blbl": "from now", "now": "now", "1s": "1 second %s", "xs": "%d seconds %s",
+		"1m": "1 minute %s", "xm": "%d minutes %s", "1h": "1 hour %s", "xh": "%d hours %s", "1d": "1 day %s",
+		"xd": "%d days %s", "1w": "1 week %s", "xw": "%d weeks %s", "1M": "1 month %s", "xM": "%d months %s",
+		"1y": "1 year %s", "2y": "2 years %s", "xy": "%d years %s", "max": "a long while %s",
+	}
+	t.Cleanup(func() {
+		Conf = previousConf
+		if hadTimeLang {
+			util.TimeLangs["en"] = previousTimeLang
+		} else {
+			delete(util.TimeLangs, "en")
+		}
+	})
 	util.WorkspaceDir = t.TempDir()
 	util.DataDir, util.HistoryDir = filepath.Join(util.WorkspaceDir, "data"), filepath.Join(util.WorkspaceDir, "history")
 	t.Cleanup(func() {
@@ -109,6 +131,17 @@ func setupAssetRelinkTest(t *testing.T) string {
 	})
 	writeAssetRelinkTestFile(t, "assets/a.png", []byte("source"))
 	writeAssetRelinkTestFile(t, "assets/b.webp", []byte("target"))
+	previousDBPath, previousBlockTreeDBPath, previousQueueDir := util.DBPath, util.BlockTreeDBPath, util.QueueDir
+	util.DBPath = filepath.Join(util.WorkspaceDir, "siyuan.db")
+	util.BlockTreeDBPath = filepath.Join(util.WorkspaceDir, "blocktree.db")
+	util.QueueDir = filepath.Join(util.WorkspaceDir, "queue")
+	sql.InitDatabase(true)
+	treenode.InitBlockTree(true)
+	t.Cleanup(func() {
+		// Windows 会拒绝删除仍被打开的数据库文件，临时目录清理前必须先关闭连接。
+		sql.CloseDatabase()
+		util.DBPath, util.BlockTreeDBPath, util.QueueDir = previousDBPath, previousBlockTreeDBPath, previousQueueDir
+	})
 	return util.DataDir
 }
 

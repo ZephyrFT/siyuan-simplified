@@ -53,18 +53,12 @@ const set = (path: string, value: unknown, onApplied?: (data: unknown, response?
 // 凭据校验、全局状态和插件生命周期保留专用协议，但共用排队与刷新入口。
 const submit = (path: string, value: unknown, namespace: string, patch: unknown): Promise<IWebSocketData> => {
     switch (path) {
-        case "system.downloadInstallPkg":
-            return fetchSyncPost("/api/system/setDownloadInstallPkg", {downloadInstallPkg: Boolean(value)});
-        case "system.updateChannel":
-            return fetchSyncPost("/api/system/setUpdateChannel", {updateChannel: value as Config.TUpdateChannel});
         case "api.token":
             return fetchSyncPost("/api/system/setAPIToken", {token: String(value)});
         case "accessAuthCode":
             return fetchSyncPost("/api/system/setAccessAuthCode", {accessAuthCode: String(value)});
         case "oidc":
             return fetchSyncPost("/api/system/setOIDC", value as Config.IOIDC);
-        case "bazaar.petalDisabled":
-            return fetchSyncPost("/api/setting/setBazaarPetalDisabled", {petalDisabled: Boolean(value)});
         // 关系图专用接口允许来宾与只读用户使用当前界面的临时偏好。
         case "graph.global":
             return fetchSyncPost("/api/graph/setGraphConf", {type: "global", conf: value as Config.IGraph["global"]});

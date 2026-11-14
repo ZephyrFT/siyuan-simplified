@@ -14,10 +14,8 @@ import (
 // 已分类的操作提示不得改回全局广播；网络安装、上传的结果仍由各自功能测试覆盖。
 func TestOperationNotificationScopeCallsites(t *testing.T) {
 	for file, names := range map[string][]string{
-		"asset.go": {"getUnusedAssets", "uploadCloud", "uploadCloudByAssetsPaths"},
+		"asset.go": {"getUnusedAssets"},
 		"av.go":    {"getUnusedAttributeViews"},
-		"bazaar.go": {"updateBazaarPackage", "installBazaarPlugin", "installBazaarWidget",
-			"installBazaarIcon", "installBazaarTemplate", "installBazaarTheme"},
 	} {
 		parsed, err := parser.ParseFile(token.NewFileSet(), file, nil, 0)
 		if err != nil {

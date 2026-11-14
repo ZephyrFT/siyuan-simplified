@@ -176,54 +176,6 @@ func TestRepoContractInputs(t *testing.T) {
 		}
 		checkLegacyInputCompatibility(t, "/api/repo/checkoutRepo", `{"id":" value ","sessionID":" value "}`, legacy, func(body []byte) error { _, err := apicontract.CheckoutRepo.Decode(bytes.NewReader(body)); return err })
 	})
-	t.Run("downloadCloudSnapshot", func(t *testing.T) {
-		legacy := func(c *gin.Context) (result *gulu.Result) {
-			ret := gulu.Ret.NewResult()
-			defer func() { result = ret }()
-
-			arg, ok := legacyJSONArg(c, ret)
-			if !ok {
-				return
-			}
-
-			var id, tag string
-			if !legacyParseArgs(arg, ret,
-				legacyBind("id", &id, true, true),
-				legacyBind("tag", &tag, true, false),
-			) {
-				return
-			}
-			return
-		}
-		checkLegacyInputCompatibility(t, "/api/repo/downloadCloudSnapshot", `{"id":" value ","tag":" value "}`, legacy, func(body []byte) error {
-			_, err := apicontract.DownloadCloudSnapshot.Decode(bytes.NewReader(body))
-			return err
-		})
-	})
-	t.Run("uploadCloudSnapshot", func(t *testing.T) {
-		legacy := func(c *gin.Context) (result *gulu.Result) {
-			ret := gulu.Ret.NewResult()
-			defer func() { result = ret }()
-
-			arg, ok := legacyJSONArg(c, ret)
-			if !ok {
-				return
-			}
-
-			var id, tag string
-			if !legacyParseArgs(arg, ret,
-				legacyBind("id", &id, true, true),
-				legacyBind("tag", &tag, true, false),
-			) {
-				return
-			}
-			return
-		}
-		checkLegacyInputCompatibility(t, "/api/repo/uploadCloudSnapshot", `{"id":" value ","tag":" value "}`, legacy, func(body []byte) error {
-			_, err := apicontract.UploadCloudSnapshot.Decode(bytes.NewReader(body))
-			return err
-		})
-	})
 	t.Run("getRepoSnapshots", func(t *testing.T) {
 		legacy := func(c *gin.Context) (result *gulu.Result) {
 			ret := gulu.Ret.NewResult()
@@ -315,53 +267,6 @@ func TestRepoContractInputs(t *testing.T) {
 		}
 		checkLegacyInputCompatibility(t, "/api/repo/exportRepoFile", `{"id":" value "}`, legacy, func(body []byte) error {
 			_, err := apicontract.ExportRepoFile.Decode(bytes.NewReader(body))
-			return err
-		})
-	})
-	t.Run("getCloudRepoSnapshots", func(t *testing.T) {
-		legacy := func(c *gin.Context) (result *gulu.Result) {
-			ret := gulu.Ret.NewResult()
-			defer func() { result = ret }()
-
-			arg, ok := legacyJSONArg(c, ret)
-			if !ok {
-				return
-			}
-
-			var page float64
-			if !legacyParseArgs(arg, ret, legacyBind("page", &page, true, false)) {
-				return
-			}
-			return
-		}
-		checkLegacyInputCompatibility(t, "/api/repo/getCloudRepoSnapshots", `{"page":1.75}`, legacy, func(body []byte) error {
-			_, err := apicontract.GetCloudRepoSnapshots.Decode(bytes.NewReader(body))
-			return err
-		})
-	})
-	t.Run("getCloudRepoTagSnapshots", func(t *testing.T) {
-		if _, err := apicontract.GetCloudRepoTagSnapshots.Decode(strings.NewReader("invalid JSON")); err != nil {
-			t.Fatal(err)
-		}
-	})
-	t.Run("removeCloudRepoTagSnapshot", func(t *testing.T) {
-		legacy := func(c *gin.Context) (result *gulu.Result) {
-			ret := gulu.Ret.NewResult()
-			defer func() { result = ret }()
-
-			arg, ok := legacyJSONArg(c, ret)
-			if !ok {
-				return
-			}
-
-			var tag string
-			if !legacyParseArgs(arg, ret, legacyBind("tag", &tag, true, true)) {
-				return
-			}
-			return
-		}
-		checkLegacyInputCompatibility(t, "/api/repo/removeCloudRepoTagSnapshot", `{"tag":" value "}`, legacy, func(body []byte) error {
-			_, err := apicontract.RemoveCloudRepoTagSnapshot.Decode(bytes.NewReader(body))
 			return err
 		})
 	})
@@ -463,11 +368,6 @@ func TestRepoContractInputs(t *testing.T) {
 	})
 	t.Run("purgeRepo", func(t *testing.T) {
 		if _, err := apicontract.PurgeRepo.Decode(strings.NewReader("invalid JSON")); err != nil {
-			t.Fatal(err)
-		}
-	})
-	t.Run("purgeCloudRepo", func(t *testing.T) {
-		if _, err := apicontract.PurgeCloudRepo.Decode(strings.NewReader("invalid JSON")); err != nil {
 			t.Fatal(err)
 		}
 	})

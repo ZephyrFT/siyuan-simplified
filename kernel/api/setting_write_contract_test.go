@@ -20,11 +20,7 @@ import (
 // settingWriteExemptions 登记命名约定上像写配置、但不写入应用配置或按事务单独处理的端点，必须注明原因。
 var settingWriteExemptions = map[string]string{
 	"/api/setting/getBootAppearances":          "只读",
-	"/api/setting/getCloudUser":                "读取账号信息，缓存的用户数据由账号流程维护",
 	"/api/setting/getPandocBin":                "只读",
-	"/api/setting/getPublish":                  "只读",
-	"/api/setting/logoutCloudUser":             "账号登出，用户数据不属于设置项",
-	"/api/setting/login2faCloudUser":           "账号登录，用户数据不属于设置项",
 	"/api/setting/refreshVirtualBlockRef":      "仅刷新运行时缓存",
 	"/api/system/setWorkspaceDir":              "写入全局工作空间列表，不属于工作空间配置",
 	"/api/system/importCustomFont":             "写入字体资源文件，不修改配置",
@@ -39,10 +35,8 @@ var settingWriteExemptions = map[string]string{
 	"/api/repo/initRepoKeyFromPassphrase":      "数据仓库密钥事务，由密钥流程自行持久化和广播",
 	"/api/repo/resetRepo":                      "数据仓库重置事务，由仓库流程自行持久化和广播",
 	"/api/repo/removeRepoTagSnapshot":          "删除快照标签，不修改配置",
-	"/api/repo/removeCloudRepoTagSnapshot":     "删除云端快照标签，不修改配置",
 	"/api/system/clearTempFiles":               "清理临时文件，不修改配置",
 	"/api/storage/clearRecentDocs":             "清空最近文档记录，不修改应用配置",
-	"/api/sync/confirmSyncCheckout":            "确认窗口已排空输入，仅更新同步检出任务的运行状态",
 }
 
 // 写配置端点的命名约定：这些前缀下以写入动词开头的端点默认视为写配置。

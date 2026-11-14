@@ -44,14 +44,6 @@ func TestAssetRequestCompatibility(t *testing.T) {
 	if err != nil || request.AssetPaths[0] != " /file " || request.ID != " id " || request.IsUpload == nil || *request.IsUpload || !request.FromHTMLPaste {
 		t.Fatalf("explicit upload arguments changed: %+v %v", request, err)
 	}
-	for _, body := range []string{`{}`, `{"paths":null}`} {
-		if _, err := AssetUploadCloudByAssetsPaths.Decode(strings.NewReader(body)); err == nil || err.Error() != "[paths] is required" {
-			t.Fatalf("missing paths response changed: %v", err)
-		}
-	}
-	if _, err := AssetUploadCloudByAssetsPaths.Decode(strings.NewReader(`{"paths":[null]}`)); err == nil {
-		t.Fatal("null path accepted")
-	}
 	files := []*multipart.FileHeader{{Filename: "first"}, {Filename: "second"}}
 	upload, err := UploadAsset.DecodeMultipart(&multipart.Form{Value: map[string][]string{"id": {"", "ignored"}, "assetsDirPath": {" path ", "ignored"}}, File: map[string][]*multipart.FileHeader{"file[]": files}})
 	if err != nil || upload.ID == nil || *upload.ID != "" || upload.AssetsDirPath == nil || *upload.AssetsDirPath != " path " || len(upload.Files) != 2 || upload.Files[0] != files[0] || upload.Files[1] != files[1] {

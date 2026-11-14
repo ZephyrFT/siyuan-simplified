@@ -531,7 +531,6 @@ export abstract class Constants {
             stickSearch: {default: "⇧⌘F", custom: "⇧⌘F"},
             replace: {default: "⌘R", custom: "⌘R"},
             closeTab: {default: "⌘W", custom: "⌘W"},
-            agentChat: {default: "", custom: ""},
             agentSend: {default: "⌘↩", custom: "⌘↩"},
             ...createDockKeymapDefaults("darwin"),
             config: {default: "⌥P", custom: "⌥P"},
@@ -805,12 +804,6 @@ export abstract class Constants {
                     show: false,
                     icon: "iconOutline",
                     hotkeyLangId: "outline",
-                }, {
-                    type: "inbox",
-                    size: {width: 320, height: 0},
-                    show: false,
-                    icon: "iconInbox",
-                    hotkeyLangId: "inbox",
                 }], [{
                     type: "bookmark",
                     size: {width: 232, height: 0},
@@ -830,12 +823,6 @@ export abstract class Constants {
             pin: true,
             data: [
                 [{
-                    type: "agentChat",
-                    size: {width: 320, height: 0},
-                    show: false,
-                    icon: "iconSparkles",
-                    hotkeyLangId: "agentChat",
-                }, {
                     type: "graph",
                     size: {width: 320, height: 0},
                     show: false,

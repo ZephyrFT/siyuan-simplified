@@ -91,18 +91,6 @@ const bootChild = async (sources) => {
         canceled.remove();
         window.siyuan.config.system.workspaceDir = "";
         window.siyuan.config.system.dataDir = "";
-        const {openBazaarPath} = loadRendererModule(sources.bazaarPath, {
-            path: require("node:path"), "../../util/pathName": {useShell() { throw new Error("child opened a relative path"); }},
-            "../setting/windowContext": {getSettingsWindowHost: () => host},
-        });
-        const callsBefore = window.opener.settingsPaths.length;
-        openBazaarPath("plugins", "example");
-        openBazaarPath("plugins", "example", true);
-        const expected = require("node:path");
-        require("node:assert/strict").deepEqual(Array.from(window.opener.settingsPaths.slice(callsBefore), item => Array.from(item)), [
-            ["openPath", expected.join("D:/workspaces/Workspace A & <B>/data", "plugins", "example")],
-            ["openPath", expected.join("D:/workspaces/Workspace A & <B>/data", "storage", "petal", "example")],
-        ]);
         document.title = host.title;
         if (host.plugin) {
             const {Setting} = loadRendererModule(sources.setting, {
@@ -207,10 +195,6 @@ const runCases = async (sources) => {
     const {ipcRenderer} = require("electron");
     const {Dialog, MobileDialog, genUUID, context, fit, titles} = rendererModules(sources);
     window.settingsPaths = [];
-    const bazaarPath = loadRendererModule(sources.bazaarPath, {
-        path: require("node:path"), "../../util/pathName": {useShell: (...args) => window.settingsPaths.push(args)},
-        "../setting/windowContext": {getSettingsWindowHost: () => undefined},
-    });
     class Plugin {openSetting() {}}
     const pluginSettings = {};
     new Function("Plugin", "exports", sources.pluginSettings)(Plugin, pluginSettings);
@@ -233,7 +217,6 @@ const runCases = async (sources) => {
         "../../protyle/toolbar/catalogSnapshot": {getEditorToolbarCatalogSnapshot: () => []},
         "../../plugin/breadcrumbButtonRegistry": breadcrumbRegistry,
         "./taskBlocker": {hasNativeSettingTasks: () => false},
-        "../bazaar/openPath": bazaarPath,
         "../tabs/compactMode": {isCompactModeEnabled: () => false},
         "./interface": settingInterface,
         "../index": {openSetting: (app, tab) => {
@@ -556,7 +539,7 @@ if (process.versions.electron && process.type === "browser") {
             paint: "util/windowPaint.ts", frontend: "util/functions.ts", titles: "util/processTitle.ts",
             mount: "config/setting/mount.ts",
             save: "config/setting/save.ts", fragments: "config/render/fragments.ts",
-            bazaarPath: "config/bazaar/openPath.ts", tooltip: "dialog/tooltip.ts", hoverInput: "util/hoverInput.ts"})) {
+            tooltip: "dialog/tooltip.ts", hoverInput: "util/hoverInput.ts"})) {
             let source = fs.readFileSync(path.join(__dirname, "../src", file), "utf8");
             if (key === "frontend") {
                 source = require("ifdef-loader/preprocessor").parse(source, {MOBILE: false, BROWSER: false}, false, true);

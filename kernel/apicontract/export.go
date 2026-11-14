@@ -294,7 +294,6 @@ func bindExportDecoder[Request, Data any](endpoint *Endpoint[Request, Data]) {
 func init() {
 	bindExportDecoder(&ExportCodeBlock)
 	bindExportDecoder(&ExportAttributeView)
-	bindExportDecoder(&Export2Liandi)
 	bindExportDecoder(&ExportDataInFolder)
 	bindExportDecoder(&ExportResources)
 	bindExportDecoder(&ExportNotebookMd)

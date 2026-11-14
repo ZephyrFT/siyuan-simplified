@@ -1,12 +1,4 @@
 {
-  "app/src/ai/actions.ts | openAIActions | menu | fullscreen": {
-    "count": 1,
-    "reason": "由 AIActions 的会话检查后调用，亦供键盘操作打开"
-  },
-  "app/src/ai/actions.ts | openAIActions | menu | open": {
-    "count": 1,
-    "reason": "由 AIActions 的会话检查后调用，亦供键盘操作打开"
-  },
   "app/src/boot/globalEvent/command/panel.ts | commandPanel | menu | fullscreen": {
     "count": 1,
     "reason": "键盘或命令打开，保留仅打开和焦点行为"

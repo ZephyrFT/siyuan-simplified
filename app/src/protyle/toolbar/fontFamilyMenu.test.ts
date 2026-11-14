@@ -176,8 +176,9 @@ const browserCases = async (sources: Record<string, string>, toolbarSource: stri
     controls.hideKeyboardToolbarUtilOnEditorClick();
     await require("electron").ipcRenderer.invoke("font-resize", 350);
     await settle();
-    check.equal(innerHeight, 350, "keyboard resize changes the layout viewport");
-    check.ok(Math.abs(menuElement.getBoundingClientRect().height - (350 - toolbar.getBoundingClientRect().height)) <= 1,
+    // Windows 下 setContentSize 会因 DPI 取整产生 1px 偏差。
+    check.ok(Math.abs(innerHeight - 350) <= 1, "keyboard resize changes the layout viewport");
+    check.ok(Math.abs(menuElement.getBoundingClientRect().height - (innerHeight - toolbar.getBoundingClientRect().height)) <= 1,
         "font sheet tracks the viewport above the preserved appearance panel");
     check.ok(Math.abs(menuElement.getBoundingClientRect().bottom - toolbar.getBoundingClientRect().top) <= 1);
     check.ok(search().getBoundingClientRect().top >= menuElement.getBoundingClientRect().top);

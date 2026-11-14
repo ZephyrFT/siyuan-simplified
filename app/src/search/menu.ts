@@ -8,7 +8,7 @@ import {Constants} from "../constants";
 import {showMessage} from "../dialog/message";
 import {fetchPost, fetchSyncPost} from "../util/fetch";
 import {escapeHtml} from "../util/escape";
-import {isDisabledFeature, isSensitiveSearchConfig, setStorageVal} from "../protyle/util/compatibility";
+import {isSensitiveSearchConfig, setStorageVal} from "../protyle/util/compatibility";
 import {mobileConfirmDialog} from "../dialog/mobileConfirmDialog";
 import {goUnRef, updateSearchResult} from "../mobile/menu/search";
 import {bindSearchSubtypeFilters} from "./subTypes";
@@ -357,17 +357,6 @@ export const queryMenu = (config: Config.IUILayoutTabSearchConfig, cb: () => voi
             cb();
         }
     }).element);
-    if (!isDisabledFeature("ai") && window.siyuan.config.ai.embedding.enabled) {
-        window.siyuan.menus.menu.append(new MenuItem({
-            icon: "iconSparkles",
-            label: window.siyuan.languages.semanticSearch,
-            current: config.method === 4,
-            click() {
-                config.method = 4;
-                cb();
-            }
-        }).element);
-    }
 };
 
 const removeCriterionData = (criteriaData: Config.IUILayoutTabSearchConfig[], names: string[]) => {
@@ -591,18 +580,6 @@ export const moreMenu = async (config: Config.IUILayoutTabSearchConfig,
             updateSearchResult(config, element, true);
         }
     }];
-    if (!isDisabledFeature("ai") && window.siyuan.config.ai.embedding.enabled) {
-        searchMethodSubmenu.push({
-            icon: "iconSparkles",
-            label: window.siyuan.languages.semanticSearch,
-            current: config.method === 4,
-            click() {
-                config.method = 4;
-                config.page = 1;
-                updateSearchResult(config, element, true);
-            }
-        });
-    }
     window.siyuan.menus.menu.append(new MenuItem({
         iconHTML: "",
         label: window.siyuan.languages.searchMethod,

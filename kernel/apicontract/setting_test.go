@@ -54,10 +54,6 @@ func TestSettingKeymapOpaqueValues(t *testing.T) {
 }
 
 func TestSettingCloudLoginSerialization(t *testing.T) {
-	bundle, err := BuildBundle()
-	if err != nil {
-		t.Fatal(err)
-	}
 	for _, payload := range []string{
 		`{"code":0,"msg":"ok","data":{"code":0,"msg":"ok","token":"secret","extra":{"list":[null,false,1]}}}`,
 		`{"code":1,"msg":"retry","data":{"code":-1,"msg":"retry","token":false,"wait":12}}`,
@@ -82,9 +78,6 @@ func TestSettingCloudLoginSerialization(t *testing.T) {
 		}
 		if !reflect.DeepEqual(before, after) {
 			t.Fatalf("cloud result changed: %s", encoded)
-		}
-		if err = bundle.ValidateHTTPResponse("POST", Login2faCloudUser.Definition().Path, 200, "application/json", encoded); err != nil {
-			t.Fatal(err)
 		}
 	}
 	for _, payload := range []string{`{}`, `{"code":null,"msg":""}`, `{"code":0,"msg":null,"token":"x"}`, `{"code":0,"msg":""}`, `{"code":0,"msg":"","token":false}`, `{"code":0,"msg":"","token":""}`} {

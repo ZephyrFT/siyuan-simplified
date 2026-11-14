@@ -261,20 +261,6 @@ var getHeadingFoldTransaction = contractHandler(apicontract.GetHeadingFoldTransa
 	return blockTransactionResponse(transaction)
 })
 
-var setBlockReminder = contractHandler(apicontract.SetBlockReminder, func(c *gin.Context, request apicontract.BlockReminderRequest) apicontract.Response[apicontract.Null] {
-	if err := model.SetBlockReminder(request.ID, request.Timed); err != nil {
-		return apicontract.FailureWithTimeout[apicontract.Null](-1, err.Error(), 7000)
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
-var setCloudReminder = contractHandler(apicontract.SetCloudReminder, func(c *gin.Context, request apicontract.CloudReminderRequest) apicontract.Response[apicontract.Null] {
-	if err := model.SetCloudReminder(request.ID, request.Content, request.Timed); err != nil {
-		return apicontract.FailureWithTimeout[apicontract.Null](-1, err.Error(), 7000)
-	}
-	return apicontract.Success(apicontract.Null{})
-})
-
 var getUnfoldedParentID = contractHandler(apicontract.GetUnfoldedParentID, func(c *gin.Context, request apicontract.BlockQueryRequest) apicontract.Response[apicontract.UnfoldedParentData] {
 	boxID, err := holdContractBlockRequest(c, request.Notebook, request.ID, request.IDs, false)
 	if err != nil {

@@ -52,38 +52,3 @@ export const receive = data => {switch(data.cmd){${clauses.join("\n")}}};`), {
         assert.deepEqual(storage, {"mobile-bottom": true});
     });
 }
-
-test("cloud account pushes and responses deliver one login notification after UI state is applied", () => {
-    const events = [];
-    const order = [];
-    const window = {siyuan: {user: null}, dispatchEvent: event => {
-        events.push(event.type);
-        order.push("login");
-    }};
-    const cloud = {};
-    runInNewContext(compile(readFileSync("src/config/tabs/cloudUser.ts", "utf8")), {exports: cloud, window});
-    const source = sourceFile("src/config/tabs/accountUi.ts");
-    const apply = source.statements.find(node => ts.isVariableStatement(node) &&
-        node.declarationList.declarations.some(item => item.name.getText(source) === "applyCloudUserState"));
-    const account = {};
-    runInNewContext(compile(apply.getText(source)), {
-        exports: account, window, ...cloud, syncTabElement: {},
-        renderAccount: () => order.push("account"), refreshSyncCloudSpaceGroup: () => order.push("space"),
-        onSetaccount: () => order.push("toolbar"), processSync: () => order.push("sync"),
-        CustomEvent: class {constructor(type) {this.type = type;}},
-    });
-    const user = {userId: "alice", userName: "Alice"};
-    account.applyCloudUserState(user);
-    assert.deepEqual(order, ["account", "space", "toolbar", "sync", "login"]);
-    account.applyCloudUserState({...user});
-    account.applyCloudUserState({...user, userNickname: "Updated"});
-    assert.deepEqual(events, ["siyuan-login-success"]);
-    assert.equal(window.siyuan.user.userNickname, "Updated");
-    account.applyCloudUserState({userId: "bob", userName: "Bob"});
-    assert.equal(events.length, 2);
-    account.applyCloudUserState(null, "Bob");
-    assert.equal(events.length, 2);
-    account.applyCloudUserState({userId: "bob", userName: "Bob"});
-    assert.equal(events.length, 3);
-    assert.equal(order.at(-1), "login");
-});

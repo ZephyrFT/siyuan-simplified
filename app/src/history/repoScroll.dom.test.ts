@@ -27,7 +27,7 @@ const browserCases = (renderSource: string, actionsSource: string, css: string, 
         document.body.style.width = `${width}px`;
         for (const fontSize of [14, 24]) {
             document.body.style.fontSize = `${fontSize}px`;
-            for (const type of ["getRepoSnapshots", "getRepoTagSnapshots", "getCloudRepoSnapshots", "getCloudRepoTagSnapshots"]) {
+            for (const type of ["getRepoSnapshots", "getRepoTagSnapshots"]) {
                 const snapshots = Array.from({length: 30}, (_, index) => ({
                     id: "a".repeat(39) + index, memo: "Memo", tag: type.includes("Tag") ? "long-tag".repeat(20) : "",
                     hCreated: "2026-11-06 22:56:15", hSize: "225.33 MB", systemOS: "android", systemName: "localhost",

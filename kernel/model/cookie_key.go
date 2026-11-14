@@ -21,7 +21,7 @@ import (
 const cookieKeyMinLen = 32
 
 func cookieKeyPath() string {
-	return filepath.Join(util.HomeDir, ".config", "siyuan", "cookie.key")
+	return filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "cookie.key")
 }
 
 // loadCookieKey 返回同一主目录下各工作空间共用的 Cookie 密钥。Cookie 不按端口隔离，各工作空间须使用同一密钥才能互相保留会话。

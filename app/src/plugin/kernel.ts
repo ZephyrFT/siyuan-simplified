@@ -1,5 +1,4 @@
 import {fetchWithAppId} from "../util/fetchWithAppId";
-import {fetchSyncPost} from "../util/fetch";
 
 import type {EventBus} from "./EventBus";
 
@@ -191,16 +190,6 @@ export class Kernel implements IKernelPlugin {
         }
     }
 
-    async #initState() {
-        const response = await fetchSyncPost("/api/plugin/getLoadedPlugin", { name: this.#name });
-        if (this.state.code === -1 && response.code === 0 && response.data?.stateCode != null) {
-            const state = response.data.stateCode;
-            if (state === 0 || state === 1 || state === 2 || state === 3 || state === 4 || state === 5) {
-                this.state.code = state;
-            }
-        }
-    }
-
     async #rpcCall(method: TJsonRpcMethod, ...params: TJsonRpcMethodParams): Promise<any> {
         const id = this.#generateId();
 
@@ -235,11 +224,6 @@ export class Kernel implements IKernelPlugin {
     public async init() {
         if (this.#destroyed) {
             return;
-        }
-        try {
-            await this.#initState();
-        } catch (error) {
-            console.error("Failed to initialize kernel plugin state:", error);
         }
     }
 

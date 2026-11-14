@@ -6,7 +6,6 @@ package model
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -23,7 +22,6 @@ import (
 
 	"github.com/88250/go-humanize"
 	"github.com/88250/gulu"
-	"github.com/88250/lute"
 	"github.com/88250/lute/ast"
 	"github.com/88250/lute/editor"
 	"github.com/88250/lute/html"
@@ -35,7 +33,6 @@ import (
 	"github.com/siyuan-note/logging"
 	"github.com/siyuan-note/siyuan/kernel/av"
 	"github.com/siyuan-note/siyuan/kernel/cache"
-	"github.com/siyuan-note/siyuan/kernel/conf"
 	"github.com/siyuan-note/siyuan/kernel/filesys"
 	"github.com/siyuan-note/siyuan/kernel/heif"
 	"github.com/siyuan-note/siyuan/kernel/search"
@@ -309,305 +306,6 @@ func DocImageAssets(rootID string) (ret []string, err error) {
 }
 
 // AgentMessageImageAssets 返回智能体用户消息中引用的全局资源图片。
-func AgentMessageImageAssets(markdown string) []string {
-	return agentMessageImageAssets(markdown, util.NewLute())
-}
-
-func agentMessageImageAssets(markdown string, luteEngine *lute.Lute) (ret []string) {
-	if strings.TrimSpace(markdown) == "" {
-		return
-	}
-	tree := parse.Parse("", []byte(markdown), luteEngine.ParseOptions)
-	seen := map[string]bool{}
-	ast.Walk(tree.Root, func(n *ast.Node, entering bool) ast.WalkStatus {
-		if !entering || n.Type != ast.NodeImage {
-			return ast.WalkContinue
-		}
-		linkDest := n.ChildByType(ast.NodeLinkDest)
-		if linkDest == nil {
-			return ast.WalkContinue
-		}
-		dest := strings.TrimSpace(linkDest.TokensStr())
-		if !strings.HasPrefix(AssetPathWithoutQuery(dest), "assets/") || seen[dest] {
-			return ast.WalkContinue
-		}
-		seen[dest] = true
-		ret = append(ret, dest)
-		return ast.WalkContinue
-	})
-	return
-}
-
-type ImageArtifactRef struct {
-	Kind       string `json:"kind"`
-	Path       string `json:"path"`
-	MIMEType   string `json:"mimeType,omitempty"`
-	DocumentID string `json:"documentId,omitempty"`
-}
-
-type DocumentImageList struct {
-	DocumentID string             `json:"documentId"`
-	Images     []ImageArtifactRef `json:"images"`
-}
-
-const (
-	documentImageMaxBytes  = 20 * 1024 * 1024
-	documentImageMaxPixels = 40 * 1000 * 1000
-	documentImageMaxEdge   = 2048
-)
-
-type PreparedDocumentImage struct {
-	Artifact ImageArtifactRef   `json:"artifact"`
-	Data     []byte             `json:"-"`
-	MIMEType string             `json:"mimeType"`
-	Prepared util.PreparedImage `json:"-"`
-}
-
-type GenerateImageRequest struct {
-	Prompt       string `json:"prompt"`
-	Size         string `json:"size"`
-	Quality      string `json:"quality"`
-	OutputFormat string `json:"outputFormat"`
-}
-
-type GenerateImageResult struct {
-	Data          []byte `json:"-"`
-	MIMEType      string `json:"mimeType"`
-	Extension     string `json:"extension"`
-	RevisedPrompt string `json:"revisedPrompt,omitempty"`
-}
-
-type GenerateDocumentImageRequest struct {
-	DocumentID   string `json:"documentId"`
-	Prompt       string `json:"prompt"`
-	Size         string `json:"size"`
-	Quality      string `json:"quality"`
-	OutputFormat string `json:"outputFormat"`
-}
-
-type GenerateDocumentImageResult struct {
-	Artifact      ImageArtifactRef `json:"artifact"`
-	RevisedPrompt string           `json:"revisedPrompt,omitempty"`
-}
-
-type imageExecutionUnknownError struct {
-	err error
-}
-
-func (err *imageExecutionUnknownError) Error() string {
-	return err.err.Error()
-}
-
-func (err *imageExecutionUnknownError) Unwrap() error {
-	return err.err
-}
-
-// IsImageExecutionUnknown 判断图片提供商调用是否已经开始，调用方不得自动重试这类错误。
-func IsImageExecutionUnknown(err error) bool {
-	var target *imageExecutionUnknownError
-	return errors.As(err, &target)
-}
-
-func markImageExecutionUnknown(err error) error {
-	if err == nil || IsImageExecutionUnknown(err) {
-		return err
-	}
-	return &imageExecutionUnknownError{err: err}
-}
-
-// ListDocumentImages 返回文档引用的本地图片，供智能体工具和编辑器功能复用。
-func ListDocumentImages(documentID string) (DocumentImageList, error) {
-	bt, err := resolveMultimodalDocument(documentID)
-	if err != nil {
-		return DocumentImageList{}, err
-	}
-	paths, err := DocImageAssets(bt.RootID)
-	if err != nil {
-		return DocumentImageList{}, fmt.Errorf("list document images failed: %w", err)
-	}
-	refs := make([]ImageArtifactRef, 0, len(paths))
-	seen := map[string]bool{}
-	for _, assetPath := range paths {
-		if !strings.HasPrefix(AssetPathWithoutQuery(assetPath), "assets/") || seen[assetPath] {
-			continue
-		}
-		seen[assetPath] = true
-		refs = append(refs, ImageArtifactRef{Kind: "image", Path: assetPath, DocumentID: bt.RootID})
-	}
-	return DocumentImageList{DocumentID: bt.RootID, Images: refs}, nil
-}
-
-// PrepareDocumentImage 校验并读取文档实际引用的本地资源图片，供当前模型直接接收图片输入。
-func PrepareDocumentImage(documentID, assetPath string) (PreparedDocumentImage, error) {
-	assetPath = strings.TrimSpace(assetPath)
-	if assetPath == "" {
-		return PreparedDocumentImage{}, errors.New("assetPath is required for analyze")
-	}
-	if !strings.HasPrefix(AssetPathWithoutQuery(assetPath), "assets/") {
-		return PreparedDocumentImage{}, errors.New("only local assets/... images are supported")
-	}
-	bt, err := resolveMultimodalDocument(documentID)
-	if err != nil {
-		return PreparedDocumentImage{}, err
-	}
-	if !documentReferencesImage(bt.RootID, assetPath) {
-		return PreparedDocumentImage{}, errors.New("assetPath is not an image referenced by the document")
-	}
-	data, err := ReadAssetBytesInBox(bt.BoxID, assetPath)
-	if err != nil {
-		return PreparedDocumentImage{}, fmt.Errorf("read image failed: %w", err)
-	}
-	prepared, err := util.PrepareModelImage(
-		data, documentImageMaxBytes, documentImageMaxPixels, documentImageMaxEdge,
-	)
-	if err != nil {
-		return PreparedDocumentImage{}, err
-	}
-	return PreparedDocumentImage{
-		Artifact: ImageArtifactRef{Kind: "image", Path: assetPath, DocumentID: bt.RootID},
-		Data:     prepared.Data,
-		MIMEType: prepared.MIMEType,
-		Prepared: prepared,
-	}, nil
-}
-
-// PrepareAgentMessageImage 校验并读取智能体用户消息引用的全局资源图片。
-func PrepareAgentMessageImage(assetPath string) (PreparedDocumentImage, error) {
-	assetPath = strings.TrimSpace(assetPath)
-	cleanPath := AssetPathWithoutQuery(assetPath)
-	if !strings.HasPrefix(cleanPath, "assets/") {
-		return PreparedDocumentImage{}, errors.New("only global assets/... images are supported")
-	}
-	relativePath, absPath, err := ResolveDataAssetPath(cleanPath)
-	if err != nil {
-		return PreparedDocumentImage{}, err
-	}
-	if !strings.HasPrefix(relativePath, "assets/") {
-		return PreparedDocumentImage{}, errors.New("only global assets/... images are supported")
-	}
-	if err = EnsureAssetLocal(absPath); err != nil {
-		return PreparedDocumentImage{}, err
-	}
-	data, err := os.ReadFile(absPath)
-	if err != nil {
-		return PreparedDocumentImage{}, fmt.Errorf("read image failed: %w", err)
-	}
-	prepared, err := util.PrepareModelImage(
-		data, documentImageMaxBytes, documentImageMaxPixels, documentImageMaxEdge,
-	)
-	if err != nil {
-		return PreparedDocumentImage{}, err
-	}
-	return PreparedDocumentImage{
-		Artifact: ImageArtifactRef{Kind: "image", Path: relativePath},
-		Data:     prepared.Data,
-		MIMEType: prepared.MIMEType,
-		Prepared: prepared,
-	}, nil
-}
-
-// GenerateImage 使用全局图片生成配置创建图片字节，可供文档资源、编辑器和其他图片入口复用。
-func GenerateImage(ctx context.Context, request GenerateImageRequest) (GenerateImageResult, error) {
-	confAIReadSnapshot := Conf.LoadAI()
-
-	if Conf == nil || confAIReadSnapshot == nil {
-		return GenerateImageResult{}, errors.New("AI configuration is unavailable")
-	}
-	provider, generationModel := confAIReadSnapshot.GetImageGenerationModel()
-	if err := validateImageModel(provider, generationModel); err != nil {
-		return GenerateImageResult{}, err
-	}
-	prompt := strings.TrimSpace(request.Prompt)
-	if prompt == "" {
-		return GenerateImageResult{}, errors.New("prompt is required for image generation")
-	}
-	size := multimodalValueOrDefault(request.Size, confAIReadSnapshot.ImageGeneration.Size)
-	quality := multimodalValueOrDefault(request.Quality, confAIReadSnapshot.ImageGeneration.Quality)
-	outputFormat := strings.ToLower(multimodalValueOrDefault(request.OutputFormat, confAIReadSnapshot.ImageGeneration.OutputFormat))
-	if outputFormat != "png" && outputFormat != "jpeg" && outputFormat != "webp" {
-		return GenerateImageResult{}, errors.New("unsupported image output format")
-	}
-	generated, err := util.NewOpenAIImageAdapter(
-		provider.APIKey, provider.BaseURL, generationModel.Name, confAIReadSnapshot.ImageGeneration.RequestTimeout, ResolveAIProviderHeaders(provider),
-	).Generate(ctx, util.GenerateImageRequest{
-		Prompt: prompt, Size: size, Quality: quality, OutputFormat: outputFormat,
-	})
-	if err != nil {
-		return GenerateImageResult{}, markImageExecutionUnknown(fmt.Errorf("generate image failed: %w", err))
-	}
-	if ctx.Err() != nil {
-		return GenerateImageResult{}, markImageExecutionUnknown(errors.New("image generation was cancelled"))
-	}
-	return GenerateImageResult{
-		Data: generated.Data, MIMEType: generated.MIMEType, Extension: generated.Extension, RevisedPrompt: generated.RevisedPrompt,
-	}, nil
-}
-
-// GenerateDocumentImage 使用通用图片生成能力创建文档资源。
-func GenerateDocumentImage(ctx context.Context, request GenerateDocumentImageRequest) (GenerateDocumentImageResult, error) {
-	bt, err := resolveMultimodalDocument(request.DocumentID)
-	if err != nil {
-		return GenerateDocumentImageResult{}, err
-	}
-	generated, err := GenerateImage(ctx, GenerateImageRequest{
-		Prompt: request.Prompt, Size: request.Size, Quality: request.Quality, OutputFormat: request.OutputFormat,
-	})
-	if err != nil {
-		return GenerateDocumentImageResult{}, err
-	}
-	assetPath, _, err := InsertAssetBytes(bt.RootID, "ai-image"+generated.Extension, generated.Data)
-	if err != nil {
-		return GenerateDocumentImageResult{}, markImageExecutionUnknown(fmt.Errorf("save generated image failed: %w", err))
-	}
-	return GenerateDocumentImageResult{
-		Artifact: ImageArtifactRef{
-			Kind: "image", Path: assetPath, MIMEType: generated.MIMEType, DocumentID: bt.RootID,
-		},
-		RevisedPrompt: generated.RevisedPrompt,
-	}, nil
-}
-
-func resolveMultimodalDocument(documentID string) (*treenode.BlockTree, error) {
-	bt := treenode.GetBlockTree(strings.TrimSpace(documentID))
-	if bt == nil {
-		return nil, errors.New("document not found: " + documentID)
-	}
-	return bt, nil
-}
-
-func validateImageModel(provider *conf.Provider, imageModel *conf.Model) error {
-	if provider == nil || imageModel == nil {
-		return errors.New("image model is not configured")
-	}
-	if provider.Protocol != "" && provider.Protocol != util.OpenAIProtocolChatCompletions &&
-		provider.Protocol != util.OpenAIProtocolResponses {
-		return fmt.Errorf("unsupported multimodal provider protocol: %s", provider.Protocol)
-	}
-	return nil
-}
-
-func documentReferencesImage(rootID, assetPath string) bool {
-	paths, err := DocImageAssets(rootID)
-	if err != nil {
-		return false
-	}
-	wanted := AssetPathWithoutQuery(assetPath)
-	for _, current := range paths {
-		if AssetPathWithoutQuery(current) == wanted {
-			return true
-		}
-	}
-	return false
-}
-
-func multimodalValueOrDefault(value, fallback string) string {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return fallback
-	}
-	return value
-}
-
 type attributeViewItemFilter func(attrView *av.AttributeView, itemID string) bool
 
 func DocAssets(rootID string, retainQueryStr bool) (ret []string, err error) {
@@ -2101,12 +1799,6 @@ func UnusedAssets(sorted bool) (ret []*UnusedItem, err error) {
 		}
 	}
 
-	agentSessionDests, readAgentSessionsErr := agentSessionImageAssetDests(luteEngine)
-	if readAgentSessionsErr != nil {
-		logging.LogErrorf("read agent session image assets failed: %s", readAgentSessionsErr)
-		return nil, readAgentSessionsErr
-	}
-	removeReferencedAssetPaths(assetsPathMap, agentSessionDests)
 	templateDests := map[string]bool{}
 	templateDir := filepath.Join(util.DataDir, "templates")
 	if resolved, resolveErr := filepath.EvalSymlinks(templateDir); resolveErr == nil {
@@ -2223,63 +1915,6 @@ func UnusedAssets(sorted bool) (ret []*UnusedItem, err error) {
 			}
 			return ret[i].Item > ret[j].Item
 		})
-	}
-	return
-}
-
-type agentAssetSessionFile struct {
-	Entries []struct {
-		Type    string `json:"type"`
-		Content string `json:"content"`
-	} `json:"entries"`
-	ActiveTurn *struct {
-		UserContent string `json:"userContent"`
-	} `json:"activeTurn"`
-}
-
-func agentSessionImageAssetDests(luteEngine *lute.Lute) (ret map[string]bool, err error) {
-	ret = map[string]bool{}
-	sessionsDir := filepath.Join(util.DataDir, "storage", "ai", "agent", "sessions")
-	entries, err := os.ReadDir(sessionsDir)
-	if os.IsNotExist(err) {
-		err = nil
-		return
-	}
-	if err != nil {
-		return
-	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			continue
-		}
-		for _, name := range []string{"session.json", "runtime.json"} {
-			data, readErr := filelock.ReadFile(filepath.Join(sessionsDir, entry.Name(), name))
-			if os.IsNotExist(readErr) {
-				continue
-			}
-			if readErr != nil {
-				err = readErr
-				return
-			}
-			file := &agentAssetSessionFile{}
-			if unmarshalErr := gulu.JSON.UnmarshalJSON(data, file); unmarshalErr != nil {
-				err = unmarshalErr
-				return
-			}
-			for _, sessionEntry := range file.Entries {
-				if sessionEntry.Type != "user" {
-					continue
-				}
-				for _, dest := range agentMessageImageAssets(sessionEntry.Content, luteEngine) {
-					ret[dest] = true
-				}
-			}
-			if file.ActiveTurn != nil {
-				for _, dest := range agentMessageImageAssets(file.ActiveTurn.UserContent, luteEngine) {
-					ret[dest] = true
-				}
-			}
-		}
 	}
 	return
 }

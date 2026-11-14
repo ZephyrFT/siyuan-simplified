@@ -58,8 +58,8 @@ for (const mobile of [false, true]) {
         assert.equal(appearance.defaultSave, patches.get("appearanceConfigApi"));
         const shells = exports.getSettingTabDefs();
         assert.deepEqual(Array.from(shells, shell => shell.id), [
-            "editor", "file", "appearance", "bazaar", "flashcard", "ai", "secretsVariables", "assets",
-            "ocr", "export", "search", ...(mobile ? [] : ["keymap"]), "sync", "access", "app", "about",
+            "editor", "file", "appearance", "flashcard", "secretsVariables", "assets",
+            "ocr", "export", "search", ...(mobile ? [] : ["keymap"]), "access", "app", "about",
         ]);
         assert.equal(exports.getSettingTab("appearance"), appearance);
         assert.equal(exports.getSettingTabDefs(), shells);

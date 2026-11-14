@@ -237,7 +237,6 @@ func SetNetworkProxy(proxyURL string, useSystem bool) {
 	}
 
 	httpclient.CloseIdleConnections()
-	closeOpenAIIdleConnections()
 }
 
 var (

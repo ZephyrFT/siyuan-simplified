@@ -116,13 +116,6 @@ func searchQueryFields(reader io.Reader, path string) (map[string]json.RawMessag
 }
 
 func init() {
-	SemanticSearchBlock.decodeRequest = func(reader io.Reader) (request SearchBlockRequest, err error) {
-		fields, err := searchQueryFields(reader, "/api/search/semanticSearchBlock")
-		if err == nil {
-			err = decodeRequestFields(reflect.ValueOf(&request).Elem(), fields)
-		}
-		return
-	}
 	FindReplace.decodeRequest = func(reader io.Reader) (request FindReplaceRequest, err error) {
 		fields, err := searchQueryFields(reader, "/api/search/findReplace")
 		if err == nil {

@@ -3,13 +3,11 @@ import {IMenuDeclaration} from "./menuDeclaration";
 export interface IImageOCRMenuContext {
     textAvailable: boolean;
     localAvailable: boolean;
-    aiAvailable: boolean;
     getStatus: () => Promise<boolean | undefined>;
     openResult: () => void;
     copyText: () => void;
     clearText: () => void;
     runLocal: () => void;
-    runAI: () => void;
 }
 
 export const IMAGE_OCR_MENU: IMenuDeclaration<IImageOCRMenuContext> = {
@@ -28,10 +26,6 @@ export const IMAGE_OCR_MENU: IMenuDeclaration<IImageOCRMenuContext> = {
                 const localLabel = element.querySelector('[data-id="reOCR"] .b3-menu__label');
                 if (localLabel) {
                     localLabel.textContent = hasText ? window.siyuan.languages.reOCR : window.siyuan.languages.performOCR;
-                }
-                const aiLabel = element.querySelector('[data-id="reAIOCR"] .b3-menu__label');
-                if (aiLabel) {
-                    aiLabel.textContent = hasText ? window.siyuan.languages.reAIOCR : window.siyuan.languages.performAIOCR;
                 }
             });
         },
@@ -62,7 +56,7 @@ export const IMAGE_OCR_MENU: IMenuDeclaration<IImageOCRMenuContext> = {
         label: () => "",
         simple: true,
         type: "separator",
-        behavior: context => ({ignore: !context.localAvailable && !context.aiAvailable}),
+        behavior: context => ({ignore: !context.localAvailable}),
     }, {
         id: "reOCR",
         label: () => window.siyuan.languages.performOCR,
@@ -70,12 +64,5 @@ export const IMAGE_OCR_MENU: IMenuDeclaration<IImageOCRMenuContext> = {
         type: "entry",
         icon: "iconOCR",
         behavior: context => ({ignore: !context.localAvailable, click: context.runLocal}),
-    }, {
-        id: "reAIOCR",
-        label: () => window.siyuan.languages.performAIOCR,
-        simple: false,
-        type: "entry",
-        icon: "iconSparkles",
-        behavior: context => ({ignore: !context.aiAvailable, click: context.runAI}),
     }],
 };

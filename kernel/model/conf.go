@@ -48,8 +48,8 @@ type AppConf struct {
 	Export         ConfSection[conf.Export]     `json:"export"`         // 导出配置
 	Graph          ConfSection[conf.Graph]      `json:"graph"`          // 关系图配置
 	UILayout       ConfSection[conf.UILayout]   `json:"uiLayout"`       // 界面布局，通过 SetUILayout 更新
-	UserData       string                       `json:"userData"`       // 社区用户信息，对 User 加密存储
-	User           *conf.User                   `json:"-"`              // 社区用户内存结构，不持久化。不要直接使用，使用 GetUser() 和 SetUser() 方法
+	UserData       string                       `json:"userData"`       // 兼容旧配置中的账户信息，不再使用
+	User           *conf.User                   `json:"-"`              // 兼容旧账户结构，不再使用
 	ReadOnly       bool                         `json:"readonly"`       // 是否是以只读模式运行
 	ServerAddrs    []string                     `json:"serverAddrs"`    // 本地服务器地址列表
 	AccessAuthCode string                       `json:"accessAuthCode"` // 锁屏密码
@@ -59,11 +59,10 @@ type AppConf struct {
 	Sync           ConfSection[conf.Sync]       `json:"sync"`           // 同步配置
 	Search         ConfSection[conf.Search]     `json:"search"`         // 搜索配置
 	Flashcard      ConfSection[conf.Flashcard]  `json:"flashcard"`      // 闪卡配置
-	AI             ConfSection[conf.AI]         `json:"ai"`             // 人工智能配置
+	Bazaar         ConfSection[conf.Bazaar]     `json:"bazaar"`         // 集市配置
 	OCR            ConfSection[conf.OCR]        `json:"ocr"`            // 本地图片文字识别
 	Secrets        ConfSection[conf.Secrets]    `json:"secrets"`        // 全局密钥库
 	Variables      ConfSection[conf.Variables]  `json:"variables"`      // 全局变量库
-	Bazaar         ConfSection[conf.Bazaar]     `json:"bazaar"`         // 集市配置
 	Stat           ConfSection[conf.Stat]       `json:"stat"`           // 统计
 	Api            ConfSection[conf.API]        `json:"api"`            // API
 	Repo           ConfSection[conf.Repo]       `json:"repo"`           // 数据仓库
@@ -71,16 +70,14 @@ type AppConf struct {
 	Publish        ConfSection[conf.Publish]    `json:"publish"`        // 发布服务
 	Onboarding     ConfSection[conf.Onboarding] `json:"onboarding"`     // 首次使用引导
 	ShowChangelog  bool                         `json:"showChangelog"`  // 是否显示版本更新日志
-	CloudRegion    int                          `json:"cloudRegion"`    // 云端区域，0：中国大陆，1：北美
+	CloudRegion    int                          `json:"cloudRegion"`    // 兼容旧配置中的云端区域
 	Snippet        ConfSection[conf.Snpt]       `json:"snippet"`        // 代码片段
 	DataIndexState int                          `json:"dataIndexState"` // 数据索引状态，0：已索引，1：未索引
 	CookieKey      string                       `json:"cookieKey"`      // 用于加密 Cookie 的密钥
 	ConfVersion    int                          `json:"confVersion"`    // 配置格式版本，用于判定需要执行的迁移
 
-	MCPOAuth string `json:"mcpOAuth"` // MCP OAuth 凭据密文
-
 	m        *sync.RWMutex // 配置数据锁
-	userLock *sync.RWMutex // 用户数据独立锁，避免与配置保存操作竞争
+	userLock *sync.RWMutex // 兼容旧账户数据的独立锁
 }
 
 func NewAppConf() *AppConf {
@@ -98,11 +95,10 @@ func NewAppConf() *AppConf {
 		Sync:       NewConfSection[conf.Sync](nil),
 		Search:     NewConfSection[conf.Search](nil),
 		Flashcard:  NewConfSection[conf.Flashcard](nil),
-		AI:         NewConfSection[conf.AI](nil),
+		Bazaar:     NewConfSection[conf.Bazaar](nil),
 		OCR:        NewConfSection[conf.OCR](nil),
 		Secrets:    NewConfSection[conf.Secrets](nil),
 		Variables:  NewConfSection[conf.Variables](nil),
-		Bazaar:     NewConfSection[conf.Bazaar](nil),
 		Stat:       NewConfSection[conf.Stat](nil),
 		Api:        NewConfSection[conf.API](nil),
 		Repo:       NewConfSection[conf.Repo](nil),
@@ -152,19 +148,6 @@ func applyOIDCEnvironment(config *conf.OIDC) {
 			config.ClaimRules = rules
 		}
 	}
-}
-
-func (conf *AppConf) GetMCPOAuth() string {
-	conf.m.RLock()
-	defer conf.m.RUnlock()
-	return conf.MCPOAuth
-}
-
-func (conf *AppConf) SetMCPOAuth(value string) {
-	conf.m.Lock()
-	conf.MCPOAuth = value
-	conf.m.Unlock()
-	conf.Save()
 }
 
 func (appConf *AppConf) GetOIDC() *conf.OIDC {
@@ -217,34 +200,6 @@ func (appConf *AppConf) CompareAndSetOIDC(expectedVersion string, config *conf.O
 	return changed, true
 }
 
-func (conf *AppConf) SetAI(ctx context.Context, ai *conf.AI) error {
-	conf.m.Lock()
-	defer conf.m.Unlock()
-	bindings := chatGPTAccountBindingIDs(ai)
-	if reflect.DeepEqual(bindings, chatGPTAccountBindingIDs(conf.AI.Load())) || util.ReadOnly {
-		conf.AI.Store(ai)
-		if !util.ReadOnly {
-			conf.saveLocked()
-		}
-		return nil
-	}
-	next := conf.cloneSettings()
-	next.AI.Store(ai)
-	data, err := next.marshalForSave()
-	if err != nil {
-		return err
-	}
-	if err = util.ChatGPTService().UpdateBindings(ctx, util.WorkspaceDir, bindings, func(path string, bindingsData []byte) error {
-		return writeChatGPTBindingConfiguration(path, bindingsData, data, writeChatGPTBindingFile)
-	}); err != nil {
-		return err
-	}
-	conf.AI.Store(ai)
-	applyConfRuntime(conf)
-	recordPersistedConf(data)
-	return nil
-}
-
 func (conf *AppConf) SetUILayout(uiLayout *conf.UILayout) {
 	conf.m.Lock()
 	defer conf.m.Unlock()
@@ -272,11 +227,6 @@ func InitConf() {
 		logging.LogFatalf(logging.ExitCodeFileSysErr, "recover settings reset failed: %s", err)
 		return
 	}
-	if err := recoverChatGPTAccountBindings(); err != nil {
-		logging.LogFatalf(logging.ExitCodeFileSysErr, "recover ChatGPT account bindings failed: %s", err)
-		return
-	}
-
 	Conf = NewAppConf()
 	if err := recoverDataImports(); err != nil {
 		logging.LogFatalf(logging.ExitCodeFileSysErr, "recover Data.zip import failed: %s", err)
@@ -295,7 +245,6 @@ func InitConf() {
 		return
 	}
 	clearEncryptedExportTempOnBoot()
-	clearOldInstallPackages("")
 	if err := CleanupRetiredInstallResources(); err != nil {
 		logging.LogWarnf("clean up retired install resources failed: %s", err)
 	}
@@ -403,14 +352,6 @@ func InitConf() {
 		api.Token = gulu.Rand.String(16)
 		Conf.Api.Store(api)
 	}
-	if Conf.AI.Load() == nil {
-		ai := conf.NewAI()
-		conf.ApplyAIEnvironment(ai)
-		Conf.AI.Store(ai)
-	}
-	if nil != Conf.AI.Load() {
-		Conf.AI.Load().DecryptAPIKeys()
-	}
 	if nil == Conf.OIDC {
 		Conf.OIDC = conf.NewOIDC()
 	} else {
@@ -430,8 +371,16 @@ func InitConf() {
 	}
 
 	flashcardWarning := normalizeAppConf(Conf)
-	if err := LoadChatGPTAccountBindings(Conf.AI.Load()); err != nil {
-		logging.LogErrorf("load local ChatGPT account bindings failed: %s", err)
+	// 本地版不提供数据同步，运行期强制关闭，避免旧配置在启动或退出时触发远端访问。
+	if syncConf := Conf.LoadSync(); nil != syncConf {
+		syncConf.Enabled = false
+		if nil != syncConf.LAN {
+			syncConf.LAN.Enabled = false
+		}
+	}
+	// 本地版不加载第三方主题脚本，避免扩展代码在窗口内执行。
+	if appearanceConf := Conf.LoadAppearance(); nil != appearanceConf {
+		appearanceConf.ThemeJS = false
 	}
 	if flashcardWarning != "" {
 		logging.LogWarnf("%s, reset to default weights [%s]", flashcardWarning, Conf.Flashcard.Load().Weights)
@@ -491,38 +440,6 @@ func InitConf() {
 
 	applyConfRuntime()
 
-	for _, p := range Conf.AI.Load().Providers {
-		if p == nil || !p.Enabled {
-			continue
-		}
-		for _, m := range p.Models {
-			if m == nil || m.Name == "" || !m.Enabled {
-				continue
-			}
-			logging.LogInfof("AI provider enabled\n"+
-				"    baseURL=%s\n"+
-				"    timeout=%ds\n"+
-				"    model=%s\n"+
-				"    maxCompletionTokens=%d\n"+
-				"    temperature=%.1f\n"+
-				"    maxHistoryMessages=%d",
-				p.BaseURL,
-				p.RequestTimeout,
-				m.Name,
-				Conf.AI.Load().Editing.MaxCompletionTokens,
-				Conf.AI.Load().Editing.Temperature,
-				Conf.AI.Load().Editing.MaxHistoryMessages)
-		}
-	}
-
-	if Conf.AI.Load().Embedding != nil && len(Conf.AI.Load().Embedding.APIKey) > 0 {
-		logging.LogInfof("embedding API enabled\n"+
-			"    baseURL=%s\n"+
-			"    model=%s",
-			Conf.AI.Load().Embedding.BaseURL,
-			Conf.AI.Load().Embedding.Name)
-	}
-
 	Conf.ReadOnly = util.ReadOnly
 
 	if "" != util.AccessAuthCode {
@@ -539,7 +456,6 @@ func InitConf() {
 	Conf.DataIndexState = 0
 
 	Conf.CookieKey = loadCookieKey(Conf.CookieKey)
-	initSharedInstallPackages()
 
 	if util.ContainerDocker == util.Container && Conf.AccessAuthCode == "" && !util.SiYuanAccessAuthCodeBypass {
 		if err := ValidateOIDCConfigurationChange(context.Background(), Conf.OIDC, true, false, false); err != nil {
@@ -667,20 +583,12 @@ var pendingWorkspaceExit *util.WorkspaceExitState // 由 exitLock 保护，绑�
 //
 // setCurrentWorkspace：是否将当前工作空间放到工作空间列表的最后一个
 //
-// execInstallPkg：是否返回新版本安装包
-//
-//	0：默认按照设置项 System.DownloadInstallPkg 检查并推送提示
-//	1：不返回新版本安装包
-//	2：返回新版本安装包路径并退出，由桌面宿主执行安装
+// execInstallPkg：保留桌面宿主传入的安装参数，本地版不再检查或返回安装包
 //
 // 返回值 exitCode：
 //
 //	0：正常退出
 //	1：同步执行失败
-//	2：提示新安装包
-//
-// 当 force 为 true（强制退出）并且 execInstallPkg 为 0（默认检查更新）并且新版本安装包已经准备就绪时，将安装包路径返回给桌面宿主
-// https://github.com/siyuan-note/siyuan/issues/10288
 func Close(force, setCurrentWorkspace bool, execInstallPkg int) (exitCode int, installPkgPath string) {
 	return CloseWithContext(context.Background(), force, setCurrentWorkspace, execInstallPkg)
 }
@@ -727,7 +635,6 @@ func closeKernel(ctx context.Context, force, setCurrentWorkspace bool, execInsta
 	if exitFinished {
 		return
 	}
-	confSyncSnapshot := Conf.LoadSync()
 	markPendingWorkspaceExit()
 	defer func() {
 		if exitCode == 1 || exitCode == 2 || exitCode == 3 {
@@ -768,21 +675,6 @@ func closeKernel(ctx context.Context, force, setCurrentWorkspace bool, execInsta
 		return
 	}
 	defer unlockSync()
-	if !force {
-		if confSyncSnapshot.Enabled && 3 != confSyncSnapshot.Mode &&
-			((IsSubscriber() && conf.ProviderSiYuan == confSyncSnapshot.Provider) || conf.ProviderSiYuan != confSyncSnapshot.Provider) {
-			diagnostic.Stage("exit sync")
-			if checkSync(false, true, false) {
-				if err := syncDataLockedContext(ctx, true, false); err != nil {
-					exitCode = 1
-					if 1 != execInstallPkg && !skipNewVerInstallPkg() {
-						installPkgPath = getNewVerInstallPkgPath(false)
-					}
-					return
-				}
-			}
-		}
-	}
 
 	// 同步期间可能重新连接界面；在关闭数据前再次确认，交还给仍可操作的窗口。
 	if recovery != nil && util.CountSessions() > 0 {
@@ -809,20 +701,6 @@ func closeKernel(ctx context.Context, force, setCurrentWorkspace bool, execInsta
 	if 0 < pendingPathRefresh {
 		logging.LogInfof("pending path refresh tasks: %d", pendingPathRefresh)
 	}
-	diagnostic.Stage("check install package")
-	newVerInstallPkgPath := getNewVerInstallPkgPath(2 == execInstallPkg || (force && 0 == execInstallPkg))
-	if !skipNewVerInstallPkg() && "" != newVerInstallPkgPath {
-		if 2 == execInstallPkg || (force && 0 == execInstallPkg) { // 将新版本安装包交给桌面宿主执行
-			installPkgPath = newVerInstallPkgPath
-			logging.LogInfof("the new version install pkg is ready for the desktop host [%s]", newVerInstallPkgPath)
-		} else if 0 == execInstallPkg { // 新版本安装包已经准备就绪
-			installPkgPath = newVerInstallPkgPath
-			exitCode = 2
-			logging.LogInfof("the new version install pkg is ready [%s], waiting for the user's next instruction", newVerInstallPkgPath)
-			return
-		}
-	}
-
 	shutdownStarted = true
 	util.IsExiting.Store(true)
 	diagnostic.Stage("save configuration")
@@ -1012,10 +890,6 @@ func (conf *AppConf) marshalForSave() ([]byte, error) {
 	if err = gulu.JSON.UnmarshalJSON(plainData, snapshot); err != nil {
 		return nil, err
 	}
-	if snapshot.AI.Load() != nil {
-		snapshot.AI.Load().ClearChatGPTAccountIDs()
-		snapshot.AI.Load().EncryptAPIKeys()
-	}
 	if snapshot.OIDC != nil {
 		snapshot.OIDC.EncryptClientSecret()
 	}
@@ -1025,8 +899,6 @@ func (conf *AppConf) marshalForSave() ([]byte, error) {
 	// safeMode 是纯运行时状态（由 --safe-mode 注入），不随 conf.json 持久化，避免跨启动残留。
 	if snapshot.System.Load() != nil {
 		snapshot.System.Load().SafeMode = false
-		// 更新通道由用户目录下的全局配置持久化，不写入工作空间配置。
-		snapshot.System.Load().UpdateChannel = ""
 	}
 
 	return gulu.JSON.MarshalIndentJSON(snapshot, "", "  ")
@@ -1202,7 +1074,6 @@ func GetMaskedConf() (ret *AppConf, err error) {
 	}
 
 	ret.UserData = MaskedUserData
-	ret.MCPOAuth = ""
 	ret.CookieKey = ""
 	if "" != ret.AccessAuthCode {
 		ret.AccessAuthCode = MaskedAccessAuthCode
@@ -1227,9 +1098,7 @@ func UpdateServerAddrs(serverAddrs []string) bool {
 // HideConfSecret 隐藏设置中的秘密信息
 // REF: https://github.com/siyuan-note/siyuan/issues/11364
 func HideConfSecret(c *AppConf) {
-	c.AI.Store(&conf.AI{})
 	c.OIDC = &conf.OIDC{}
-	c.MCPOAuth = ""
 	c.CookieKey = ""
 	c.Api.Store(&conf.API{})
 	if nil != c.Export.Load() {
@@ -1268,7 +1137,7 @@ func HideBoxConfSecret(c *conf.BoxConf) {
 
 func clearPortJSON() {
 	pid := fmt.Sprintf("%d", os.Getpid())
-	portJSON := filepath.Join(util.HomeDir, ".config", "siyuan", "port.json")
+	portJSON := filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "port.json")
 	pidPorts := map[string]string{}
 	var data []byte
 	var err error
@@ -1338,8 +1207,6 @@ func clearWorkspaceTemp(preserveInstallPkgPath string) {
 	os.RemoveAll(filepath.Join(util.TempDir, "os"))
 	os.RemoveAll(filepath.Join(util.TempDir, "base64"))
 	os.RemoveAll(filepath.Join(util.TempDir, "ai"))
-
-	clearOldInstallPackages(preserveInstallPkgPath)
 
 	tmps, err := filepath.Glob(filepath.Join(util.TempDir, "*.tmp"))
 	if err != nil {

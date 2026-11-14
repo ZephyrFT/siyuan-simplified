@@ -110,7 +110,9 @@ const browserCases = async sources => {
         const tall = row.getBoundingClientRect().height;
         hidden.textContent = "Short";
         await settle();
-        close(row.getBoundingClientRect().height, 46, "detached async text shrink invalidates measured height");
+        // Windows 的字体亚像素度量会让 46px 行高落到 45.67px 左右。
+        check.ok(Math.abs(row.getBoundingClientRect().height - 46) <= 1,
+            `detached async text shrink invalidates measured height: ${row.getBoundingClientRect().height}`);
         check.ok(tall > 100);
         controller.invalidate();
         check.equal(row.style.minHeight, "45px");

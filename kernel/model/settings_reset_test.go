@@ -51,12 +51,9 @@ func settingsResetTestEnvironment(t *testing.T) {
 	Conf.NotebookCrypto.HistoryKEKs = [][]byte{[]byte("retained-history-key")}
 	Conf.AccessAuthCode = "screen-lock"
 	Conf.CookieKey = "cookie-signing-key"
-	Conf.MCPOAuth = "encrypted-oauth"
 	Conf.UserData = "encrypted-account"
 	Conf.Api.Store(conf.NewAPI())
 	Conf.Api.Load().Token = "preserved-token"
-	Conf.AI.Store(conf.NewAI())
-	Conf.AI.Load().Providers = []*conf.Provider{{APIKey: "retained-provider-key"}}
 	Conf.OIDC.ClientSecret = "retained-oidc-secret"
 	Conf.Secrets.Store(&conf.Secrets{Items: []*conf.Secret{{Name: "secret", Value: "retained-secret"}}})
 	Conf.Sync.Store(conf.NewSync())
@@ -77,7 +74,6 @@ func TestSettingsResetPreservesDataAndProtectedConfiguration(t *testing.T) {
 	Conf.System.Load().NetworkProxy = &conf.NetworkProxy{Host: "proxy"}
 	Conf.System.Load().LockScreenMode = 1
 	Conf.System.Load().EncryptedNotebookFollowSystemLock = true
-	Conf.System.Load().DownloadInstallPkg = false
 	Conf.System.Load().SettingsWindow = true
 	util.MarkdownSettings.Store(util.NewMarkdown())
 	util.MarkdownSettings.Load().InlineMath = false
@@ -110,8 +106,8 @@ func TestSettingsResetPreservesDataAndProtectedConfiguration(t *testing.T) {
 			t.Fatal("retention and language must be preserved")
 		}
 		if Conf.NotebookCrypto != protected.NotebookCrypto || Conf.Api.Load() != protected.Api.Load() || Conf.AccessAuthCode != protected.AccessAuthCode ||
-			Conf.CookieKey != protected.CookieKey || Conf.MCPOAuth != protected.MCPOAuth || Conf.UserData != protected.UserData ||
-			Conf.Snippet.Load() != protected.Snippet.Load() || Conf.AI.Load() != protected.AI.Load() ||
+			Conf.CookieKey != protected.CookieKey || Conf.UserData != protected.UserData ||
+			Conf.Snippet.Load() != protected.Snippet.Load() ||
 			Conf.Bazaar.Load().Trust != protected.Bazaar.Load().Trust || Conf.Bazaar.Load().PetalDisabled != protected.Bazaar.Load().PetalDisabled ||
 			Conf.OIDC != protected.OIDC || Conf.Secrets.Load() != protected.Secrets.Load() || Conf.Sync.Load() != protected.Sync.Load() || Conf.Repo.Load() != protected.Repo.Load() {
 			t.Fatal("protected configuration changed")
@@ -153,15 +149,12 @@ func TestSettingsResetPreservesDataAndProtectedConfiguration(t *testing.T) {
 	if !reflect.DeepEqual(reloaded.NotebookCrypto, protected.NotebookCrypto) {
 		t.Fatal("persisted recovery material changed")
 	}
-	if bytes.Contains(data, []byte("retained-provider-key")) || bytes.Contains(data, []byte("retained-oidc-secret")) ||
-		bytes.Contains(data, []byte("retained-secret")) {
+	if bytes.Contains(data, []byte("retained-oidc-secret")) || bytes.Contains(data, []byte("retained-secret")) {
 		t.Fatal("reset persisted plaintext credentials")
 	}
-	reloaded.AI.Load().DecryptAPIKeys()
 	reloaded.OIDC.DecryptClientSecret()
 	reloaded.Secrets.Load().Decrypt()
-	if reloaded.AI.Load().Providers[0].APIKey != Conf.AI.Load().Providers[0].APIKey ||
-		reloaded.OIDC.ClientSecret != Conf.OIDC.ClientSecret || reloaded.Secrets.Load().Items[0].Value != Conf.Secrets.Load().Items[0].Value {
+	if reloaded.OIDC.ClientSecret != Conf.OIDC.ClientSecret || reloaded.Secrets.Load().Items[0].Value != Conf.Secrets.Load().Items[0].Value {
 		t.Fatal("credentials no longer decrypt after reset")
 	}
 }
@@ -357,7 +350,6 @@ func TestSettingsResetRollbackFailureStopsWrites(t *testing.T) {
 func TestConfPreferencesPersistPatchAndReset(t *testing.T) {
 	prepareConfConsistencyTest(t)
 	settingsResetTestEnvironment(t)
-	Conf.AI.Load().Agent.StreamingMarkdown = true
 	oldStorage := []byte(`{"local-compact-mode":true,"local-menu-mouse-scroll":true,"local-outline":{"keepCurrentExpand":true},"local-pdftheme":{"light":"dark"},"local-mobile-bars":{"autoHide":false},"local-recent-docs":{"type":"updated"},"siyuan-agent-streaming-markdown":true}`)
 	if err := os.WriteFile(settingsResetPaths()[1], oldStorage, 0600); err != nil {
 		t.Fatal(err)
@@ -365,7 +357,6 @@ func TestConfPreferencesPersistPatchAndReset(t *testing.T) {
 	for _, item := range []struct{ namespace, patch string }{
 		{"appearance", `{"compactMode":true,"menuMouseScroll":true,"outlineKeepCurrentExpand":true,"pdfTheme":{"light":"dark","annoColor":"red"},"mobileBars":{"autoHide":false,"sidebarSwipe":false}}`},
 		{"fileTree", `{"recentDocsSort":"updated"}`},
-		{"ai", `{"agent":{"streamingMarkdown":true}}`},
 		{"appearance", `{"pdfTheme":{"dark":"light"},"mobileBars":{"sidebarButtons":false}}`},
 	} {
 		if _, err := ApplyConfPatch(item.namespace, []byte(item.patch)); err != nil {
@@ -384,7 +375,7 @@ func TestConfPreferencesPersistPatchAndReset(t *testing.T) {
 	if !appearance.CompactMode || !appearance.MenuMouseScroll || !appearance.OutlineKeepCurrentExpand ||
 		appearance.PDFTheme.Light != "dark" || appearance.PDFTheme.Dark != "light" || appearance.PDFTheme.AnnoColor != "red" ||
 		*appearance.MobileBars.AutoHide || *appearance.MobileBars.SidebarSwipe || !*appearance.MobileBars.SidebarButtons ||
-		reloaded.FileTree.Load().RecentDocsSort != "updated" || !reloaded.AI.Load().Agent.StreamingMarkdown {
+		reloaded.FileTree.Load().RecentDocsSort != "updated" {
 		t.Fatal("persisted preferences or partial update preservation changed")
 	}
 	if err = ResetSettings(); err != nil {
@@ -394,8 +385,8 @@ func TestConfPreferencesPersistPatchAndReset(t *testing.T) {
 	if appearance.CompactMode || !appearance.MenuMouseScroll || appearance.OutlineKeepCurrentExpand ||
 		appearance.PDFTheme.Light != "light" || appearance.PDFTheme.Dark != "dark" ||
 		!*appearance.MobileBars.AutoHide || !*appearance.MobileBars.SidebarSwipe || !*appearance.MobileBars.SidebarButtons ||
-		Conf.FileTree.Load().RecentDocsSort != "viewedAt" || !Conf.AI.Load().Agent.StreamingMarkdown {
-		t.Fatal("reset must restore appearance and file tree preferences while preserving AI")
+		Conf.FileTree.Load().RecentDocsSort != "viewedAt" {
+		t.Fatal("reset must restore appearance and file tree preferences while preserving host configuration")
 	}
 	if data, err = os.ReadFile(settingsResetPaths()[1]); err != nil {
 		t.Fatal(err)

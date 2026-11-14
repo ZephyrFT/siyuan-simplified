@@ -3,7 +3,7 @@ import type {App} from "../index";
 import {EventBus} from "./EventBus";
 import type {subMenu} from "../menus/Menu";
 import {setTopBarContextMenu} from "./topBarContextMenu";
-import {fetchPost, fetchSyncPost} from "../util/fetch";
+import {fetchPost} from "../util/fetch";
 import {ContractFormData} from "../util/contractFormData";
 import {isMobile, isWindow} from "../util/functions";
 import {getAllEditor, getAllModels} from "../layout/getAll";
@@ -23,7 +23,6 @@ import {Constants} from "../constants";
 import {addPluginDock, removePluginDock} from "./loader";
 import {normalizeStoragePath} from "../util/pathName";
 import {Kernel} from "./kernel";
-import {IAgentCapabilityEffects, registerCapability} from "../layout/dock/agent/frontendCapabilities";
 import {
     addBreadcrumbButton as addPluginBreadcrumbButton,
     removeBreadcrumbButton as removePluginBreadcrumbButton,
@@ -98,7 +97,6 @@ export class Plugin {
     public setting: Setting;
     public statusBarIcons: Element[] = [];
     public commands: ICommand[] = [];
-    public agentCapabilities: Array<{id: string; generation: number}> = [];
     public models: {
         /// #if !MOBILE
         [key: string]: (options: { tab: Tab, data: any }) => Custom
@@ -441,27 +439,6 @@ export class Plugin {
         this.setting.open(this.displayName || this.name);
     }
 
-    public async loadPublishData(): Promise<Record<string, string | number | boolean | null>> {
-        if (isPluginDisposed(this)) {
-            throw {code: 410, msg: "Plugin lifecycle has ended", data: null};
-        }
-        const response = await fetchSyncPost("/api/petal/loadPluginPublishData", {packageName: this.name}, undefined, false);
-        if (response.code !== 0 || !response.data) {
-            throw response;
-        }
-        return response.data;
-    }
-
-    public async savePublishData(data: Record<string, string | number | boolean | null>): Promise<void> {
-        if (isPluginDisposed(this)) {
-            throw {code: 410, msg: "Plugin lifecycle has ended", data: null};
-        }
-        const response = await fetchSyncPost("/api/petal/savePluginPublishData", {packageName: this.name, data}, undefined, false);
-        if (response.code !== 0) {
-            throw response;
-        }
-    }
-
     /**
      * 读取 /data/storage/petal/ 插件私有目录中的文件，成功回调会更新 data[storageName]。
      * 缓存值为 undefined 时先初始化为 ""；文件不存在（HTTP 202）或触发请求失败回调时，
@@ -663,47 +640,6 @@ export class Plugin {
     public getVariable(name: string): string {
         const found = window.siyuan.config.variables?.items?.find((item) => item.name === name);
         return found ? found.value : "";
-    }
-
-    public addAgentCapability(options: {
-        name: string,
-        title?: string,
-        description: string,
-        inputSchema: Record<string, unknown>,
-        outputSchema?: Record<string, unknown>,
-        effects?: IAgentCapabilityEffects,
-        actionEffects?: Record<string, IAgentCapabilityEffects>,
-        handler: (args: Record<string, unknown>, app: App) => Promise<{
-            result?: string;
-            structuredContent?: unknown;
-            error?: string;
-        }>
-    }): string {
-        const name = options.name.trim();
-        if (!name || !options.description.trim()) {
-            throw new Error("Agent capability name and description are required");
-        }
-        const id = "plugin/frontend/" + encodeURIComponent(this.name) + "/" + encodeURIComponent(name);
-        if (isPluginDisposed(this) || isSettingsWindow()) {
-            return id;
-        }
-        if (!this.agentCapabilities.some((capability) => capability.id === id)) {
-            const generation = registerCapability({
-                id,
-                title: options.title,
-                description: options.description,
-                inputSchema: options.inputSchema,
-                outputSchema: options.outputSchema,
-                effects: options.effects,
-                actionEffects: options.actionEffects,
-                source: "plugin",
-                ownerId: this.name,
-                ownerName: this.displayName || this.name,
-                handler: options.handler,
-            });
-            this.agentCapabilities.push({id, generation});
-        }
-        return id;
     }
 
     public addDock(options: {

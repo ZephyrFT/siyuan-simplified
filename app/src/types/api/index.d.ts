@@ -1,269 +1,5 @@
 // 此文件由内核契约生成，请运行 pnpm run api:generate 更新。
 
-export type AIActionRequestInput = { "action": string; "ids": Array<string>; };
-
-export type AIAgentAttachment = { "detail"?: string; "documentId": string; "height"?: number; "mimeType"?: string; "path": string; "pdfImage"?: AIPDFImageSelection; "type": string; "width"?: number; };
-
-export type AIAgentAttachmentInput = { "detail"?: string | null; "documentId"?: string | null; "height"?: number | null; "mimeType"?: string | null; "path"?: string | null; "pdfImage"?: AIPDFImageSelectionInput | null; "type"?: string | null; "width"?: number | null; };
-
-export type AIAgentChatRequestInput = { "blockHTML"?: string | null; "contentRevision"?: number | null; "editorContext"?: AIEditorContextInput | null; "frontendCapabilities"?: Array<AIFrontendCapabilityInput> | null; "language"?: string | null; "message"?: string | null; "model"?: string | null; "reasoningEffort"?: string | null; "references"?: Array<AIReferenceInput> | null; "regenerate"?: boolean | null; "sessionID"?: string | null; "userEntryID"?: string | null; };
-
-export type AIAgentGoogleToolCallProviderData = { "thoughtSignature"?: string; };
-
-export type AIAgentGoogleToolCallProviderDataInput = { "thoughtSignature"?: string | null; };
-
-export type AIAgentInstructionsData = { "content": string; "revision": string; };
-
-export type AIAgentInstructionsSaveRequestInput = { "content": string; "revision": string; };
-
-export type AIAgentMessage = { "content": string; "editorContext"?: AIEditorContext; "entryID"?: string; "nativeContent"?: AINativeContent; "reasoningContent"?: string; "references"?: Array<AIReference>; "responseOutput"?: Array<JSONValue>; "responseOutputTokens"?: number; "role": string; "roundID"?: string; "toolCalls"?: Array<AIAgentToolCall>; };
-
-export type AIAgentMessageInput = { "content"?: string | null; "editorContext"?: AIEditorContextInput | null; "entryID"?: string | null; "nativeContent"?: AINativeContentInput | null; "reasoningContent"?: string | null; "references"?: Array<AIReferenceInput> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "role"?: string | null; "roundID"?: string | null; "toolCalls"?: Array<AIAgentToolCallInput> | null; };
-
-export type AIAgentToolCall = { "arguments": { [key: string]: JSONValue } | null; "argumentsJSON"?: string; "attachments"?: Array<AIAgentAttachment>; "id"?: string; "name": string; "providerData"?: AIAgentToolCallProviderData; "result"?: string; "state"?: string; };
-
-export type AIAgentToolCallInput = { "arguments"?: { [key: string]: JSONValue } | null; "argumentsJSON"?: string | null; "attachments"?: Array<AIAgentAttachmentInput> | null; "id"?: string | null; "name"?: string | null; "providerData"?: AIAgentToolCallProviderDataInput | null; "result"?: string | null; "state"?: string | null; };
-
-export type AIAgentToolCallProviderData = { "google"?: AIAgentGoogleToolCallProviderData; };
-
-export type AIAgentToolCallProviderDataInput = { "google"?: AIAgentGoogleToolCallProviderDataInput | null; };
-
-export type AIBrowserCapabilityResultRequestInput = { "callID"?: string | null; "isError"?: boolean | null; "result"?: string | null; "structuredContent"?: JSONValue | null; "structuredContentSet"?: boolean | null; };
-
-export type AIBuiltinSkillInfo = { "description": string; "digest": string; "enabled": boolean; "id": string; "name": string; "source": string; "version": string; };
-
-export type AICapabilityAction = { "effects": AIToolEffects; "name": string; };
-
-export type AICapabilityManifest = { "actions"?: Array<AICapabilityAction>; "agentOnly"?: boolean; "available": boolean; "description": string; "effects": AIToolEffects; "id": string; "name": string; "ownerId"?: string; "ownerName"?: string; "runtime": string; "source": string; "title"?: string; };
-
-export type AIConfirmRequestInput = { "always"?: boolean | null; "approved"?: boolean | null; "confirmID"?: string | null; };
-
-export type AIDecisionTestData = { "matched": boolean; "msg"?: string; };
-
-export type AIDecisionTestRequestInput = { "profile"?: SettingDecisionProfileInput | null; "provider"?: string; };
-
-export type AIEditorAction = { "action": string; "id": string; "name": string; };
-
-export type AIEditorActionIDRequestInput = { "id": string; };
-
-export type AIEditorActionSaveRequestInput = { "action": string; "id"?: string | null; "name": string; };
-
-export type AIEditorChatRequestInput = { "action"?: string | null; "history"?: Array<AIEditorMessageInput> | null; "ids"?: Array<string> | null; "input"?: string | null; "taskID"?: string | null; };
-
-export type AIEditorContext = { "activeDocID"?: string; "activeDocTitle"?: string; "focusedBlockID"?: string; "notebookID"?: string; "selectedBlockIDs"?: Array<string>; "visibleBlockIDs"?: Array<string>; };
-
-export type AIEditorContextInput = { "activeDocID"?: string | null; "activeDocTitle"?: string | null; "focusedBlockID"?: string | null; "notebookID"?: string | null; "selectedBlockIDs"?: Array<string> | null; "visibleBlockIDs"?: Array<string> | null; };
-
-export type AIEditorMessageInput = { "content"?: string | null; "role"?: string | null; };
-
-export type AIEmbeddingStat = { "enabled": boolean; "failed": number; "ignoredByConfig": number; "ignoredByLen": number; "indexed": number; "pending": number; "total": number; };
-
-export type AIEmbeddingTestData = { "dimensions"?: number; "matched": boolean; "msg"?: string; };
-
-export type AIFrontendCapabilityInput = { "actionEffects"?: Record<string, AIToolEffectsInput> | null; "description"?: string | null; "effects"?: AIToolEffectsInput | null; "generation"?: number | null; "id"?: string | null; "inputSchema"?: { [key: string]: JSONValue } | null; "outputSchema"?: { [key: string]: JSONValue } | null; "ownerId"?: string | null; "ownerName"?: string | null; "source"?: string | null; "title"?: string | null; };
-
-export type AIMCPEnvironmentData = { "defaults": Array<string> | null; "names": Array<string> | null; };
-
-export type AIMCPIDRequestInput = { "id"?: string | null; };
-
-export type AIMCPStatus = { "authorizationURL"?: string; "authorized": boolean; "error"?: string; "id": string; "name": string; "status": string; "tools": number; };
-
-export type AIMemoryCapabilitiesData = { "efforts": Array<string> | null; };
-
-export type AIMemoryClearData = { "cleared": boolean; "disabled": boolean; };
-
-export type AIMemoryForgetData = { "cleanupPending": boolean; "saved": boolean; };
-
-export type AIMemoryForgetRequestInput = { "id": string; "operationId": string; "revision": string; };
-
-export type AIMemoryGetData = { "record": AIMemoryRecord; "revision": string; };
-
-export type AIMemoryGetRequestInput = { "id": string; };
-
-export type AIMemoryListData = { "errors": Array<string> | null; "incomplete": boolean; "records": Array<AIMemoryRecord> | null; "tasks": Array<AIMemoryTaskData> | null; };
-
-export type AIMemoryListRequestInput = { "limit"?: number; "offset"?: number; "query"?: string; };
-
-export type AIMemoryMaintainRequestInput = { "operationId": string; "sourceIDs"?: Array<string>; "text": string; };
-
-export type AIMemoryOverviewData = { "count": number; "countComplete": boolean; "memory": string; "stale": boolean; "user": string; };
-
-export type AIMemoryRecord = { "confirmed": string; "content": string; "created": string; "id": string; "kind": string; "reason": string; "revision": string; "scope": string; "sources": Array<AIMemorySource> | null; "state": string; "subject": string; "supersedes": string; "updated": string; "validFrom": string; "validUntil": string; };
-
-export type AIMemorySaveData = { "id": string; "overviewPending": boolean; "revision": string; "saved": boolean; };
-
-export type AIMemorySaveRequestInput = { "content": string; "id"?: string; "kind": string; "operationId": string; "revision": string; "scope": string; "state": string; "subject": string; };
-
-export type AIMemorySource = { "evidence": string; "id": string; "kind": string; "revision": string; };
-
-export type AIMemoryTaskData = { "error": string; "overviewPending": boolean; "results": Array<AIMemoryTaskResult> | null; "state": string; "taskId": string; };
-
-export type AIMemoryTaskRequestInput = { "taskId": string; };
-
-export type AIMemoryTaskResult = { "error": string; "id": string; "saved": boolean; };
-
-export type AIMemoryTaskStarted = { "taskId": string; };
-
-export type AIMemoryTranslateData = { "language": string; "memory": string; };
-
-export type AIMemoryTranslateRequestInput = { "language": string; "memory": string; };
-
-export type AIMessageRequestInput = { "msg": string; };
-
-export type AIModelRequestInput = { "model": string; "provider"?: string | null; "providerConfig"?: SettingProviderInput | null; };
-
-export type AIModelTestData = { "available": Array<string> | null; "matched": boolean; "msg"?: string; };
-
-export type AIModelsData = { "contextLengths": Record<string, number> | null; "displayNames"?: Record<string, string>; "models": Array<string> | null; "msg"?: string; };
-
-export type AINativeContent = { "blocks": Array<JSONValue> | null; "protocol": string; "version": number; };
-
-export type AINativeContentInput = { "blocks": Array<JSONValue>; "protocol": string; "version": number; };
-
-export type AIPDFImageSelection = { "object": number; "page": number; "revision": string; };
-
-export type AIPDFImageSelectionInput = { "object"?: number | null; "page"?: number | null; "revision"?: string | null; };
-
-export type AIPermissionData = { "permissionMode": string; };
-
-export type AIPermissionRequestInput = { "permissionMode"?: string | null; "sessionID"?: string | null; };
-
-export type AIProviderRequestInput = { "provider"?: string | null; "providerConfig"?: SettingProviderInput | null; };
-
-export type AIQuestionRequestInput = { "answers"?: Array<string> | null; "questionID"?: string | null; };
-
-export type AIReference = { "id": string; "title": string; };
-
-export type AIReferenceInput = { "id"?: string | null; "title"?: string | null; };
-
-export type AIRerankTestData = { "matched": boolean; "msg"?: string; };
-
-export type AISSEBrowserCapabilityCall = { "arguments": { [key: string]: JSONValue } | null; "callID": string; "capabilityID": string; "generation": number; "name": string; };
-
-export type AISSEConfirm = { "arguments": { [key: string]: JSONValue } | null; "confirmID": string; "effects": AIToolEffects; "forced": boolean; "name": string; };
-
-export type AISSEFinish = { "finishReason": string; };
-
-export type AISSEMessage = { "message": string; };
-
-export type AISSEQuestion = { "arguments": { [key: string]: JSONValue } | null; "questionID": string; "roundID": string; };
-
-export type AISSERetry = { "attempt": number; "maxRetries": number; };
-
-export type AISSESnapshot = { "roundID": string; "snapshotID": string; };
-
-export type AISSEStart = { "taskID": string; };
-
-export type AISSEThinking = { "reasoning": string; "roundID": string; };
-
-export type AISSEToken = { "token": string; };
-
-export type AISSEToolCall = { "arguments": { [key: string]: JSONValue } | null; "callID": string; "name": string; "roundID": string; };
-
-export type AISSEToolResult = { "callID": string; "name": string; "result": string; "roundID": string; };
-
-export type AISSETurn = { "turnID": string; };
-
-export type AISSEUsage = { "cachedTokens": number; "completionTokens": number; "contextLimit": number; "lastPromptTokens": number; "promptTokens": number; "tokenBreakdown": Record<string, number> | null; };
-
-export type AISessionEntry = { "answers"?: Array<string>; "args"?: { [key: string]: JSONValue }; "blockHTML"?: string; "completionTokens"?: number; "confirmID"?: string; "content"?: string; "duration"?: number; "editorContext"?: AIEditorContext; "id"?: string; "name"?: string; "nativeContent"?: AINativeContent; "promptTokens"?: number; "questionID"?: string; "questions"?: Array<{ [key: string]: JSONValue } | null>; "reasoningContent"?: string; "references"?: Array<AIReference>; "responseOutput"?: Array<JSONValue>; "responseOutputTokens"?: number; "roundID"?: string; "snapshotID"?: string; "status"?: string; "steps"?: Array<AISessionEntryStep>; "timestamp"?: number; "toolCalls"?: Array<AIAgentToolCall>; "type": string; };
-
-export type AISessionEntryInput = { "answers"?: Array<string> | null; "args"?: { [key: string]: JSONValue } | null; "blockHTML"?: string | null; "completionTokens"?: number | null; "confirmID"?: string | null; "content"?: string | null; "duration"?: number | null; "editorContext"?: AIEditorContextInput | null; "id"?: string | null; "name"?: string | null; "nativeContent"?: AINativeContentInput | null; "promptTokens"?: number | null; "questionID"?: string | null; "questions"?: Array<{ [key: string]: JSONValue } | null> | null; "reasoningContent"?: string | null; "references"?: Array<AIReferenceInput> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "roundID"?: string | null; "snapshotID"?: string | null; "status"?: string | null; "steps"?: Array<AISessionEntryStepInput> | null; "timestamp"?: number | null; "toolCalls"?: Array<AIAgentToolCallInput> | null; "type"?: string | null; };
-
-export type AISessionEntryStep = { "content"?: string; "reasoning": string; "reasoningContent"?: string; "roundID"?: string; "toolCallIDs"?: Array<string>; "toolNames"?: Array<string>; };
-
-export type AISessionEntryStepInput = { "content"?: string | null; "reasoning"?: string | null; "reasoningContent"?: string | null; "roundID"?: string | null; "toolCallIDs"?: Array<string> | null; "toolNames"?: Array<string> | null; };
-
-export type AISessionExtensionAIAgentAttachment = ({ "detail"?: string | null; "documentId"?: string | null; "height"?: number | null; "mimeType"?: string | null; "path"?: string | null; "pdfImage"?: AISessionExtensionAIPDFImageSelection | null; "type"?: string | null; "width"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentAttachmentInput = ({ "detail"?: string | null; "documentId"?: string | null; "height"?: number | null; "mimeType"?: string | null; "path"?: string | null; "pdfImage"?: AISessionExtensionAIPDFImageSelectionInput | null; "type"?: string | null; "width"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentGoogleToolCallProviderData = ({ "thoughtSignature"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentGoogleToolCallProviderDataInput = ({ "thoughtSignature"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentMessage = ({ "content"?: string | null; "editorContext"?: AISessionExtensionAIEditorContext | null; "entryID"?: string | null; "nativeContent"?: AISessionExtensionAINativeContent | null; "reasoningContent"?: string | null; "references"?: Array<AISessionExtensionAIReference> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "role"?: string | null; "roundID"?: string | null; "toolCalls"?: Array<AISessionExtensionAIAgentToolCall> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentMessageInput = ({ "content"?: string | null; "editorContext"?: AISessionExtensionAIEditorContextInput | null; "entryID"?: string | null; "nativeContent"?: AISessionExtensionAINativeContentInput | null; "reasoningContent"?: string | null; "references"?: Array<AISessionExtensionAIReferenceInput> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "role"?: string | null; "roundID"?: string | null; "toolCalls"?: Array<AISessionExtensionAIAgentToolCallInput> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentToolCall = ({ "arguments"?: { [key: string]: JSONValue } | null; "argumentsJSON"?: string | null; "attachments"?: Array<AISessionExtensionAIAgentAttachment> | null; "id"?: string | null; "name"?: string | null; "providerData"?: AISessionExtensionAIAgentToolCallProviderData | null; "result"?: string | null; "state"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentToolCallInput = ({ "arguments"?: { [key: string]: JSONValue } | null; "argumentsJSON"?: string | null; "attachments"?: Array<AISessionExtensionAIAgentAttachmentInput> | null; "id"?: string | null; "name"?: string | null; "providerData"?: AISessionExtensionAIAgentToolCallProviderDataInput | null; "result"?: string | null; "state"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentToolCallProviderData = ({ "google"?: AISessionExtensionAIAgentGoogleToolCallProviderData | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIAgentToolCallProviderDataInput = ({ "google"?: AISessionExtensionAIAgentGoogleToolCallProviderDataInput | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIEditorContext = ({ "activeDocID"?: string | null; "activeDocTitle"?: string | null; "focusedBlockID"?: string | null; "notebookID"?: string | null; "selectedBlockIDs"?: Array<string> | null; "visibleBlockIDs"?: Array<string> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIEditorContextInput = ({ "activeDocID"?: string | null; "activeDocTitle"?: string | null; "focusedBlockID"?: string | null; "notebookID"?: string | null; "selectedBlockIDs"?: Array<string> | null; "visibleBlockIDs"?: Array<string> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAINativeContent = ({ "blocks"?: Array<JSONValue> | null; "protocol"?: string | null; "version"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAINativeContentInput = ({ "blocks"?: Array<JSONValue> | null; "protocol"?: string | null; "version"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIPDFImageSelection = ({ "object"?: number | null; "page"?: number | null; "revision"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIPDFImageSelectionInput = ({ "object"?: number | null; "page"?: number | null; "revision"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIReference = ({ "id"?: string | null; "title"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAIReferenceInput = ({ "id"?: string | null; "title"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionEntry = ({ "answers"?: Array<string> | null; "args"?: { [key: string]: JSONValue } | null; "blockHTML"?: string | null; "completionTokens"?: number | null; "confirmID"?: string | null; "content"?: string | null; "duration"?: number | null; "editorContext"?: AISessionExtensionAIEditorContext | null; "id"?: string | null; "name"?: string | null; "nativeContent"?: AISessionExtensionAINativeContent | null; "promptTokens"?: number | null; "questionID"?: string | null; "questions"?: Array<{ [key: string]: JSONValue } | null> | null; "reasoningContent"?: string | null; "references"?: Array<AISessionExtensionAIReference> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "roundID"?: string | null; "snapshotID"?: string | null; "status"?: string | null; "steps"?: Array<AISessionExtensionAISessionEntryStep> | null; "timestamp"?: number | null; "toolCalls"?: Array<AISessionExtensionAIAgentToolCall> | null; "type"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionEntryInput = ({ "answers"?: Array<string> | null; "args"?: { [key: string]: JSONValue } | null; "blockHTML"?: string | null; "completionTokens"?: number | null; "confirmID"?: string | null; "content"?: string | null; "duration"?: number | null; "editorContext"?: AISessionExtensionAIEditorContextInput | null; "id"?: string | null; "name"?: string | null; "nativeContent"?: AISessionExtensionAINativeContentInput | null; "promptTokens"?: number | null; "questionID"?: string | null; "questions"?: Array<{ [key: string]: JSONValue } | null> | null; "reasoningContent"?: string | null; "references"?: Array<AISessionExtensionAIReferenceInput> | null; "responseOutput"?: Array<JSONValue> | null; "responseOutputTokens"?: number | null; "roundID"?: string | null; "snapshotID"?: string | null; "status"?: string | null; "steps"?: Array<AISessionExtensionAISessionEntryStepInput> | null; "timestamp"?: number | null; "toolCalls"?: Array<AISessionExtensionAIAgentToolCallInput> | null; "type"?: string | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionEntryStep = ({ "content"?: string | null; "reasoning"?: string | null; "reasoningContent"?: string | null; "roundID"?: string | null; "toolCallIDs"?: Array<string> | null; "toolNames"?: Array<string> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionEntryStepInput = ({ "content"?: string | null; "reasoning"?: string | null; "reasoningContent"?: string | null; "roundID"?: string | null; "toolCallIDs"?: Array<string> | null; "toolNames"?: Array<string> | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionFields = ({ "agentRunning"?: boolean | null; "alwaysAllow"?: boolean | null; "commitTurnID"?: string | null; "completionTokens"?: number | null; "contextCachedTokens"?: number | null; "contextLimit"?: number | null; "contextTokenBreakdown"?: Record<string, number> | null; "contextTokens"?: number | null; "createdAt"?: number | null; "entries"?: Array<AISessionExtensionAISessionEntry> | null; "expectedRevision"?: number | null; "id": string; "lastCommittedTurnID"?: string | null; "messageHistory"?: Array<string> | null; "messages"?: Array<AISessionExtensionAIAgentMessage> | null; "model"?: string | null; "permissionMode"?: string | null; "pinnedAt"?: number | null; "promptTokens"?: number | null; "recoveryRevision"?: number | null; "recoveryState"?: string | null; "recoveryTurnID"?: string | null; "revision"?: number | null; "snapshots"?: Array<string> | null; "title"?: string | null; "titled"?: boolean | null; "totalDuration"?: number | null; "updatedAt"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionExtensionAISessionFieldsInput = ({ "agentRunning"?: boolean | null; "alwaysAllow"?: boolean | null; "commitTurnID"?: string | null; "completionTokens"?: number | null; "contextCachedTokens"?: number | null; "contextLimit"?: number | null; "contextTokenBreakdown"?: Record<string, number> | null; "contextTokens"?: number | null; "createdAt"?: number | null; "entries"?: Array<AISessionExtensionAISessionEntryInput> | null; "expectedRevision"?: number | null; "id": string; "lastCommittedTurnID"?: string | null; "messageHistory"?: Array<string> | null; "messages"?: Array<AISessionExtensionAIAgentMessageInput> | null; "model"?: string | null; "permissionMode"?: string | null; "pinnedAt"?: number | null; "promptTokens"?: number | null; "recoveryRevision"?: number | null; "recoveryState"?: string | null; "recoveryTurnID"?: string | null; "revision"?: number | null; "snapshots"?: Array<string> | null; "title"?: string | null; "titled"?: boolean | null; "totalDuration"?: number | null; "updatedAt"?: number | null; } & { [key: string]: JSONValue });
-
-export type AISessionFields = { "agentRunning"?: boolean; "alwaysAllow"?: boolean; "commitTurnID"?: string; "completionTokens"?: number; "contextCachedTokens"?: number; "contextLimit"?: number; "contextTokenBreakdown"?: Record<string, number>; "contextTokens"?: number; "createdAt"?: number; "entries"?: Array<AISessionEntry>; "expectedRevision"?: number; "id": string; "lastCommittedTurnID"?: string; "messageHistory"?: Array<string>; "messages"?: Array<AIAgentMessage>; "model"?: string; "permissionMode"?: string; "pinnedAt"?: number; "promptTokens"?: number; "recoveryRevision"?: number; "recoveryState"?: string; "recoveryTurnID"?: string; "revision"?: number; "snapshots"?: Array<string>; "title"?: string; "titled"?: boolean; "totalDuration"?: number; "updatedAt"?: number; };
-
-export type AISessionFieldsInput = { "agentRunning"?: boolean | null; "alwaysAllow"?: boolean | null; "commitTurnID"?: string | null; "completionTokens"?: number | null; "contextCachedTokens"?: number | null; "contextLimit"?: number | null; "contextTokenBreakdown"?: Record<string, number> | null; "contextTokens"?: number | null; "createdAt"?: number | null; "entries"?: Array<AISessionEntryInput> | null; "expectedRevision"?: number | null; "id": string; "lastCommittedTurnID"?: string | null; "messageHistory"?: Array<string> | null; "messages"?: Array<AIAgentMessageInput> | null; "model"?: string | null; "permissionMode"?: string | null; "pinnedAt"?: number | null; "promptTokens"?: number | null; "recoveryRevision"?: number | null; "recoveryState"?: string | null; "recoveryTurnID"?: string | null; "revision"?: number | null; "snapshots"?: Array<string> | null; "title"?: string | null; "titled"?: boolean | null; "totalDuration"?: number | null; "updatedAt"?: number | null; };
-
-export type AISessionIDRequestInput = { "id"?: string | null; };
-
-export type AISessionIndex = { "agentRunning"?: boolean; "createdAt": number; "id": string; "pinnedAt"?: number; "title": string; "updatedAt": number; };
-
-export type AISessionList = { "page": number; "pageSize": number; "sessions": Array<AISessionIndex | null> | null; "total": number; };
-
-export type AISessionPinnedData = { "pinnedAt": number; };
-
-export type AISessionPinnedRequestInput = { "id": string; "pinned": boolean; };
-
-export type AISessionSaveData = { "revision": number; "session"?: AISessionExtensionAISessionFields; };
-
-export type AISessionsRequestInput = { "keyword"?: string | null; "page"?: number | null; "pageSize"?: number | null; };
-
-export type AISkillData = { "content": string; "name": string; };
-
-export type AISkillFileData = { "content"?: string; "entries"?: Array<AISkillFileEntry> | null; "readOnlyReason"?: "binary" | "encoding" | "tooLarge"; "revision"?: string; };
-
-export type AISkillFileEntry = { "editable": boolean; "isDir": boolean; "path": string; };
-
-export type AISkillFileRequestInput = { "action": string; "content"?: string; "path"?: string; "revision"?: string; "target"?: string; };
-
-export type AISkillInfo = { "description": string; "name": string; };
-
-export type AISkillNameRequestInput = { "name"?: string | null; "source"?: string | null; };
-
-export type AISkillRenameRequestInput = { "newName"?: string | null; "oldName"?: string | null; "source"?: string | null; };
-
-export type AISkillSaveRequestInput = { "content"?: string | null; "name"?: string | null; "source"?: string | null; };
-
-export type AITitleRequestInput = { "language"?: string | null; "message"?: string | null; "model"?: string | null; };
-
-export type AIToolEffects = { "dataEgress"?: boolean; "externalCost"?: boolean; "localRead"?: boolean; "localWrite"?: boolean; };
-
-export type AIToolEffectsInput = { "dataEgress"?: boolean | null; "externalCost"?: boolean | null; "localRead"?: boolean | null; "localWrite"?: boolean | null; };
-
-export type AIUserSkillInfo = { "description": string; "enabled": boolean; "id": string; "name": string; "shadowed": boolean; };
-
 export type AVArchiveRenderData = { "colorOrder": Array<string> | null; "customColors": Array<AVAttributeViewCustomColor | null> | null; "defaultTemplateID": string; "id": string; "isMirror": boolean; "name": string; "newItemTemplates": Array<AVNewItemTemplate | null> | null; "subItems"?: AVSubItemsConfig; "usedCustomColorIndexes": Array<number> | null; "view": AVViewInstance; "viewID": string; "viewType": "table" | "list" | "gallery" | "kanban" | "calendar"; "views": Array<AVViewData | null> | null; };
 
 export type AVAttributeViewBacklink = { "avID": string; "avName": string; "blockIDs": Array<string> | null; "boundBlockID": string; "boxID": string; "databaseBlockID": string; "databasePath": string; "icon": string; "isDetached": boolean; "itemID": string; "relations": Array<AVAttributeViewBacklinkRelation | null> | null; "title": string; "valueID": string; };
@@ -654,12 +390,6 @@ export type AVViewSortInput = { "column"?: string | null; "dateEndpoint"?: "star
 
 export type AVViewTableColumn = { "align"?: "" | "left" | "center" | "right"; "calc"?: AVFieldCalc; "desc"?: string; "hidden": boolean; "id": string; "pin": boolean; "width": string; "wrap": boolean; } | ({ "align"?: "" | "left" | "center" | "right"; "calc"?: AVFieldCalc; "pin": boolean; "width": string; } & { "desc"?: never; "hidden"?: never; "id"?: never; "wrap"?: never; });
 
-export type AccountLoginData = { "needCaptcha": string | null; "token": string | null; "userName": string | null; };
-
-export type AccountLoginRequestInput = { "captcha": string; "cloudRegion": number; "userName": string; "userPassword": string; };
-
-export type ActivationCodeRequestInput = { "data": string; };
-
 export type AddAttributeViewBlocksRequestInput = { "avID": string; "blockID"?: string | null; "groupID"?: string | null; "ignoreDefaultFill"?: boolean | null; "previousID"?: string | null; "srcs": Array<AVBlockSourceInput>; "viewID"?: string | null; };
 
 export type AddAttributeViewKeyRequestInput = { "avID": string; "blockID"?: string | null; "keyID": string; "keyIcon": string; "keyName": string; "keyType": string; "previousKeyID": string; };
@@ -671,8 +401,6 @@ export type AppendBlockRequestInput = { "data": string; "dataType": string; "par
 export type AppendHeadingChildrenRequestInput = { "childrenDOM": string; "id": string; };
 
 export type AssetAnnotationData = { "data": string; };
-
-export type AssetCloudUploadRequestInput = { "id": string; "ignorePushMsg"?: boolean | null; };
 
 export type AssetContent = { "content": string; "ext": string; "hSize": string; "id": string; "name": string; "path": string; "size": number; "updated": number; };
 
@@ -694,8 +422,6 @@ export type AssetPathData = { "path": string; };
 
 export type AssetPathRequestInput = { "path": string; };
 
-export type AssetPathsCloudUploadRequestInput = { "ignorePushMsg"?: boolean | null; "paths": Array<string>; };
-
 export type AssetPathsData = { "paths": Array<string> | null; };
 
 export type AssetReference = { "avID": string; "blockID": string; "notebook": string; "oldPath"?: string; "path": string; "reason": string; "reference": string; "relinkable": boolean; "replacement": string; "rootID": string; "type": string; "valueID": string; };
@@ -709,8 +435,6 @@ export type AssetRelinkMappingInput = { "newPath": string; "oldPath": string; };
 export type AssetRenameData = { "newPath": string; };
 
 export type AssetStatData = { "created": number; "downloaded"?: false; "hCreated": string; "hSize": string; "hUpdated": string; "size": number; "updated": number; };
-
-export type AssetTextData = { "text": string; };
 
 export type AssetUnusedItem = { "blockIDs"?: Array<string>; "item": string; "name": string; "path"?: string; };
 
@@ -774,72 +498,6 @@ export type BatchTaskListMarkerRequestInput = { "items": Array<TaskListMarkerReq
 
 export type BatchUpdateBlockRequestInput = { "blocks": Array<UpdateBlockRequestInput>; };
 
-export type BatchUpdatePackageRequestInput = { "frontend": string; };
-
-export type BazaarAppearance = { "bodyGradient": BazaarBodyGradient | null; "closeButtonBehavior": number; "codeBlockThemeDark": string; "codeBlockThemeLight": string; "compactMode": boolean; "darkThemes": Array<BazaarAppearanceTheme | null> | null; "entryVisibility": BazaarEntryVisibility | null; "globalFontFamilies": Array<BazaarEditorFont | null> | null; "hideStatusBar": boolean; "hideToolbar": boolean; "icon": string; "iconVer": string; "icons": Array<BazaarAppearanceIcon | null> | null; "lang": string; "lightThemes": Array<BazaarAppearanceTheme | null> | null; "lockScreenWallpaper": boolean; "menuMouseScroll": boolean; "mobileBars": BazaarMobileBars | null; "mode": number; "modeOS": boolean; "notifications": BazaarNotifications | null; "outlineKeepCurrentExpand": boolean; "pdfTheme": BazaarPDFTheme | null; "showFloatingDockBar": boolean | null; "showFloatingStatusBar": boolean; "statusBar": BazaarStatusBar | null; "themeDark": string; "themeJS": boolean; "themeLight": string; "themeVer": string; };
-
-export type BazaarAppearanceIcon = { "label": string; "name": string; };
-
-export type BazaarAppearancePackagesData = { "appearance": BazaarAppearance | null; "packages": Array<BazaarPackage | null> | null; };
-
-export type BazaarAppearanceTheme = { "frontends"?: Array<string>; "label": string; "name": string; };
-
-export type BazaarBodyGradient = { "dark": BazaarBodyGradientColor; "light": BazaarBodyGradientColor; "mode": string; };
-
-export type BazaarBodyGradientColor = { "color": string; "opacity": number; };
-
-export type BazaarEditorFont = { "displayName": string; "family": string; "weight": number; };
-
-export type BazaarEntryVisibility = { "active": string; "profiles": Array<BazaarEntryVisibilityProfile | null> | null; "version": number; };
-
-export type BazaarEntryVisibilityProfile = { "entries": Record<string, boolean> | null; "id": string; "name": string; "orders": Record<string, Array<string> | null> | null; };
-
-export type BazaarFunding = { "custom": Array<string> | null; "github": string; "links"?: Array<BazaarFundingLink>; "openCollective": string; "patreon": string; };
-
-export type BazaarFundingLink = { "label": string; "url": string; };
-
-export type BazaarLocalInstallData = { "minAppVersion"?: string; "packageName": string; "packageType": string; "updated": boolean; };
-
-export type BazaarLocalInstallError = { "minAppVersion": string; "packageName": string; "packageType": string; "reason": "install-failed" | "package-exists" | "package-incompatible"; };
-
-export type BazaarLocalInstallResult = (BazaarLocalInstallData & { "reason"?: never; }) | (BazaarLocalInstallError & { "updated"?: never; });
-
-export type BazaarMobileBars = { "autoHide": boolean | null; "sidebarButtons": boolean | null; "sidebarSwipe": boolean | null; };
-
-export type BazaarNotifications = { "browserCompatibility": boolean; "docTreeMaxList": boolean; "formatPainterTip"?: boolean; "selectAllIncompleteTip"?: boolean; "selectAllTip"?: boolean; "tagMaxList": boolean; "workspaceNotSSD": boolean; };
-
-export type BazaarPDFTheme = { "annoColor": string; "dark": string; "light": string; };
-
-export type BazaarPackage = { "author": string; "backends": Array<string> | null; "bazaarIncompatible"?: boolean; "bazaarVersionUnsupported"?: boolean; "bootAppearances"?: Array<string>; "choices"?: Array<BazaarPackageChoice>; "created"?: string; "current": boolean; "deprecated"?: boolean; "deprecatedReason"?: Record<string, string>; "description": Record<string, string> | null; "disabledInPublish": boolean; "disallowInstall": boolean; "disallowUpdate": boolean; "displayName": Record<string, string> | null; "downloads": number; "enabled"?: boolean; "frontends": Array<string> | null; "funding": BazaarFunding | null; "hInstallDate": string; "hInstallSize": string; "hSize": string; "hUpdated": string; "hasStorageData"?: boolean; "icon"?: string; "iconURL": string; "installSize": number; "installTime": number; "installed": boolean; "installedIncompatible"?: boolean; "invalidReason"?: "missing-manifest" | "invalid-manifest" | "name-mismatch"; "kernels": Array<string> | null; "keywords": Array<string> | null; "minAppVersion": string; "modes"?: Array<string> | null; "name": string; "openIssues": number; "outdated": boolean; "preferredDeprecatedReason"?: string; "preferredDesc": string; "preferredFunding": string; "preferredName": string; "preferredReadme": string; "preview"?: string; "previewURL": string; "rating"?: BazaarPackageRating; "ratingAvailable": boolean; "readme": Record<string, string> | null; "repoHash": string; "repoRef"?: string; "repoURL": string; "settingsWindow"?: boolean; "size": number; "stars": number; "updateRequiredMinAppVer"?: string; "updateTime": number; "updated": string; "url": string; "userDisabledInPublish"?: boolean; "version": string; };
-
-export type BazaarPackageChoice = { "name": string; "packageType": string; };
-
-export type BazaarPackageDetail = { "available": BazaarPackage | null; "installed": BazaarPackage | null; };
-
-export type BazaarPackageRating = { "average": number; "count": number; "distribution": [number, number, number, number, number]; };
-
-export type BazaarPackageSizeData = { "hInstallSize": string; "installSize": number; };
-
-export type BazaarPackagesData = { "packages": Array<BazaarPackage | null> | null; };
-
-export type BazaarREADMEData = { "html": string; };
-
-export type BazaarRatingData = { "rating"?: BazaarPackageRating; "ratingAvailable": boolean; "userRating": number; };
-
-export type BazaarRatingError = { "errorCode": "bazaarRatingRateLimited" | "bazaarPackagePending"; };
-
-export type BazaarRatingResult = (BazaarRatingData & { "errorCode"?: never; }) | (BazaarRatingError & { "rating"?: never; "ratingAvailable"?: never; "userRating"?: never; });
-
-export type BazaarRatingsData = { "eligiblePackageNames": Array<string> | null; "ratings": Record<string, BazaarPackageRating | null> | null; };
-
-export type BazaarStatusBar = { "msgDataSyncDisabled": boolean; "msgTaskAssetDatabaseIndexCommitDisabled": boolean; "msgTaskDatabaseIndexCommitDisabled": boolean; "msgTaskHistoryDatabaseIndexCommitDisabled": boolean; "msgTaskHistoryGenerateFileDisabled": boolean; "version": number; };
-
-export type BazaarUpdatedData = { "icons": Array<BazaarPackageDetail | null> | null; "plugins": Array<BazaarPackageDetail | null> | null; "templates": Array<BazaarPackageDetail | null> | null; "themes": Array<BazaarPackageDetail | null> | null; "widgets": Array<BazaarPackageDetail | null> | null; };
-
-export type BazaarUserRatingsData = { "eligiblePackageNames": Array<string> | null; "userRatings": Record<string, number> | null; };
-
-export type BazaarUserRatingsResult = (BazaarUserRatingsData & { "errorCode"?: never; }) | (BazaarRatingError & { "eligiblePackageNames"?: never; "userRatings"?: never; });
-
 export type BlockBreadcrumbChildren = { "hasMore": boolean; "items": Array<BlockPath | null> | null; };
 
 export type BlockBreadcrumbChildrenRequestInput = { "excludeTypes"?: Array<string> | null; "id": string; "ids"?: Array<string> | null; "limit"?: number | null; "notebook"?: string | null; "offset"?: number | null; };
@@ -876,8 +534,6 @@ export type BlockQueryRequestInput = { "id": string; "ids"?: Array<string> | nul
 
 export type BlockRelevantData = { "nextID": string; "parentID": string; "previousID": string; };
 
-export type BlockReminderRequestInput = { "id": string; "timed": string; };
-
 export type BlockSiblingData = { "next": string; "parent": string; "previous": string; };
 
 export type BlockStat = { "blockCount": number; "imageCount": number; "linkCount": number; "refCount": number; "runeCount": number; "wordCount": number; };
@@ -912,31 +568,11 @@ export type BroadcastPublishMessage = { "filename": string; "size": number; "typ
 
 export type BroadcastPublishResult = { "channel": BroadcastChannel; "code": number; "message": BroadcastPublishMessage; "msg": string; };
 
-export type CancelSyncCheckoutData = { "requested": boolean; };
-
-export type CancelSyncCheckoutRequestInput = { "taskID": string; };
-
 export type ChangeAttrViewLayoutRequestInput = { "avID": string; "blockID": string; "layoutType": string; };
 
 export type ChangeMasterPasswordRequestInput = { "newPassword": string; "oldPassword": string; };
 
 export type ChangeSortNotebookRequestInput = { "notebooks": Array<string>; };
-
-export type ChatGPTAccount = { "connected": boolean; "email": string; "id": string; "name": string; "sharing": boolean; };
-
-export type ChatGPTAccountRequestInput = { "accountID"?: string; };
-
-export type ChatGPTLogin = { "id": string; "url": string; };
-
-export type ChatGPTLoginRequestInput = { "id": string; };
-
-export type ChatGPTLoginStatus = { "accountID": string; "error": string; "state": string; };
-
-export type ChatGPTLogoutResult = { "revoked": boolean; };
-
-export type ChatGPTTransferRequestInput = { "accountID"?: string; "data"?: string; "password": string; };
-
-export type CheckActivationCodeRequestInput = { "data": string; };
 
 export type CheckBlockRefRequestInput = { "deletedIDs"?: Array<string>; "exactIDs"?: Array<string>; "id"?: string | null; "ids"?: Array<string>; "notebook"?: string | null; "paths"?: Array<string>; "scope"?: string; };
 
@@ -950,27 +586,11 @@ export type ChildBlock = { "content"?: string; "id": string; "markdown"?: string
 
 export type CleanupRichTextRequestInput = { "batch": string; "groups": Array<string>; };
 
-export type ClearSyncProviderConfigData = { "enabled": boolean; "local"?: SyncLocal; "s3"?: SyncS3; "webdav"?: SyncWebDAV; };
-
-export type ClearSyncProviderConfigRequestInput = { "provider": number; };
-
 export type ClipboardFile = { "isDir": boolean; "name": string; "path": string; "size": number; "updated": number; };
 
 export type ClipboardPathRequestInput = { "path": string; };
 
 export type CloseNotebookRequestInput = { "notebook": string; };
-
-export type CloudBackup = { "hSize": string; "saveDir": string; "size": number; "updated": string; };
-
-export type CloudReminderRequestInput = { "content": string; "id": string; "timed": string; };
-
-export type CloudSpaceData = { "backup": CloudBackup | null; "hAssetSize": string; "hExchangeSize": string; "hSize": string; "hTotalSize": string; "hTrafficAPIGet": string; "hTrafficAPIPut": string; "hTrafficDownloadSize": string; "hTrafficUploadSize": string; "sync": CloudSync | null; };
-
-export type CloudSync = { "cloudName": string; "hSize": string; "saveDir": string; "size": number; "updated": string; };
-
-export type CloudSyncDir = { "cloudName": string; "hSize": string; "saveDir": string; "size": number; "updated": string; };
-
-export type CloudSyncDirsData = { "checkedSyncDir": string; "hSize": string; "syncDirs": Array<CloudSyncDir | null> | null; };
 
 export type CollectionRemovalPreview = { "collections": Array<TagRemovalCollection | null> | null; "sourceVersions": Record<string, string> | null; };
 
@@ -981,8 +601,6 @@ export type CommitDataImportRequestInput = { "id": string; "mode": "skip" | "ove
 export type CommitNotebookArchiveRequestInput = { "id": string; "saved": boolean; };
 
 export type ConfirmSettingsResetRequestInput = { "saved": boolean; "token": string; };
-
-export type ConfirmSyncCheckoutRequestInput = { "saved": boolean; "taskID": string; "token": string; };
 
 export type ContentWordCountRequestInput = { "content": string; "reqId"?: JSONValue | null; };
 
@@ -1158,10 +776,6 @@ export type DocumentTitleSource = { "content": string; "format": "inline-ast"; "
 
 export type DocumentTitleSourceInput = { "content": string; "format": "inline-ast"; "spec": 1; };
 
-export type DownloadCloudSnapshotRequestInput = { "id": string; "tag": string; };
-
-export type DownloadInstallPkgRequestInput = { "downloadInstallPkg": boolean; };
-
 export type DuplicateAttributeViewBlockRequestInput = { "avID": string; };
 
 export type EditorReadOnlyRequestInput = { "readonly": boolean; };
@@ -1171,8 +785,6 @@ export type EmbedBlock = { "allowChildOperation": boolean; "block": SearchBlock 
 export type EmbedBlocksData = { "blocks": Array<EmbedBlock | null> | null; };
 
 export type EmbedStat = { "complete": boolean; "cycleCount": number; "depthLimitCount": number; "failedQueryCount": number; "failedResultCount": number; "jsEmbedCount": number; "queryEmbedCount": number; "resultCount": number; "truncatedQueryCount": number; };
-
-export type EmptyRequest = Record<string, never>;
 
 export type EmptyRequestInput = Record<string, never>;
 
@@ -1241,8 +853,6 @@ export type ExportTempContentRequestInput = { "content": string; "id"?: string |
 export type ExportURLData = { "url": string; };
 
 export type ExportZipData = { "zip": string; };
-
-export type ExtensionCopyData = { "md": string; "withMath": boolean; };
 
 export type FileAnnotationRefRequestInput = { "id": string; "notebook"?: string | null; };
 
@@ -1398,28 +1008,6 @@ export type GetAttributeViewRowSortRequestInput = { "avID"?: string | null; "blo
 
 export type GetAttributeViewSearchTargetRequestInput = { "id"?: string | null; "keywords"?: Array<string> | null; };
 
-export type GetBazaarIconRequestInput = { "keyword"?: string | null; };
-
-export type GetBazaarPackageREADMERequestInput = { "packageType": string; "repoHash": string; "repoURL": string; };
-
-export type GetBazaarPackageRatingRequestInput = { "packageName": string; "packageType": string; };
-
-export type GetBazaarPackageRatingsRequestInput = { "packageNames": Array<string>; "packageType": string; };
-
-export type GetBazaarPackageRequestInput = { "frontend"?: string | null; "packageName": string; "packageType": string; };
-
-export type GetBazaarPackageUserRatingsRequestInput = { "packageNames": Array<string>; "packageType": string; };
-
-export type GetBazaarPluginRequestInput = { "frontend": string; "keyword"?: string | null; };
-
-export type GetBazaarTemplateRequestInput = { "keyword"?: string | null; };
-
-export type GetBazaarThemeRequestInput = { "frontend"?: string | null; "keyword"?: string | null; };
-
-export type GetBazaarWidgetRequestInput = { "keyword"?: string | null; };
-
-export type GetCloudRepoSnapshotsRequestInput = { "endTime"?: number; "page": number; "startTime"?: number; };
-
 export type GetCurrentAttrViewImagesRequestInput = { "blockID"?: string | null; "groupID"?: string | null; "id": string; "query"?: string | null; "viewID"?: string | null; };
 
 export type GetDocCreateTargetRequestInput = { "notebook": string; "purpose": "document" | "reference" | "dailyNote"; };
@@ -1427,18 +1015,6 @@ export type GetDocCreateTargetRequestInput = { "notebook": string; "purpose": "d
 export type GetDocPathsRequestInput = { "ids": Array<string>; "includeIcons"?: boolean; "notebook": string; };
 
 export type GetEmbedBlockRequestInput = { "breadcrumb"?: boolean | null; "embedBlockID": string; "headingMode"?: number | null; "includeIDs": Array<string>; "notebook"?: string | null; };
-
-export type GetInstalledIconRequestInput = { "keyword"?: string | null; };
-
-export type GetInstalledPackageSizeRequestInput = { "packageName": string; "packageType": string; };
-
-export type GetInstalledPluginRequestInput = { "frontend": string; "keyword"?: string | null; };
-
-export type GetInstalledTemplateRequestInput = { "keyword"?: string | null; };
-
-export type GetInstalledThemeRequestInput = { "frontend"?: string | null; "keyword"?: string | null; };
-
-export type GetInstalledWidgetRequestInput = { "keyword"?: string | null; };
 
 export type GetMirrorDatabaseBlocksRequestInput = { "avID": string; };
 
@@ -1451,8 +1027,6 @@ export type GetRepoSnapshotsRequestInput = { "endTime"?: number; "id"?: string; 
 export type GetSnippetRequestInput = { "enabled": number; "keyword"?: string | null; "type": string; };
 
 export type GetTagRequestInput = { "app"?: string | null; "ignoreMaxListHint"?: boolean | null; "sort"?: number | null; };
-
-export type GetUpdatedPackageRequestInput = { "frontend": string; };
 
 export type GlobalBacklinkContextData = { "expired": boolean; "items": Array<BacklinkContext | null> | null; };
 
@@ -1588,21 +1162,7 @@ export type InsertCoverRequestInput = { "id": string; "name": string; };
 
 export type InsertLocalAssetsRequestInput = { "assetPaths": Array<string>; "fromHTMLPaste"?: boolean | null; "id"?: string | null; "isUpload"?: boolean | null; };
 
-export type InstallBazaarIconRequestInput = { "keyword"?: string | null; "packageName": string; "repoHash": string; "repoRef"?: string | null; "repoURL": string; };
-
-export type InstallBazaarPluginRequestInput = { "frontend": string; "keyword"?: string | null; "packageName": string; "repoHash": string; "repoRef"?: string | null; "repoURL": string; };
-
-export type InstallBazaarTemplateRequestInput = { "keyword"?: string | null; "packageName": string; "repoHash": string; "repoRef"?: string | null; "repoURL": string; };
-
-export type InstallBazaarThemeRequestInput = { "frontend"?: string | null; "keyword"?: string | null; "mode"?: number; "modeOS"?: boolean; "packageName": string; "repoHash": string; "repoRef"?: string | null; "repoURL": string; };
-
-export type InstallBazaarWidgetRequestInput = { "keyword"?: string | null; "packageName": string; "repoHash": string; "repoRef"?: string | null; "repoURL": string; };
-
-export type InstallLocalBazaarPackageRequestInput = { "file"?: Blob; "frontend"?: string; "overwrite"?: string; };
-
 export type JSONValue = null | boolean | number | string | Array<JSONValue> | { [key: string]: JSONValue };
-
-export type KernelPetal = { "existed": boolean; "incompatible": boolean; "js": string; };
 
 export type LegacyDocumentTarget = { "notebook": string; "path": string; "version": 1; };
 
@@ -1626,12 +1186,6 @@ export type LivePhotoPreviewRequestInput = { "id": string; };
 
 export type LivePhotoPreviewSession = { "color": LivePhotoColor; "encode": boolean; "frames": Array<LivePhotoFrameTime> | null; "height": number; "id": string; "width": number; };
 
-export type LoadPetalsRequestInput = { "frontend": string; "names"?: Array<string> | null; "settingsWindow"?: boolean; };
-
-export type LoadedPlugin = { "methods": Array<PluginRPCMethod | null> | null; "name": string; "state": string; "stateCode": number; };
-
-export type LoadedPluginRequestInput = { "name": string; };
-
 export type LocalGraphConf = { "d3": GraphD3 | null; "dailyNote": boolean; "type": GraphTypeFilter | null; };
 
 export type LocalGraphRequestInput = { "conf"?: GraphConfigurationFieldsInput; "id"?: string | null; "k"?: string | null; "notebook"?: string | null; "reqId"?: JSONValue | null; "type"?: string | null; };
@@ -1639,24 +1193,6 @@ export type LocalGraphRequestInput = { "conf"?: GraphConfigurationFieldsInput; "
 export type LocalGraphResult = { "box": string; "conf": LocalGraphConf; "id": string; "links": Array<GraphLink | null> | null; "nodes": Array<GraphNode | null> | null; "reqId": JSONValue; };
 
 export type LockScreenRequestInput = { "lockScreenMode": number; };
-
-export type Login2faEnvelope = { "code": number; "data": ({ "code": number; "msg": string; } & { [key: string]: JSONValue }) | null; "msg": string; };
-
-export type MCPOAuthClient = { "id": string; "name": string; "redirectURI": string; };
-
-export type MCPOAuthClientRequestInput = { "name": string; "redirectURI": string; };
-
-export type MCPOAuthClientSecret = { "id": string; "name": string; "redirectURI": string; "secret": string; };
-
-export type MCPOAuthConfigInput = { "enabled": boolean; "publicURL": string; };
-
-export type MCPOAuthConsentRequestInput = { "decision"?: string; "ticket"?: string; };
-
-export type MCPOAuthRemoveRequestInput = { "all"?: boolean; "id"?: string; };
-
-export type MCPOAuthStatus = { "clients": Array<MCPOAuthClient> | null; "enabled": boolean; "publicURL": string; };
-
-export type MCPOAuthTokenRequestInput = { "client_id"?: string; "client_secret"?: string; "code"?: string; "code_verifier"?: string; "grant_type"?: string; "redirect_uri"?: string; "refresh_token"?: string; "resource"?: string; "scope"?: string; "token"?: string; "token_type_hint"?: string; };
 
 export type MarkdownHTMLRequestInput = { "markdown": string; "mode"?: string | null; };
 
@@ -1669,60 +1205,6 @@ export type MoveBlockRequestInput = { "id": string; "parentID"?: string | null; 
 export type NetImageAssetsRequestInput = { "id": string; "url"?: string | null; };
 
 export type NetworkData = { "proxy": NetworkProxy | null; };
-
-export type NetworkEchoAttributeTypeAndValue = ({ "Type": Array<number> | null; "Value": null | string | number | boolean | Array<number> | (NetworkEchoRawValue & { "BitLength"?: never; }) | (NetworkEchoBitString & { "Class"?: never; "FullBytes"?: never; "IsCompound"?: never; "Tag"?: never; }); } & { [key: string]: JSONValue });
-
-export type NetworkEchoBitString = ({ "BitLength": number; "Bytes": string | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoCertificate = ({ "AuthorityKeyId": string | null; "BasicConstraintsValid": boolean; "CRLDistributionPoints": Array<string> | null; "DNSNames": Array<string> | null; "EmailAddresses": Array<string> | null; "ExcludedDNSDomains": Array<string> | null; "ExcludedEmailAddresses": Array<string> | null; "ExcludedIPRanges": Array<NetworkEchoIPNet | null> | null; "ExcludedURIDomains": Array<string> | null; "ExtKeyUsage": Array<number> | null; "Extensions": Array<NetworkEchoExtension> | null; "ExtraExtensions": Array<NetworkEchoExtension> | null; "IPAddresses": Array<string> | null; "InhibitAnyPolicy": number; "InhibitAnyPolicyZero": boolean; "InhibitPolicyMapping": number; "InhibitPolicyMappingZero": boolean; "IsCA": boolean; "Issuer": NetworkEchoName; "IssuingCertificateURL": Array<string> | null; "KeyUsage": number; "MaxPathLen": number; "MaxPathLenZero": boolean; "NotAfter": string; "NotBefore": string; "OCSPServer": Array<string> | null; "PermittedDNSDomains": Array<string> | null; "PermittedDNSDomainsCritical": boolean; "PermittedEmailAddresses": Array<string> | null; "PermittedIPRanges": Array<NetworkEchoIPNet | null> | null; "PermittedURIDomains": Array<string> | null; "Policies": Array<string> | null; "PolicyIdentifiers": Array<Array<number> | null> | null; "PolicyMappings": Array<NetworkEchoPolicyMapping> | null; "PublicKey": null | string | (NetworkEchoRSAPublicKey & { "Curve"?: never; "G"?: never; "P"?: never; "Q"?: never; "X"?: never; "Y"?: never; }) | (NetworkEchoECDSAPublicKey & { "E"?: never; "G"?: never; "N"?: never; "P"?: never; "Q"?: never; }) | (NetworkEchoDSAPublicKey & { "Curve"?: never; "E"?: never; "N"?: never; "X"?: never; }); "PublicKeyAlgorithm": number; "Raw": string | null; "RawIssuer": string | null; "RawSubject": string | null; "RawSubjectPublicKeyInfo": string | null; "RawTBSCertificate": string | null; "RequireExplicitPolicy": number; "RequireExplicitPolicyZero": boolean; "SerialNumber": number | null; "Signature": string | null; "SignatureAlgorithm": number; "Subject": NetworkEchoName; "SubjectKeyId": string | null; "URIs": Array<NetworkEchoURL | null> | null; "UnhandledCriticalExtensions": Array<Array<number> | null> | null; "UnknownExtKeyUsage": Array<Array<number> | null> | null; "Version": number; } & { [key: string]: JSONValue });
-
-export type NetworkEchoConnectionState = ({ "CipherSuite": number; "CurveID": number; "DidResume": boolean; "ECHAccepted": boolean; "HandshakeComplete": boolean; "HelloRetryRequest": boolean; "NegotiatedProtocol": string; "NegotiatedProtocolIsMutual": boolean; "OCSPResponse": string | null; "PeerCertificates": Array<NetworkEchoCertificate | null> | null; "ServerName": string; "SignedCertificateTimestamps": Array<string | null> | null; "TLSUnique": string | null; "VerifiedChains": Array<Array<NetworkEchoCertificate | null> | null> | null; "Version": number; } & { [key: string]: JSONValue });
-
-export type NetworkEchoContext = { "ClientIP": string; "ContentType": string; "FullPath": string; "HandlerNames": Array<string> | null; "IsWebsocket": boolean; "Params": Array<NetworkEchoParam> | null; "RawData": string | null; "RemoteIP": string; };
-
-export type NetworkEchoCookie = ({ "Domain": string; "Expires": string; "HttpOnly": boolean; "MaxAge": number; "Name": string; "Partitioned": boolean; "Path": string; "Quoted": boolean; "Raw": string; "RawExpires": string; "SameSite": number; "Secure": boolean; "Unparsed": Array<string> | null; "Value": string; } & { [key: string]: JSONValue });
-
-export type NetworkEchoCurveParams = ({ "B": number | null; "BitSize": number; "Gx": number | null; "Gy": number | null; "N": number | null; "Name": string; "P": number | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoDSAPublicKey = ({ "G": number | null; "P": number | null; "Q": number | null; "Y": number | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoData = { "Context": NetworkEchoContext; "Request": NetworkEchoRequest; "URL": NetworkEchoURLInfo; "User": NetworkEchoUser; };
-
-export type NetworkEchoECDSAPublicKey = ({ "Curve": (Record<string, never> & { "B"?: never; "BitSize"?: never; "Gx"?: never; "Gy"?: never; "N"?: never; "Name"?: never; "P"?: never; }) | NetworkEchoCurveParams | null; "X": number | null; "Y": number | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoExtension = ({ "Critical": boolean; "Id": Array<number> | null; "Value": string | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoFile = { "Content": string; "Filename": string; "Header": Record<string, Array<string> | null> | null; "Size": number; };
-
-export type NetworkEchoIPNet = ({ "IP": string; "Mask": string | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoMultipart = { "File": Record<string, Array<NetworkEchoFile> | null> | null; "Value": Record<string, Array<string> | null> | null; };
-
-export type NetworkEchoName = ({ "CommonName": string; "Country": Array<string> | null; "ExtraNames": Array<NetworkEchoAttributeTypeAndValue> | null; "Locality": Array<string> | null; "Names": Array<NetworkEchoAttributeTypeAndValue> | null; "Organization": Array<string> | null; "OrganizationalUnit": Array<string> | null; "PostalCode": Array<string> | null; "Province": Array<string> | null; "SerialNumber": string; "StreetAddress": Array<string> | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoParam = { "Key": string; "Value": string; };
-
-export type NetworkEchoParameters = ({ "G": number | null; "P": number | null; "Q": number | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoPolicyMapping = ({ "IssuerDomainPolicy": string; "SubjectDomainPolicy": string; } & { [key: string]: JSONValue });
-
-export type NetworkEchoRSAPublicKey = ({ "E": number; "N": number | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoRawValue = ({ "Bytes": string | null; "Class": number; "FullBytes": string | null; "IsCompound": boolean; "Tag": number; } & { [key: string]: JSONValue });
-
-export type NetworkEchoRequest = { "Close": boolean; "ContentLength": number; "Cookies": Array<NetworkEchoCookie | null> | null; "Form": Record<string, Array<string> | null> | null; "Header": Record<string, Array<string> | null> | null; "Host": string; "Method": string; "MultipartForm": NetworkEchoMultipart | null; "PostForm": Record<string, Array<string> | null> | null; "Proto": string; "ProtoMajor": number; "ProtoMinor": number; "Referer": string; "RemoteAddr": string; "TLS": NetworkEchoConnectionState | null; "Trailer": Record<string, Array<string> | null> | null; "TransferEncoding": Array<string> | null; "URL": NetworkEchoURL | null; "UserAgent": string; };
-
-export type NetworkEchoURL = ({ "ForceQuery": boolean; "Fragment": string; "Host": string; "OmitHost": boolean; "Opaque": string; "Path": string; "RawFragment": string; "RawPath": string; "RawQuery": string; "Scheme": string; "User": NetworkEchoUserinfo | null; } & { [key: string]: JSONValue });
-
-export type NetworkEchoURLInfo = { "EscapedFragment": string; "EscapedPath": string; "Hostname": string; "IsAbs": boolean; "Port": string; "Query": Record<string, Array<string> | null> | null; "Redacted": string; "RequestURI": string; "String": string; };
-
-export type NetworkEchoUser = { "Exists": boolean; "Password": string; "Username": string; };
-
-export type NetworkEchoUserinfo = Record<string, never>;
-
-export type NetworkForwardData = { "body": string; "bodyEncoding": string; "contentType": string; "elapsed": number; "headers": Record<string, Array<string> | null> | null; "status": number; "url": string; };
-
-export type NetworkForwardRequestInput = { "contentType"?: string | null; "headers"?: Array<{ [key: string]: JSONValue } | null> | null; "method"?: string | null; "payload"?: JSONValue | null; "payloadEncoding"?: string | null; "redirect"?: boolean | null; "responseEncoding"?: string | null; "timeout"?: number | null; "url": string; };
 
 export type NetworkProxy = { "host": string; "port": string; "scheme": string; };
 
@@ -1816,31 +1298,11 @@ export type PatchSyncSettingInput = { "assetDownloadMode"?: number | null; "clou
 
 export type PatchSystemSettingInput = { "autoLaunch2"?: number | null; "encryptedNotebookFollowSystemLock"?: boolean | null; "lockScreenMode"?: number | null; "networkProxy"?: NetworkProxyInput | null; "networkServe"?: boolean | null; "networkServeTLS"?: boolean | null; "settingsWindow"?: boolean | null; };
 
-export type PerformSyncRequestInput = { "cloudID"?: string; "localID"?: string; "mobileSwitch"?: boolean | null; "source"?: string; "upload"?: boolean; };
-
 export type PerformTransactionsRequestInput = { "app"?: string; "reqId": number; "session"?: string; "transactions": Array<TransactionInput | null>; };
-
-export type Petal = { "css": string; "disabledInPublish": boolean; "disallowInstall": boolean; "displayName": string; "enabled": boolean; "i18n": { [key: string]: JSONValue } | null; "incompatible": boolean; "js": string; "kernel": KernelPetal; "name": string; "settingsWindow"?: boolean; "userDisabledInPublish": boolean; "version": string; };
 
 export type PinnedDoc = { "alias": string; "bookmark": string; "childrenSortMode": number | null; "hCtime": string; "hMtime": string; "hSize": string; "icon": string; "id": string; "memo": string; "name": string; "name1": string; "notebook": string; "path": string; "specTooNew"?: boolean; "subFileCount": number; "unavailable": boolean; };
 
 export type PlanDocCreateRequestInput = { "ancestorChoices"?: Array<DocumentAncestorChoiceInput>; "contextID"?: string | null; "date"?: string; "id": string; "notebook": string; "placement"?: "configured" | "child"; "purpose": "document" | "reference" | "dailyNote"; "reuse"?: boolean; "targetRevision"?: string; "time"?: string; "title"?: string; };
-
-export type PluginPublishInfo = { "fields": Array<string>; "granted": boolean; "resources": Array<string>; };
-
-export type PluginPublishRequestInput = { "packageName": string; };
-
-export type PluginRPCError = { "code": number; "data"?: JSONValue; "message": string; };
-
-export type PluginRPCFailure = { "error": PluginRPCError | null; "id": string | number | null; "jsonrpc": "2.0"; };
-
-export type PluginRPCMethod = { "descriptions": Array<string> | null; "name": string; };
-
-export type PluginRPCNotification = { "jsonrpc": "2.0"; "method": string; "params"?: JSONValue; };
-
-export type PluginRPCRequestFieldsInput = { "id"?: string | number | null; "jsonrpc": "2.0"; "method": string; "params"?: Array<JSONValue> | { [key: string]: JSONValue } | null; };
-
-export type PluginRPCSuccess = { "id": string | number | null; "jsonrpc": "2.0"; "result": JSONValue; };
 
 export type PrepareNotebookArchiveRequestInput = { "notebooks": Array<string>; };
 
@@ -1851,8 +1313,6 @@ export type PrepareRichTextRequestInput = { "assets": Array<RichClipboardAssetIn
 export type PrependBlockRequestInput = { "data": string; "dataType": string; "parentID": string; };
 
 export type ProcessPDFRequestInput = { "exportAssets"?: boolean | null; "id": string; "merge"?: boolean | null; "mergeContentHeadingMode"?: string | null; "mergeDocHeadingMode"?: string | null; "path": string; "removeAssets": boolean; "watermark": boolean; };
-
-export type ProxyFailure = { "code": number; "msg": string; };
 
 export type PublishedBlockInfo = { "publishAccessRequired": true; "rootID": string; "rootIcon": string; "rootTitle": string; "rootTitleEmpty": boolean; };
 
@@ -1888,8 +1348,6 @@ export type RemoveAttributeViewKeyRequestInput = { "avID": string; "keyID": stri
 
 export type RemoveBookmarkRequestInput = { "bookmark": string; };
 
-export type RemoveCloudRepoTagSnapshotRequestInput = { "tag": string; };
-
 export type RemoveCriterionRequestInput = { "name": string; };
 
 export type RemoveEncryptedBoxAssetsRequestInput = { "notebook": string; "paths": Array<string>; };
@@ -1897,8 +1355,6 @@ export type RemoveEncryptedBoxAssetsRequestInput = { "notebook": string; "paths"
 export type RemoveFileRequestInput = { "app"?: string | null; "path": string; };
 
 export type RemoveRepoTagSnapshotRequestInput = { "tag": string; };
-
-export type RemoveShorthandsRequestInput = { "ids": Array<string>; };
 
 export type RemoveTagRequestInput = { "label": string; };
 
@@ -1934,10 +1390,6 @@ export type ReorderData = { "changed": boolean; "notebook"?: string; "parentPath
 
 export type ReorderNotebooksRequestInput = { "position"?: string | null; "sourceIDs"?: Array<string> | null; "targetID"?: string | null; };
 
-export type RepoCloudSnapshotsData = { "pageCount": number; "snapshots": Array<RepoLog | null> | null; "totalCount": number; };
-
-export type RepoCloudTagsData = { "snapshots": Array<RepoLog | null> | null; };
-
 export type RepoDiffData = { "addsLeft": Array<RepoDiffFile | null> | null; "left": RepoDiffIndex | null; "removesRight": Array<RepoDiffFile | null> | null; "right": RepoDiffIndex | null; "updatesLeft": Array<RepoDiffFile | null> | null; "updatesRight": Array<RepoDiffFile | null> | null; };
 
 export type RepoDiffFile = { "fileID": string; "hPath"?: string; "hSize": string; "indexID": string; "path": string; "title": string; "updated": number; };
@@ -1953,8 +1405,6 @@ export type RepoExportData = { "path": string; };
 export type RepoFile = { "chunks": Array<string> | null; "id": string; "path": string; "size": number; "updated": number; };
 
 export type RepoKeyData = { "key": string; };
-
-export type RepoLog = { "count": number; "created": number; "files": Array<RepoFile | null> | null; "hCreated": string; "hSize": string; "hTagUpdated": string; "id": string; "memo": string; "size": number; "systemID": string; "systemName": string; "systemOS": string; "tag": string; };
 
 export type RepoOpenFileData = { "content": string; "displayInText": boolean; "title": string; "updated": number; };
 
@@ -2026,8 +1476,6 @@ export type RunAttributeViewAutomationRequestInput = { "action"?: string; "avID"
 
 export type SQLQueryRequestInput = { "mode"?: string | null; "stmt": string; };
 
-export type SavePluginPublishDataRequestInput = { "data": Record<string, null | string | number | boolean>; "packageName": string; };
-
 export type SaveTemplateRequestInput = { "databaseMode"?: string; "directory"?: string; "id": string; "name": string; "overwrite": boolean; };
 
 export type SearchAsset = { "hName": string; "path": string; "updated": number; };
@@ -2049,8 +1497,6 @@ export type SearchAttributeViewRollupDestKeysRequestInput = { "avID": string; "k
 export type SearchBlock = { "alias": string; "box": string; "children": Array<SearchBlock | null> | null; "content": string; "count": number; "created": string; "defID": string; "defPath": string; "depth": number; "fcontent": string; "folded": boolean; "hPath": string; "ial": Record<string, string> | null; "id": string; "markdown": string; "memo": string; "name": string; "number"?: string; "parentID": string; "path": string; "refCount": number; "refText": string; "refs": Array<SearchBlock | null> | null; "riffCard": SearchBlockCard | null; "riffCardID": string; "rootID": string; "sort": number; "subType": string; "tag": string; "type": string; "updated": string; };
 
 export type SearchBlockCard = { "due": string; "lapses": number; "lastReview": string; "reps": number; "state": number; };
-
-export type SearchBlockRequestInput = { "groupBy"?: number | null; "method"?: number | null; "orderBy"?: number | null; "page"?: number | null; "pageSize"?: number | null; "paths"?: Array<string> | null; "query"?: string | null; "subTypes"?: SearchSubtypeFilterInput | null; "types"?: Record<string, boolean> | null; };
 
 export type SearchBlocksData = { "blocks": Array<SearchBlock | null> | null; "matchedBlockCount": number; "matchedRootCount": number; "pageCount": number; };
 
@@ -2098,8 +1544,6 @@ export type SearchWidgetData = { "k": string; "widgets": Array<SearchWidgetResul
 
 export type SearchWidgetResult = { "content": string; "name": string; };
 
-export type SetAIRequestInput = { "agent"?: SettingAgentInput | null; "decision"?: SettingDecisionInput | null; "editing"?: SettingEditingInput | null; "embedding"?: SettingEmbeddingInput | null; "imageGeneration"?: SettingImageGenerationInput | null; "mcp"?: SettingMCPInput | null; "memory"?: SettingMemoryInput | null; "providers"?: Array<SettingProviderInput | null> | null; "rerank"?: SettingRerankInput | null; "web"?: SettingAIWebInput | null; };
-
 export type SetAppearanceRequestInput = { "bodyGradient"?: SettingBodyGradientInput | null; "closeButtonBehavior"?: number | null; "codeBlockThemeDark"?: string | null; "codeBlockThemeLight"?: string | null; "compactMode"?: boolean | null; "darkThemes"?: Array<SettingAppearanceThemeInput | null> | null; "entryVisibility"?: SettingEntryVisibilityInput | null; "globalFontFamilies"?: Array<SettingEditorFontInput | null> | null; "hideStatusBar"?: boolean | null; "hideToolbar"?: boolean | null; "icon"?: string | null; "iconVer"?: string | null; "icons"?: Array<SettingAppearanceIconInput | null> | null; "lang"?: string | null; "lightThemes"?: Array<SettingAppearanceThemeInput | null> | null; "lockScreenWallpaper"?: boolean | null; "menuMouseScroll"?: boolean | null; "mobileBars"?: SettingMobileBarsInput | null; "mode"?: number | null; "modeOS"?: boolean | null; "notifications"?: SettingNotificationsInput | null; "outlineKeepCurrentExpand"?: boolean | null; "pdfTheme"?: SettingPDFThemeInput | null; "showFloatingDockBar"?: boolean | null; "showFloatingStatusBar"?: boolean | null; "statusBar"?: SettingStatusBarInput | null; "themeDark"?: string | null; "themeJS"?: boolean | null; "themeLight"?: string | null; "themeVer"?: string | null; };
 
 export type SetAssetAnnotationRequestInput = { "baseData"?: string | null; "data": string; "path": string; };
@@ -2115,10 +1559,6 @@ export type SetAttrViewGroupRequestInput = { "avID": string; "blockID": string; 
 export type SetAttrViewSortsRequestInput = { "avID": string; "blockID": string; "data": Array<AVViewSortInput | null>; };
 
 export type SetAttributeViewBlockAttrRequestInput = { "avID": string; "itemID"?: string | null; "keyID": string; "rowID"?: string | null; "value": AVValueInput; };
-
-export type SetBazaarPackageRatingRequestInput = { "packageName": string; "packageType": string; "rating": number; };
-
-export type SetBazaarRequestInput = { "batchUpdateExcluded"?: Record<string, Record<string, boolean> | null> | null; "compatibilityFilters"?: Record<string, SettingBazaarCompatibilityFilterInput | null> | null; "petalDisabled"?: boolean | null; "trust"?: boolean | null; };
 
 export type SetBlockAttrsRequestInput = { "attrs": Record<string, string | null>; "id": string; };
 
@@ -2146,14 +1586,6 @@ export type SetNotebookConfRequestInput = { "conf"?: NotebookConfPatchInput | nu
 
 export type SetNotebookIconRequestInput = { "icon": string; "notebook": string; };
 
-export type SetPetalEnabledRequestInput = { "app"?: string | null; "enabled": boolean; "packageName": string; };
-
-export type SetPetalPublishEnabledRequestInput = { "enabled": boolean; "packageName": string; };
-
-export type SetPluginPublishDataGrantRequestInput = { "enabled": boolean; "fields": Array<string>; "packageName": string; };
-
-export type SetPublishRequestInput = { "auth"?: SettingBasicAuthInput | null; "enable"?: boolean | null; "port"?: number | null; };
-
 export type SetRepoIndexRetentionDaysRequestInput = { "days": number; };
 
 export type SetRetentionIndexesDailyRequestInput = { "indexes": number; };
@@ -2168,27 +1600,13 @@ export type SetSnapshotMemoRequestInput = { "id": string; "memo": string; };
 
 export type SetSnippetRequestInput = { "revision"?: string | null; "snippets": Array<SnippetInput>; };
 
-export type SetSyncLocalRequestInput = { "local": SyncLocalInput; };
-
-export type SetSyncS3RequestInput = { "s3": SyncS3Input; };
-
-export type SetSyncWebDAVRequestInput = { "webdav": SyncWebDAVInput; };
-
 export type SetVariablesRequestInput = { "items"?: Array<SettingVariableInput | null> | null; };
-
-export type SettingAI = { "agent": SettingAgent | null; "decision": SettingDecision | null; "editing": SettingEditing | null; "embedding": SettingEmbedding | null; "imageGeneration": SettingImageGeneration | null; "mcp": SettingMCP | null; "memory": SettingMemory | null; "providers": Array<SettingProvider | null> | null; "rerank": SettingRerank | null; "web": SettingAIWeb | null; };
 
 export type SettingAIInput = { "agent"?: SettingAgentInput | null; "decision"?: SettingDecisionInput | null; "editing"?: SettingEditingInput | null; "embedding"?: SettingEmbeddingInput | null; "imageGeneration"?: SettingImageGenerationInput | null; "mcp"?: SettingMCPInput | null; "memory"?: SettingMemoryInput | null; "providers"?: Array<SettingProviderInput | null> | null; "rerank"?: SettingRerankInput | null; "web"?: SettingAIWebInput | null; };
 
-export type SettingAIWeb = { "apiKey": string; "exaApiKey": string; "fetchProvider": string; "searchProvider": string; "timeout": number; };
-
 export type SettingAIWebInput = { "apiKey"?: string | null; "exaApiKey"?: string | null; "fetchProvider"?: string | null; "searchProvider"?: string | null; "timeout"?: number | null; };
 
-export type SettingAgent = { "approvalPolicy": SettingApprovalPolicy | null; "capabilityPolicy": SettingCapabilityPolicy | null; "confirmTimeout": number; "maxCompletionTokens": number; "maxRetries": number; "maxToolCallRounds": number; "modelId": string; "sessionTimeout": number; "skills": SettingAgentSkills | null; "streamIdleTimeout": number; "streamingMarkdown": boolean; "temperature": number; };
-
 export type SettingAgentInput = { "approvalPolicy"?: SettingApprovalPolicyInput | null; "capabilityPolicy"?: SettingCapabilityPolicyInput | null; "confirmTimeout"?: number | null; "maxCompletionTokens"?: number | null; "maxRetries"?: number | null; "maxToolCallRounds"?: number | null; "modelId"?: string | null; "sessionTimeout"?: number | null; "skills"?: SettingAgentSkillsInput | null; "streamIdleTimeout"?: number | null; "streamingMarkdown"?: boolean | null; "temperature"?: number | null; };
-
-export type SettingAgentSkills = { "builtinDisabled": Array<string> | null; "userEnabled": Array<string> | null; };
 
 export type SettingAgentSkillsInput = { "builtinDisabled"?: Array<string> | null; "userEnabled"?: Array<string> | null; };
 
@@ -2203,8 +1621,6 @@ export type SettingAppearanceInput = { "bodyGradient"?: SettingBodyGradientInput
 export type SettingAppearanceTheme = { "frontends"?: Array<string>; "label": string; "name": string; };
 
 export type SettingAppearanceThemeInput = { "frontends"?: Array<string> | null; "label"?: string | null; "name"?: string | null; };
-
-export type SettingApprovalPolicy = { "default": string; "overrides": Record<string, SettingCapabilityApproval | null> | null; };
 
 export type SettingApprovalPolicyInput = { "default"?: string | null; "overrides"?: Record<string, SettingCapabilityApprovalInput | null> | null; };
 
@@ -2250,25 +1666,13 @@ export type SettingBootAppearanceSelection = { "appearance": string; "provider":
 
 export type SettingBootAppearancesData = { "appearances": Array<SettingBootAppearance | null> | null; "current": SettingBootAppearanceCurrent; };
 
-export type SettingCapabilityApproval = { "actions": Record<string, string> | null; "default": string; };
-
 export type SettingCapabilityApprovalInput = { "actions"?: Record<string, string> | null; "default"?: string | null; };
-
-export type SettingCapabilityPolicy = { "default": string; "overrides": Record<string, string> | null; };
 
 export type SettingCapabilityPolicyInput = { "default"?: string | null; "overrides"?: Record<string, string> | null; };
 
-export type SettingCloudUserRequestInput = { "cached"?: boolean; "token"?: string | null; };
-
-export type SettingDecision = { "apiKey": string; "enabled": boolean; "endpoint": string; "name": string; "profiles": Record<string, SettingDecisionProfile | null> | null; "provider": string; "timeout": number; };
-
 export type SettingDecisionInput = { "apiKey"?: string | null; "enabled"?: boolean | null; "endpoint"?: string | null; "name"?: string | null; "profiles"?: Record<string, SettingDecisionProfileInput | null> | null; "provider"?: string | null; "timeout"?: number | null; };
 
-export type SettingDecisionProfile = { "apiKey": string; "endpoint": string; "name": string; "timeout": number; };
-
 export type SettingDecisionProfileInput = { "apiKey": string; "endpoint": string; "name": string; "timeout": number; };
-
-export type SettingEditing = { "maxCompletionTokens": number; "maxHistoryMessages": number; "modelId": string; "temperature": number; };
 
 export type SettingEditingInput = { "maxCompletionTokens"?: number | null; "maxHistoryMessages"?: number | null; "modelId"?: string | null; "temperature"?: number | null; };
 
@@ -2279,8 +1683,6 @@ export type SettingEditorFont = { "displayName": string; "family": string; "weig
 export type SettingEditorFontInput = { "displayName"?: string | null; "family"?: string | null; "weight"?: number | null; };
 
 export type SettingEditorInput = { "allowHTMLBLockScript"?: boolean | null; "allowSVGScript"?: boolean | null; "assetOpen"?: SettingAssetOpenInput | null; "autoCloseRefBrackets"?: boolean | null; "autoDirection"?: boolean | null; "backlinkBlockSort"?: number | null; "backlinkContainChildren"?: boolean | null; "backlinkExpandCount"?: number | null; "backlinkGlobalSort"?: number | null; "backlinkHideReference"?: boolean | null; "backlinkMentionExclude"?: string | null; "backlinkShowBottom"?: boolean | null; "backlinkSort"?: number | null; "backmentionExpandCount"?: number | null; "backmentionSort"?: number | null; "blockGutterMode"?: boolean | null; "blockRefDynamicAnchorTextMaxLen"?: number | null; "checkBlockRef"?: boolean | null; "codeFontFamilies"?: Array<SettingEditorFontInput | null> | null; "codeLigatures"?: boolean | null; "codeLineWrap"?: boolean | null; "codeSyntaxHighlightLineNum"?: boolean | null; "codeTabSpaces"?: number | null; "cursorSurroundingLines"?: number | null; "databaseAttrClickMode"?: number | null; "databaseAttrHideEmpty"?: boolean | null; "databaseAttrLayout"?: number | null; "databaseAttrShow"?: boolean | null; "databaseAttrUseTabs"?: boolean | null; "databaseAttrViewMode"?: number | null; "displayBookmarkIcon"?: boolean | null; "displayImgAlt"?: boolean | null; "displayImgName"?: boolean | null; "displayNetImgMark"?: boolean | null; "dragHTMLFileToIframe"?: boolean | null; "dynamicLoadBlocks"?: number | null; "embedBlockBreadcrumb"?: boolean | null; "embedBlockBreadcrumbParentPath"?: boolean | null; "emoji"?: Array<string> | null; "floatWindowDelay"?: number | null; "floatWindowMode"?: number | null; "fontFamilies"?: Array<SettingEditorFontInput | null> | null; "fontFamily"?: string | null; "fontFamilyDisplay"?: string | null; "fontSize"?: number | null; "fontSizeScrollZoom"?: boolean | null; "fontWeight"?: number | null; "fullWidth"?: boolean | null; "generateHistoryInterval"?: number | null; "globalBreadcrumb"?: boolean | null; "hashTagSearch"?: boolean | null; "headingEmbedMode"?: number | null; "headingNumber"?: boolean | null; "headingNumberFormat"?: string | null; "historyRetentionDays"?: number | null; "justify"?: boolean | null; "katexMacros"?: string | null; "keepLoadedContent"?: boolean | null; "listItemDotNumberClickFocus"?: boolean | null; "listLogicalOutdent"?: boolean | null; "markdown"?: SettingMarkdownInput | null; "mathDelimiterCompatibility"?: boolean | null; "onlySearchForDoc"?: boolean | null; "pageScrollButtons"?: boolean | null; "pasteURLAutoConvert"?: boolean | null; "plantUMLServePath"?: string | null; "readOnly"?: boolean | null; "rtl"?: boolean | null; "spellcheck"?: boolean | null; "spellcheckLanguages"?: Array<string> | null; "virtualBlockRef"?: boolean | null; "virtualBlockRefExclude"?: string | null; "virtualBlockRefInclude"?: string | null; };
-
-export type SettingEmbedding = { "apiKey": string; "baseURL": string; "batchSize": number; "concurrency": number; "dimensions": number; "enabled": boolean; "id": string; "name": string; "timeout": number; };
 
 export type SettingEmbeddingInput = { "apiKey"?: string | null; "baseURL"?: string | null; "batchSize"?: number | null; "concurrency"?: number | null; "dimensions"?: number | null; "enabled"?: boolean | null; "id"?: string | null; "name"?: string | null; "timeout"?: number | null; };
 
@@ -2310,21 +1712,13 @@ export type SettingGetSectionRequestInput = { "namespace": string; };
 
 export type SettingIconRequestInput = { "icon": string; };
 
-export type SettingImageGeneration = { "modelId": string; "outputFormat": string; "quality": string; "requestTimeout": number; "size": string; };
-
 export type SettingImageGenerationInput = { "modelId"?: string | null; "outputFormat"?: string | null; "quality"?: string | null; "requestTimeout"?: number | null; "size"?: string | null; };
 
 export type SettingIssue = { "field": string; "message": string; "severity": string; };
 
 export type SettingKeymapRequestInput = { "data": { [key: string]: JSONValue }; };
 
-export type SettingLogin2faRequestInput = { "code": string; "token": string; };
-
-export type SettingMCP = { "exposurePolicy": SettingCapabilityPolicy | null; "servers": Array<SettingMCPServer> | null; };
-
 export type SettingMCPInput = { "exposurePolicy"?: SettingCapabilityPolicyInput | null; "servers"?: Array<SettingMCPServerInput> | null; };
-
-export type SettingMCPServer = { "args": Array<string> | null; "command": string; "disableStandaloneSSE": boolean; "enabled": boolean; "env": Record<string, string> | null; "headers": Record<string, string> | null; "id": string; "inheritEnv": Array<string> | null; "name": string; "timeout": number; "trustToolAnnotations": boolean; "type": string; "url": string; };
 
 export type SettingMCPServerInput = { "args"?: Array<string> | null; "command"?: string | null; "disableStandaloneSSE"?: boolean | null; "enabled"?: boolean | null; "env"?: Record<string, string> | null; "headers"?: Record<string, string> | null; "id"?: string | null; "inheritEnv"?: Array<string> | null; "name"?: string | null; "timeout"?: number | null; "trustToolAnnotations"?: boolean | null; "type"?: string | null; "url"?: string | null; };
 
@@ -2332,15 +1726,11 @@ export type SettingMarkdown = { "blockFullWidthTaskList": boolean | null; "codeB
 
 export type SettingMarkdownInput = { "blockFullWidthTaskList"?: boolean | null; "codeBlockMiddleDot"?: boolean | null; "inlineAsterisk"?: boolean | null; "inlineFullWidthStrikethrough"?: boolean | null; "inlineMark"?: boolean | null; "inlineMath"?: boolean | null; "inlineStrikethrough"?: boolean | null; "inlineSub"?: boolean | null; "inlineSup"?: boolean | null; "inlineTag"?: boolean | null; "inlineUnderscore"?: boolean | null; };
 
-export type SettingMemory = { "enabled": boolean; "modelId": string; "reasoningEffort": string; };
-
 export type SettingMemoryInput = { "enabled"?: boolean | null; "modelId"?: string | null; "reasoningEffort"?: string | null; };
 
 export type SettingMobileBars = { "autoHide": boolean | null; "sidebarButtons": boolean | null; "sidebarSwipe": boolean | null; };
 
 export type SettingMobileBarsInput = { "autoHide"?: boolean | null; "sidebarButtons"?: boolean | null; "sidebarSwipe"?: boolean | null; };
-
-export type SettingModel = { "contextLength"?: number; "displayName"?: string; "enabled": boolean; "id": string; "name": string; };
 
 export type SettingModelInput = { "contextLength"?: number | null; "displayName"?: string | null; "enabled"?: boolean | null; "id"?: string | null; "name"?: string | null; };
 
@@ -2358,21 +1748,11 @@ export type SettingPDFThemeInput = { "annoColor"?: string | null; "dark"?: strin
 
 export type SettingPatchData = { "issues": Array<SettingIssue> | null; };
 
-export type SettingPetalDisabledData = { "dataChangePlugins": Array<string> | null; "globalPetalChanged": boolean; "globalPetalDisabled": boolean; "globalPetalEnabled": boolean; "globalPetalRevision": number; "reloadPlugins": Array<string> | null; "uninstallPlugins": Array<string> | null; "unloadPlugins": Array<string> | null; };
-
-export type SettingPetalDisabledRequestInput = { "petalDisabled": boolean; };
-
-export type SettingProvider = { "accountID"?: string; "apiKey": string; "authType"?: string; "baseURL": string; "displayName"?: string; "enabled": boolean; "headers"?: Record<string, string>; "id": string; "models": Array<SettingModel | null> | null; "protocol"?: string; "requestTimeout": number; };
-
 export type SettingProviderInput = { "accountID"?: string | null; "apiKey"?: string | null; "authType"?: string | null; "baseURL"?: string | null; "displayName"?: string | null; "enabled"?: boolean | null; "headers"?: Record<string, string> | null; "id"?: string | null; "models"?: Array<SettingModelInput | null> | null; "protocol"?: string | null; "requestTimeout"?: number | null; };
 
 export type SettingPublish = { "auth": SettingBasicAuth | null; "enable": boolean; "port": number; };
 
-export type SettingPublishData = { "port": number; "publish": SettingPublish | null; };
-
 export type SettingPublishInput = { "auth"?: SettingBasicAuthInput | null; "enable"?: boolean | null; "port"?: number | null; };
-
-export type SettingRerank = { "apiKey": string; "candidateCount": number; "enabled": boolean; "endpoint": string; "id": string; "name": string; "requestFormat": string; "timeout": number; };
 
 export type SettingRerankInput = { "apiKey"?: string | null; "candidateCount"?: number | null; "enabled"?: boolean | null; "endpoint"?: string | null; "id"?: string | null; "name"?: string | null; "requestFormat"?: string | null; "timeout"?: number | null; };
 
@@ -2404,10 +1784,6 @@ export type SettingTaskState = { "revision": number; "tasks": Array<SettingTask>
 
 export type SettingThemeRequestInput = { "appearanceMode"?: string | null; "modes"?: Array<number> | null; "theme"?: string | null; };
 
-export type SettingUser = { "userAvatarURL": string; "userCreateTime": string; "userHomeBImgURL": string; "userId": string; "userIntro": string; "userName": string; "userNickname": string; "userSiYuanAssetSize": number; "userSiYuanOneTimePayStatus": number; "userSiYuanPointExchangeRepoSize": number; "userSiYuanProExpireTime": number; "userSiYuanRepoSize": number; "userSiYuanSubscriptionPlan": number; "userSiYuanSubscriptionStatus": number; "userSiYuanSubscriptionType": number; "userTitles": Array<SettingUserTitle | null> | null; "userToken": string; "userTokenExpireTime": string; "userTrafficAPIGet": number; "userTrafficAPIPut": number; "userTrafficDownload": number; "userTrafficTime": number; "userTrafficUpload": number; };
-
-export type SettingUserTitle = { "desc": string; "icon": string; "name": string; };
-
 export type SettingVariable = { "name": string; "value": string; };
 
 export type SettingVariableInput = { "name"?: string | null; "value"?: string | null; };
@@ -2417,16 +1793,6 @@ export type SettingVariables = { "items": Array<SettingVariable | null> | null; 
 export type SettingVariablesInput = { "items"?: Array<SettingVariableInput | null> | null; };
 
 export type SettingsWindowRequestInput = { "settingsWindow": boolean; };
-
-export type Shorthand = { "hCreated": string; "oId": string; "shorthandContent": string; "shorthandDesc": string; "shorthandFrom": number; "shorthandMd": string; "shorthandTitle": string; "shorthandURL": string; };
-
-export type ShorthandPage = { "pagination": ShorthandPagination; "shorthands": Array<Shorthand | null>; };
-
-export type ShorthandPagination = { "paginationPageCount": number; "paginationPageNums": Array<number> | null; "paginationRecordCount": number; };
-
-export type ShorthandsData = { "code": number; "data": ShorthandPage; "msg": string; };
-
-export type ShorthandsRequestInput = { "page": number; };
 
 export type Snippet = { "content": string; "disabledInPublish": boolean; "enabled": boolean; "id": string; "name": string; "type": string; };
 
@@ -2460,57 +1826,11 @@ export type StructuredTemplateRequired = { "reason": "structuredTemplateRequired
 
 export type SwapBlockRefRequestInput = { "defID": string; "includeChildren": boolean; "originalToEmbed"?: boolean; "refID": string; };
 
-export type SyncAssetDownloadModeData = { "assetDownloadMode": number; };
-
-export type SyncCheckoutClientRequestInput = { "appID"?: string; "clientID"?: string; };
-
-export type SyncCheckoutSnapshot = { "kernelID": string; "revision": number; "task": SyncCheckoutState | null; };
-
-export type SyncCheckoutState = { "blocking": boolean; "canceling": boolean; "current": number; "message": string; "phase": string; "removeRootIDs": Array<string>; "revision": number; "taskID": string; "token": string; "total": number; "upsertRootIDs": Array<string>; };
-
-export type SyncEnabledRequestInput = { "enabled": boolean; };
-
-export type SyncInfoData = { "kernel": string; "kernels": Array<SyncOnlineKernel | null> | null; "stat": string; "synced": number; };
-
-export type SyncIntervalRequestInput = { "interval": number; };
-
 export type SyncLANRequestInput = { "enabled": boolean; "maxConcurrentReqs"?: number | null; };
-
-export type SyncLANStatus = { "active": boolean; "connectedPeers": number; "discoveredPeers": number; "enabled": boolean; "maxConcurrentReqs": number; };
-
-export type SyncLocal = { "concurrentReqs": number; "endpoint": string; "timeout": number; };
-
-export type SyncLocalData = { "local": SyncLocal | null; };
 
 export type SyncLocalInput = { "concurrentReqs"?: number | null; "endpoint"?: string | null; "timeout"?: number | null; };
 
-export type SyncModeRequestInput = { "mode": number; };
-
-export type SyncNameRequestInput = { "name": string; };
-
-export type SyncOnlineKernel = { "hostname": string; "id": string; "os": string; "ver": string; };
-
-export type SyncProviderConfigRulesData = { "endpointBucketWarning": boolean; "requiredFields": Array<string>; };
-
-export type SyncProviderConfigRulesRequestInput = { "bucket"?: string; "endpoint"?: string; "provider": number; };
-
-export type SyncProviderExportData = { "name": string; "zip": string; };
-
-export type SyncProviderImportRequestInput = { "file"?: Blob; };
-
-export type SyncProviderRequestInput = { "completeAssets"?: boolean | null; "provider": number; };
-
-export type SyncS3 = { "accessKey": string; "bucket": string; "concurrentReqs": number; "endpoint": string; "pathStyle": boolean; "region": string; "secretKey": string; "skipTlsVerify": boolean; "timeout": number; };
-
-export type SyncS3Data = { "s3": SyncS3 | null; };
-
 export type SyncS3Input = { "accessKey"?: string | null; "bucket"?: string | null; "concurrentReqs"?: number | null; "endpoint"?: string | null; "pathStyle"?: boolean | null; "region"?: string | null; "secretKey"?: string | null; "skipTlsVerify"?: boolean | null; "timeout"?: number | null; };
-
-export type SyncSourceState = { "cloudCreated": number; "cloudDevice": string; "cloudFiles": number; "cloudID": string; "localFiles": number; "localID": string; "overwriteFiles": number; "pending": boolean; "removeFiles": number; "source": string; "uploadFiles": number; };
-
-export type SyncWebDAV = { "concurrentReqs": number; "endpoint": string; "password": string; "skipTlsVerify": boolean; "timeout": number; "username": string; };
-
-export type SyncWebDAVData = { "webdav": SyncWebDAV | null; };
 
 export type SyncWebDAVInput = { "concurrentReqs"?: number | null; "endpoint"?: string | null; "password"?: string | null; "skipTlsVerify"?: boolean | null; "timeout"?: number | null; "username"?: string | null; };
 
@@ -2520,7 +1840,7 @@ export type SystemAPITokenRequestInput = { "token": string; };
 
 export type SystemAccessAuthCodeRequestInput = { "accessAuthCode": string; };
 
-export type SystemAppConf = { "accessAuthCode": string; "ai": SettingAI | null; "api": SystemAPI | null; "appearance": SettingAppearance | null; "bazaar": SettingBazaar | null; "cloudRegion": number; "cookieKey": string; "dataIndexState": number; "editor": SettingEditor | null; "export": SettingExport | null; "fileTree": SettingFileTree | null; "flashcard": SettingFlashcard | null; "graph": SystemGraph | null; "keymap": { [key: string]: JSONValue } | null; "lang": string; "langs": Array<SystemLang | null> | null; "logLevel": string; "mcpOAuth": string; "notebookCrypto": SystemNotebookCrypto | null; "ocr": SettingOCR | null; "oidc": SystemOIDC | null; "onboarding": SystemOnboarding | null; "publish": SettingPublish | null; "readonly": boolean; "repo": SystemRepo | null; "search": SettingSearch | null; "secrets": SettingSecrets | null; "serverAddrs": Array<string> | null; "showChangelog": boolean; "snippet": SettingSnpt | null; "stat": SystemStat | null; "sync": SystemSync | null; "system": SystemSystem | null; "tag": SystemTag | null; "uiLayout": { [key: string]: JSONValue } | null; "userData": string; "variables": SettingVariables | null; };
+export type SystemAppConf = { "accessAuthCode": string; "api": SystemAPI | null; "appearance": SettingAppearance | null; "bazaar": SettingBazaar | null; "cloudRegion": number; "cookieKey": string; "dataIndexState": number; "editor": SettingEditor | null; "export": SettingExport | null; "fileTree": SettingFileTree | null; "flashcard": SettingFlashcard | null; "graph": SystemGraph | null; "keymap": { [key: string]: JSONValue } | null; "lang": string; "langs": Array<SystemLang | null> | null; "logLevel": string; "notebookCrypto": SystemNotebookCrypto | null; "ocr": SettingOCR | null; "oidc": SystemOIDC | null; "onboarding": SystemOnboarding | null; "publish": SettingPublish | null; "readonly": boolean; "repo": SystemRepo | null; "search": SettingSearch | null; "secrets": SettingSecrets | null; "serverAddrs": Array<string> | null; "showChangelog": boolean; "snippet": SettingSnpt | null; "stat": SystemStat | null; "sync": SystemSync | null; "system": SystemSystem | null; "tag": SystemTag | null; "uiLayout": { [key: string]: JSONValue } | null; "userData": string; "variables": SettingVariables | null; };
 
 export type SystemAppearanceData = { "appearance": SettingAppearance | null; };
 
@@ -2532,8 +1852,6 @@ export type SystemChangelogData = { "html": string; "show": boolean; "version": 
 
 export type SystemChangelogRequestInput = { "force"?: boolean | null; };
 
-export type SystemCheckUpdateRequestInput = { "showMsg": boolean; };
-
 export type SystemConfData = { "conf": SystemAppConf | null; "isPublish": boolean; "revision": number; "settingTasks"?: SettingTaskState; "start": boolean; };
 
 export type SystemCustomEmojiRequestInput = { "file"?: Blob; "name"?: string; "url"?: string; };
@@ -2541,8 +1859,6 @@ export type SystemCustomEmojiRequestInput = { "file"?: Blob; "name"?: string; "u
 export type SystemCustomFont = { "aliases"?: Array<string>; "displayName": string; "family": string; "id": string; "spacing"?: string; "url": string; "weight": number; };
 
 export type SystemD3 = { "arrow": boolean; "centerStrength": number; "collideRadius": number; "collideStrength": number; "lineOpacity": number; "linkDistance": number; "linkWidth": number; "nodeSize": number; };
-
-export type SystemDownloadUpdateRequestInput = { "version": string; };
 
 export type SystemEmoji = { "description": string; "description_ja_jp": string; "description_zh_cn": string; "keywords": string; "unicode": string; };
 
@@ -2636,7 +1952,7 @@ export type SystemStat = { "assetsSize": number; "blockCount": number; "cAssetsS
 
 export type SystemSync = { "assetDownloadMode": number; "cloudName": string; "enabled": boolean; "generateConflictDoc": boolean; "interval": number; "lan": SystemLANSync | null; "lastResult": number; "local": SystemLocal | null; "mode": number; "perception": boolean; "provider": number; "s3": SystemS3 | null; "stat": string; "synced": number; "webdav": SystemWebDAV | null; };
 
-export type SystemSystem = { "appDir": string; "autoLaunch2": number; "confDir": string; "container": string; "dataDir": string; "disabledFeatures": Array<string> | null; "downloadInstallPkg": boolean; "encryptedNotebookFollowSystemLock": boolean; "homeDir": string; "id": string; "isMicrosoftStore": boolean; "kernelVersion": string; "lockScreenMode": number; "microsoftDefenderExcluded": boolean; "name": string; "networkProxy": SystemNetworkProxy | null; "networkServe": boolean; "networkServeTLS": boolean; "os": string; "osPlatform": string; "safeMode": boolean; "settingsWindow": boolean; "updateChannel"?: string; "workspaceDir": string; };
+export type SystemSystem = { "appDir": string; "autoLaunch2": number; "confDir": string; "container": string; "dataDir": string; "disabledFeatures": Array<string> | null; "encryptedNotebookFollowSystemLock": boolean; "homeDir": string; "id": string; "isMicrosoftStore": boolean; "kernelVersion": string; "lockScreenMode": number; "name": string; "networkProxy": SystemNetworkProxy | null; "networkServe": boolean; "networkServeTLS": boolean; "os": string; "osPlatform": string; "safeMode": boolean; "settingsWindow": boolean; "workspaceDir": string; };
 
 export type SystemTag = { "sort": number; };
 
@@ -2682,25 +1998,9 @@ export type TemplateFileRevision = { "revision": string; };
 
 export type TemplateFileSource = { "content": string; "path"?: string; "revision": string; "sourceDocID"?: string; };
 
-export type TemplateHTTPCancelRequestInput = { "app": string; "executionID": string; "httpConfirmToken"?: string; "session": string; };
-
-export type TemplateHTTPPermissionData = { "allowed": boolean; };
-
-export type TemplateHTTPPermissionRequestInput = { "action": string; "avID"?: string; "keyID"?: string; "kind"?: string; "path"?: string; "slot"?: string; };
-
-export type TemplateHTTPReplyRequestInput = { "app": string; "approved": boolean; "confirmID": string; "executionID": string; "scope"?: string; "session": string; };
-
 export type TemplatePlan = { "count": number; "id": string; "nodes": Array<TemplatePlanNode | null> | null; };
 
 export type TemplatePlanNode = { "depth": number; "hPath": string; "id": string; "parentID": string; "title": string; };
-
-export type TestSyncProviderLocalRequestInput = { "local": SyncLocalInput; };
-
-export type TestSyncProviderS3Data = { "kind": string; "msg": string; };
-
-export type TestSyncProviderS3RequestInput = { "s3": SyncS3Input; };
-
-export type TestSyncProviderWebDAVRequestInput = { "cloudName"?: string; "webdav": SyncWebDAVInput; };
 
 export type Transaction = { "collectionRemovalSourceVersions"?: Record<string, string>; "doOperations": Array<TransactionOperation | null> | null; "httpAutomationJobs"?: Array<AVHTTPAutomationJob | null>; "templateDocTreePlanID"?: string; "timestamp": number; "undoOperations": Array<TransactionOperation | null> | null; };
 
@@ -2778,16 +2078,6 @@ export type UnavailableAssetAttributeView = { "avID": string; "blockID": string;
 
 export type UnfoldedParentData = { "parentID": string; };
 
-export type UninstallBazaarIconRequestInput = { "keyword"?: string | null; "packageName": string; };
-
-export type UninstallBazaarPluginRequestInput = { "frontend"?: string | null; "keyword"?: string | null; "packageName": string; };
-
-export type UninstallBazaarTemplateRequestInput = { "keyword"?: string | null; "packageName": string; };
-
-export type UninstallBazaarThemeRequestInput = { "frontend"?: string | null; "keyword"?: string | null; "packageName": string; };
-
-export type UninstallBazaarWidgetRequestInput = { "keyword"?: string | null; "packageName": string; };
-
 export type UnknownTransactionAction = string & { readonly __unknownTransactionAction: unique symbol };
 
 export type UnlockNotebookRequestInput = { "notebook": string; "password": string; };
@@ -2796,19 +2086,13 @@ export type UnusedAssetsRequestInput = { "all"?: boolean | null; "keyword"?: str
 
 export type UnzipRequestInput = { "path": string; "zipPath": string; };
 
-export type UpdateBazaarPackageRequestInput = { "frontend": string; "keyword"?: string | null; "packageName": string; "packageType": string; };
-
 export type UpdateBlockRequestInput = { "data": string; "dataType": string; "id": string; "lockType"?: boolean | null; };
-
-export type UpdateChannelRequestInput = { "updateChannel": string; };
 
 export type UpdateEmbedBlockRequestInput = { "content": string; "id": string; };
 
 export type UpdatePinnedDocsRequestInput = { "action": string; "after"?: boolean; "ids": Array<string>; "targetID"?: string; };
 
 export type UploadAssetRequestInput = { "assetsDirPath"?: string; "file[]"?: Array<Blob>; "id"?: string; };
-
-export type UploadCloudSnapshotRequestInput = { "id": string; "tag": string; };
 
 export type ViewStatePatchRequestInput = { "key": string; "removeKeys"?: Array<string> | null; "values"?: { [key: string]: JSONValue }; };
 
@@ -2833,45 +2117,6 @@ export type WorkspaceStorageEntry = { "name": "data" | "repo" | "history" | "tem
 export type ZipRequestInput = { "path": string; "zipPath": string; };
 
 export interface APIGETRoutes {
-    "/.well-known/oauth-authorization-server": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"application/json"},{"status":400,"contentType":"application/json"},{"status":401,"contentType":"application/json"},{"status":404,"contentType":"application/json"},{"status":429,"contentType":"application/json"},{"status":500,"contentType":"application/json"}];
-    };
-    "/.well-known/oauth-protected-resource": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"application/json"},{"status":400,"contentType":"application/json"},{"status":401,"contentType":"application/json"},{"status":404,"contentType":"application/json"},{"status":429,"contentType":"application/json"},{"status":500,"contentType":"application/json"}];
-    };
-    /**
-     * MCP OAuth 协议入口返回标准 OAuth JSON 或授权页面，不使用内核结果信封。
-     */
-    "/.well-known/oauth-protected-resource/mcp": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"application/json"},{"status":400,"contentType":"application/json"},{"status":401,"contentType":"application/json"},{"status":404,"contentType":"application/json"},{"status":429,"contentType":"application/json"},{"status":500,"contentType":"application/json"}];
-    };
-    "/api/ai/mcp/oauth/callback/:flowID": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"text/html"},{"status":400,"contentType":"text/html"},{"status":403,"contentType":"text/plain"}];
-    };
     /**
      * 从 URL 查询参数读取 type、color、date、lang、weekdayType、content 和 id，不读取请求体。
      * type 默认 1，lang 默认内核语言，weekdayType 默认 1；文字图标（type=8）跟随全局字体列表和首选字重。
@@ -2886,58 +2131,6 @@ export interface APIGETRoutes {
         output: "binary";
         emptyResponseStatuses: [500];
         contentVariants: [{"status":200,"contentType":"image/svg+xml"}];
-    };
-    /**
-     * URL、TLS 和 Cookie 诊断对象包含标准库的原始 JSON。
-     * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
-     */
-    "/api/network/echo": {
-        request: Blob;
-        response: { "code": 0; "data": NetworkEchoData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * URL、TLS 和 Cookie 诊断对象包含标准库的原始 JSON。
-     * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
-     */
-    "/api/network/echo/*path": {
-        request: Blob;
-        response: { "code": 0; "data": NetworkEchoData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/network/proxy": {
-        request: Blob;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        output: "proxy";
-        proxy: {"kind":"http","contentType":"application/octet-stream","upstreamStatuses":true};
-    };
-    "/api/plugin": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<LoadedPlugin | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/plugin/rpc": {
-        request: LoadedPluginRequestInput;
-        response: { "code": 0; "data": LoadedPlugin | null; "msg": string; } | { "code": -1 | 1 | 2 | 3 | 4; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/plugin/rpc/:name": {
-        request: LoadedPluginRequestInput;
-        response: { "code": 0; "data": LoadedPlugin | null; "msg": string; } | { "code": -1 | 1 | 2 | 3 | 4; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
     };
     "/api/system/bootProgress": {
         request: EmptyRequestInput;
@@ -3015,33 +2208,6 @@ export interface APIGETRoutes {
         output: "sse";
         sse: { raw: {"eventNames":"dynamic","dataEncoding":"raw","id":true,"retry":true}; };
     };
-    "/es/network/proxy": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        output: "proxy";
-        proxy: {"kind":"eventSource","contentType":"text/event-stream","upstreamStatuses":true};
-    };
-    "/oauth/mcp/authorize": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"text/html"},{"status":302,"contentType":"text/html"},{"status":400,"contentType":"text/html"}];
-    };
-    "/plugin/private/:name/*path": {
-        request: Blob;
-        response: Blob | JSONValue | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "pluginService";
-        pluginService: {"variants":[{"mode":"JSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"JSONP","statusPolicy":"plugin","mediaTypes":["application/javascript","application/json"],"payload":"jsonp-or-json","headersOverrideMedia":true},{"mode":"AsciiJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"IndentedJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"PureJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"SecureJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"secure-json","headersOverrideMedia":true},{"mode":"XML","statusPolicy":"plugin","mediaTypes":["application/xml"],"payload":"xml","headersOverrideMedia":true},{"mode":"YAML","statusPolicy":"plugin","mediaTypes":["application/yaml"],"payload":"yaml","headersOverrideMedia":true},{"mode":"TOML","statusPolicy":"plugin","mediaTypes":["application/toml"],"payload":"toml","headersOverrideMedia":true},{"mode":"ProtoBuf","statusPolicy":"plugin","mediaTypes":["application/x-protobuf"],"payload":"protobuf","headersOverrideMedia":true},{"mode":"file","statusPolicy":"file","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"string","statusPolicy":"plugin","mediaTypes":["text/plain"],"payload":"text","headersOverrideMedia":true},{"mode":"raw","statusPolicy":"plugin","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"stream","statusPolicy":"plugin","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"redirect","statusPolicy":"redirect","mediaTypes":["text/html"],"payload":"redirect","headersOverrideMedia":true},{"mode":"proxy","statusPolicy":"proxy","mediaTypes":["upstream"],"payload":"bytes","headersOverrideMedia":true},{"mode":"empty","statusPolicy":"plugin","mediaTypes":["optional"],"payload":"none","headersOverrideMedia":true},{"mode":"websocket","statusPolicy":"websocket","mediaTypes":["upgrade-or-text"],"payload":"frames","headersOverrideMedia":false},{"mode":"sse","statusPolicy":"sse","mediaTypes":["text/event-stream"],"payload":"events","headersOverrideMedia":false},{"mode":"admission","statusPolicy":"admission","mediaTypes":["text/plain"],"payload":"text","headersOverrideMedia":true}],"admissionStatuses":[400,404,500,503],"webSocketFrames":["text","binary","close","ping","pong"],"sseEventNames":"dynamic","sseData":"json-or-text","sseEvent":{"type":"object","properties":{"data":{"$ref":"#/$defs/JSONValue"},"event":{"type":"string"},"id":{"type":"string"},"retry":{"type":"integer"}},"required":["data"],"additionalProperties":false}};
-    };
     "/ws/broadcast": {
         request: EmptyRequestInput;
         response: null | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -3051,630 +2217,9 @@ export interface APIGETRoutes {
         output: "websocket";
         websocket: { incoming: Blob; outgoing: Blob; failureStatus: 0; raw: {"frames":[1,2,8,9,10],"upgradeErrorStatuses":[400,403,405,500],"emptyClosedResponse":true}; };
     };
-    "/ws/network/proxy": {
-        request: EmptyRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        output: "proxy";
-        proxy: {"kind":"websocket","upstreamStatuses":false,"frames":["text","binary","close"]};
-    };
-    /**
-     * RPC 握手保留写权限检查，但不跨空闲连接持有工作空间写入租约。实际方法与通知各自
-     * 取得租约；同步应用、导入提交、只读或恢复失败时不进入脚本。调用失败沿用 JSON-RPC
-     * 内部错误（-32603），通知仍不回复；等待者取消后，未完成的方法继续保留租约。
-     */
-    "/ws/plugin/rpc": {
-        request: EmptyRequestInput;
-        response: (PluginRPCFailure & { "code"?: never; "data"?: never; "msg"?: never; }) | ({ "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; } & { "error"?: never; "id"?: never; "jsonrpc"?: never; });
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "websocket";
-        websocket: { incoming: PluginRPCRequestFieldsInput | [PluginRPCRequestFieldsInput, ...Array<PluginRPCRequestFieldsInput>]; outgoing: (PluginRPCSuccess & { "error"?: never; "method"?: never; "params"?: never; }) | (PluginRPCFailure & { "method"?: never; "params"?: never; "result"?: never; }) | [(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }), ...Array<(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; })>] | (PluginRPCNotification & { "error"?: never; "id"?: never; "result"?: never; }); failureStatus: 404; };
-    };
-    /**
-     * 与查询参数形式使用相同的握手和逐方法写入准入规则。
-     */
-    "/ws/plugin/rpc/:name": {
-        request: EmptyRequestInput;
-        response: (PluginRPCFailure & { "code"?: never; "data"?: never; "msg"?: never; }) | ({ "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; } & { "error"?: never; "id"?: never; "jsonrpc"?: never; });
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "websocket";
-        websocket: { incoming: PluginRPCRequestFieldsInput | [PluginRPCRequestFieldsInput, ...Array<PluginRPCRequestFieldsInput>]; outgoing: (PluginRPCSuccess & { "error"?: never; "method"?: never; "params"?: never; }) | (PluginRPCFailure & { "method"?: never; "params"?: never; "result"?: never; }) | [(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }), ...Array<(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; })>] | (PluginRPCNotification & { "error"?: never; "id"?: never; "result"?: never; }); failureStatus: 404; };
-    };
 }
 
 export interface APIPOSTRoutes {
-    "/api/account/checkActivationcode": {
-        request: CheckActivationCodeRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/account/deactivate": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/account/login": {
-        request: AccountLoginRequestInput;
-        response: { "code": 0; "data": AccountLoginData | null; "msg": string; } | { "code": -1 | 1 | 10; "data": { "closeTimeout": number; } | null | AccountLoginData | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/account/startFreeTrial": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/account/useActivationcode": {
-        request: ActivationCodeRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/agent/browserCapabilityResult": {
-        request: AIBrowserCapabilityResultRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        additionalErrorStatuses: [409];
-    };
-    /**
-     * gemini-interactions 使用 store=false 和本地会话历史，nativeContent 版本 1 保留完整原生步骤及思考签名。
-     * 未知原生版本保留原会话并报错；缺失终止事件、失败或不完整的响应不会执行工具调用。
-     * 流式事件按序发送；消费停滞会取消生成，待工具结果和运行时检查点收尾后发送 interrupted。
-     * 同轮重试保留原 thinking 轮次；上下文压缩的 thinking 事件携带该轮 roundID。
-     */
-    "/api/ai/agent/chat": {
-        request: AIAgentChatRequestInput;
-        response: string | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "sse";
-        additionalErrorStatuses: [409];
-        sse: { events: { "browser_capability_call": AISSEBrowserCapabilityCall; "confirm": AISSEConfirm; "content": AISSEToken; "done": AISSETurn; "error": AISSEMessage; "interrupted": AISSEMessage; "permission": AIPermissionData; "question": AISSEQuestion; "reasoning": AISSEToken; "retry": AISSERetry; "snapshot": AISSESnapshot; "thinking": AISSEThinking; "tool_call": AISSEToolCall; "tool_result": AISSEToolResult; "turn": AISSETurn; "usage": AISSEUsage; }; };
-    };
-    "/api/ai/agent/confirm": {
-        request: AIConfirmRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        additionalErrorStatuses: [409];
-    };
-    /**
-     * 返回工作空间 data/storage/ai/AGENTS.md 的 content 和 revision，要求管理员权限。
-     * 兼容读取旧路径 data/ai/AGENTS.md，读取不迁移；两处内容不同时返回 code=-1，保留两份文件并提示合并。
-     * 缺失文件返回空 content 和 missing 修订，不创建文件；非 UTF-8 文本、超出 32 KiB 或读取失败返回 code=-1。
-     */
-    "/api/ai/agent/getInstructions": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIAgentInstructionsData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 会话保留扩展字段。图片附件只持久化来源元数据，不包含图片字节。
-     * PDF 预览附件的 path 指向来源 PDF，pdfImage 记录 revision、page 和 object；恢复时认证读取来源并校验版本。
-     */
-    "/api/ai/agent/getSession": {
-        request: AISessionIDRequestInput;
-        response: { "code": 0; "data": AISessionExtensionAISessionFields | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        additionalErrorStatuses: [500];
-    };
-    "/api/ai/agent/getSkill": {
-        request: AISkillNameRequestInput;
-        response: { "code": 0; "data": AISkillData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 独立于斜杠菜单的普通技能发现，只返回只读元数据，包括已禁用条目。
-     */
-    "/api/ai/agent/lsBuiltinSkills": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AIBuiltinSkillInfo> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * Filter by title, then paginate sessions with pinned entries first, ordered by pinnedAt descending.
-     * Unpinned sessions retain createdAt descending order; equal timestamps use descending session IDs.
-     * Missing pinnedAt in older sessions means unpinned. Pinning survives index reconstruction.
-     */
-    "/api/ai/agent/lsSessions": {
-        request: AISessionsRequestInput;
-        response: { "code": 0; "data": AISessionList; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/agent/lsSkills": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AISkillInfo> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/agent/lsUserSkills": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AIUserSkillInfo> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 使用严格字符串字段，通过管理员和只读检查管理工作空间技能文件。相对路径标识实际目录，
-     * 与文件头中的技能名称无关，允许普通的点开头名称。读写支持不超过 8 MiB 的 UTF-8 文本，
-     * 不依赖扩展名并保留原文字节。目录和资源读取保留基于内容的版本；不支持编辑的内容省略 content，
-     * 并增加可选的 readOnlyReason（binary、encoding 或 tooLarge）。
-     * 修改已有文件时重新校验内容并要求当前版本，与旧技能修改接口和安装共享临界区，成功后通知同步。
-     * 路径穿越、平台别名、链接、过期版本，以及单独修改不支持的内容或重命名、删除根 SKILL.md 均被拒绝。
-     */
-    "/api/ai/agent/manageSkills": {
-        request: AISkillFileRequestInput;
-        response: { "code": 0; "data": AISkillFileData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/agent/question": {
-        request: AIQuestionRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        additionalErrorStatuses: [409];
-    };
-    "/api/ai/agent/removeSession": {
-        request: AISessionIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        additionalErrorStatuses: [409,500];
-    };
-    "/api/ai/agent/removeSkill": {
-        request: AISkillNameRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/agent/renameSkill": {
-        request: AISkillRenameRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * Save conversation content with revision checks. The stored pinnedAt is preserved regardless of the
-     * submitted snapshot; clients must use setPinned to update list pinning independently of active turns.
-     */
-    "/api/ai/agent/saveSession": {
-        request: AISessionExtensionAISessionFieldsInput;
-        response: { "code": 0; "data": AISessionSaveData; "msg": string; } | { "code": -1; "data": ({ "closeTimeout": number; } & { "revision"?: never; "session"?: never; }) | null | (AISessionSaveData & { "closeTimeout"?: never; }); "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        additionalErrorStatuses: [400,409,500];
-    };
-    "/api/ai/agent/saveSkill": {
-        request: AISkillSaveRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 接收 content 和读取时的 revision，要求管理员权限且禁止只读写入。
-     * 内容允许为空；修订冲突返回 code=-1 并保留原文。保存采用原子替换，并按工作空间同步忽略规则通知同步。
-     * 首次保存迁移旧路径 data/ai/AGENTS.md，先持久化原文到新路径再移除旧文件；旧路径的忽略规则需在保存前更新。
-     * 指令在下一轮用户对话生效，同轮工具调用和压缩使用固定快照，且不能覆盖工具权限、审批或访问控制。
-     */
-    "/api/ai/agent/setInstructions": {
-        request: AIAgentInstructionsSaveRequestInput;
-        response: { "code": 0; "data": AIAgentInstructionsData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/agent/setPermission": {
-        request: AIPermissionRequestInput;
-        response: { "code": 0; "data": AIPermissionData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * Persist pinning for an existing session. Requires administrator write access.
-     * pinned is a required boolean. Repeated pin requests preserve the original millisecond timestamp;
-     * unpinning returns pinnedAt=0. Missing or corrupt sessions fail without replacing their data.
-     * Pinning does not change conversation revisions, timestamps or active turns; stale saveSession requests cannot overwrite it.
-     */
-    "/api/ai/agent/setPinned": {
-        request: AISessionPinnedRequestInput;
-        response: { "code": 0; "data": AISessionPinnedData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/agent/title": {
-        request: AITitleRequestInput;
-        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/chatGPT": {
-        request: AIMessageRequestInput;
-        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/chatGPTWithAction": {
-        request: AIActionRequestInput;
-        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 套餐授权接口仅供已鉴权管理员使用，遵守 AI 禁用开关及只读限制。
-     * 账户列表只返回身份及连接状态；令牌保存在主机私有目录，配置仅保存账户 ID。
-     */
-    "/api/ai/chatgpt/accounts": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<ChatGPTAccount>; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/chatgpt/cancel": {
-        request: ChatGPTLoginRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 导出使用至少 12 个字符的密码，先写入带版本的认证加密文件，再停止源主机刷新。
-     */
-    "/api/ai/chatgpt/export": {
-        request: ChatGPTTransferRequestInput;
-        response: { "code": 0; "data": ExportFileData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 导入限制为 1 MiB，认证文件和账户身份后续期；失败保留账户及目标主机标识。
-     */
-    "/api/ai/chatgpt/import": {
-        request: ChatGPTTransferRequestInput;
-        response: { "code": 0; "data": ChatGPTAccount; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 退出清除本地令牌并保留账户映射；revoked 表示远程撤销是否确认成功。
-     */
-    "/api/ai/chatgpt/logout": {
-        request: ChatGPTAccountRequestInput;
-        response: { "code": 0; "data": ChatGPTLogoutResult; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 删除指定的本机账户注册并终止其请求及登录尝试，不合并同邮箱注册；不修改提供商配置或主机 ID。
-     * 先尝试撤销会话，远程撤销未确认时仍清除本地记录并返回 revoked=false；缺失账户报错。
-     */
-    "/api/ai/chatgpt/remove": {
-        request: ChatGPTAccountRequestInput;
-        response: { "code": 0; "data": ChatGPTLogoutResult; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 登录地址可能包含身份提示，客户端不得记录；回调使用独立的 IPv4 回环监听器。
-     */
-    "/api/ai/chatgpt/start": {
-        request: ChatGPTAccountRequestInput;
-        response: { "code": 0; "data": ChatGPTLogin; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/chatgpt/status": {
-        request: ChatGPTLoginRequestInput;
-        response: { "code": 0; "data": ChatGPTLoginStatus; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/editor/chat": {
-        request: AIEditorChatRequestInput;
-        response: string | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "structJSON";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        output: "sse";
-        sse: { events: { "content": AISSEToken; "done": AISSEFinish; "error": AISSEMessage; "reasoning": AISSEToken; "start": AISSEStart; "truncated": AISSEMessage; }; };
-    };
-    "/api/ai/editor/lsActions": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AIEditorAction | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/editor/removeAction": {
-        request: AIEditorActionIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/editor/saveAction": {
-        request: AIEditorActionSaveRequestInput;
-        response: { "code": 0; "data": AIEditorAction | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/embeddingStat": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIEmbeddingStat | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 按提供商协议读取模型及上下文上限；gemini-interactions 使用原生模型清单并去除 models/ 前缀。
-     */
-    "/api/ai/listModels": {
-        request: AIProviderRequestInput;
-        response: { "code": 0; "data": AIModelsData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/lsCapabilities": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AICapabilityManifest> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/mcpEnvironmentVariables": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIMCPEnvironmentData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/mcpOAuthAuthorize": {
-        request: AIMCPIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/mcpOAuthDisconnect": {
-        request: AIMCPIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/mcpStatus": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<AIMCPStatus> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/memory/cancel": {
-        request: AIMemoryTaskRequestInput;
-        response: { "code": 0; "data": EmptyRequest; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 返回所选记忆模型的标准推理选项，与智能体共用策略，不按模型名称推断供应商能力。
-     * 可用模型使用受支持协议时，efforts 为 none、low、medium、high、xhigh、max；默认空字符串不列入其中。
-     * 未选择模型、模型不可用或协议不支持时返回空数组；这些选项不保证供应商接受每个值，实际请求由协议适配器处理。
-     */
-    "/api/ai/memory/capabilities": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIMemoryCapabilitiesData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 先持久关闭长期记忆并取消旧任务，再撤回全部正式记录并删除当前概览，不调用模型。
-     * disabled 表示开关已保存为关闭；cleared=false 表示清理未全部完成，可由用户再次调用重试。
-     * 不删除原笔记、对话、数据历史或防恢复标记；不支持未知或损坏的记录格式时保留原文件。
-     */
-    "/api/ai/memory/clear": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIMemoryClearData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 先持久保存撤回标记再清理原记录；saved=true 表示已阻止使用，cleanupPending=true 时可重试物理清理。
-     */
-    "/api/ai/memory/forget": {
-        request: AIMemoryForgetRequestInput;
-        response: { "code": 0; "data": AIMemoryForgetData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/memory/get": {
-        request: AIMemoryGetRequestInput;
-        response: { "code": 0; "data": AIMemoryGetData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 记忆接口仅面向工作空间管理员；写入需要可写空间，读取不依赖模型配置。
-     */
-    "/api/ai/memory/list": {
-        request: AIMemoryListRequestInput;
-        response: { "code": 0; "data": AIMemoryListData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/memory/maintain": {
-        request: AIMemoryMaintainRequestInput;
-        response: { "code": 0; "data": AIMemoryTaskStarted; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * memory 返回统一 MEMORY.md 只读概览；user 保留为空字符串供旧调用方兼容，stale 表示概览不可用或过期。
-     * count 只统计来源有效且当前可用的正式记忆；仅 countComplete=true 时可作为完整总数展示。
-     */
-    "/api/ai/memory/overview": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIMemoryOverviewData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/memory/save": {
-        request: AIMemorySaveRequestInput;
-        response: { "code": 0; "data": AIMemorySaveData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * results[].saved 表示该条新增或更新已持久化，候选记录仍需确认；失败或取消不回滚已保存结果。
-     * overviewPending 仅表示本任务已有已持久化结果且概览待刷新，不表示所有提案成功；无写入时为 false。
-     * 空 results 不代表保存成功；completed 且结果为空表示没有需要保存的记录变更。
-     */
-    "/api/ai/memory/task": {
-        request: AIMemoryTaskRequestInput;
-        response: { "code": 0; "data": AIMemoryTaskData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 仅翻译当前有效概览用于显示；需要启用记忆并配置记忆模型，可能产生模型费用。
-     * 缓存仅在当前进程内按内容、目标语言及配置复用；不会修改正式记录或 MEMORY.md。
-     */
-    "/api/ai/memory/translate": {
-        request: AIMemoryTranslateRequestInput;
-        response: { "code": 0; "data": AIMemoryTranslateData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 手动调用设备选择的 OCR AI 模型识别本地 assets/ 图片，不使用会话、工具。
-     * 未保存独立模型且本地提供商仍被选中时兼容智能体模型；显式模型失效时返回错误，不回退。
-     * path 保留 box 查询参数以隔离笔记本资源；拒绝加密资源和外部图片地址。
-     * 支持 PNG、JPEG、GIF、WebP，并将 BMP、TIFF 转为 PNG、HEIC/HEIF 转为 JPEG；其他格式返回错误。
-     * 保留原图分辨率，原始文件和发送图片均限制为 20 MiB、发送图片限制为四千万像素；HEIF 遵循预览解码限制。
-     * 支持现有 AI 生成协议，受 AI 功能开关、管理员权限和只读模式限制。
-     * 请求上限为两分钟，提供商配置的更短超时仍生效；模型不支持图片时返回错误，不降级为纯文本请求。
-     * 成功将完整文本（含换行和空白，图片无文字时可为空）保存到现有 OCR 存储并更新索引。
-     * 失败、取消、拒绝或截断时保留已有文本；不返回虚构的坐标和置信度。
-     */
-    "/api/ai/ocr": {
-        request: AssetPathRequestInput;
-        response: { "code": 0; "data": AssetTextData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/reindexEmbedding": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/ai/retryFailedEmbedding": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 用固定的 TypeSafe System One 样例测试已保存的可选 ai.decision 配置，返回 {matched, msg?}。
-     * 遵循全局人工智能禁用标记和请求取消，配置错误与供应商错误不会被转换为判断结果。
-     * 省略决策配置时补齐默认关闭的配置，关闭后保留密钥，并沿用现有配置加密存储机制。
-     */
-    "/api/ai/testDecisionModel": {
-        request: AIDecisionTestRequestInput;
-        response: { "code": 0; "data": AIDecisionTestData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/testEmbeddingModel": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIEmbeddingTestData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 按提供商协议验证实际生成能力，模型清单命中本身不代表测试通过。
-     * gemini-interactions 使用原生端点、store=false 和有限输出预算，必须收到已校验的流式终止事件。
-     * 测试允许无上游错误且不含工具调用的 incomplete 响应，避免思考耗尽测试预算导致误判；正常生成仍报错。
-     */
-    "/api/ai/testModel": {
-        request: AIModelRequestInput;
-        response: { "code": 0; "data": AIModelTestData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/ai/testRerankModel": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": AIRerankTestData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
     /**
      * 在隔离目录解压并预检完整输出集合的能力记录及文档源，失败时不写入目标。
      * 实际复制仍重新检查目标；后续并发变化或 I/O 失败可能留下已完成条目，不承诺整批回滚。
@@ -3862,6 +2407,9 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
+    /**
+     * 上传提示生命周期使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播，保留 ignorePushMsg 语义。
+     */
     "/api/asset/insertLocalAssets": {
         request: InsertLocalAssetsRequestInput;
         response: { "code": 0; "data": AssetUploadData; "msg": string; } | { "code": -1; "data": ({ "closeTimeout": number; } & { "errFiles"?: never; "failedFiles"?: never; "succFiles"?: never; "succMap"?: never; }) | null | (AssetUploadData & { "closeTimeout"?: never; }); "msg": string; };
@@ -4003,26 +2551,6 @@ export interface APIPOSTRoutes {
         request: UploadAssetRequestInput;
         response: { "code": 0; "data": AssetUploadData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "multipart";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 上传提示生命周期使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播，状态栏仍全局更新。
-     */
-    "/api/asset/uploadCloud": {
-        request: AssetCloudUploadRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 上传提示生命周期使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播，保留 ignorePushMsg 语义。
-     */
-    "/api/asset/uploadCloudByAssetsPaths": {
-        request: AssetPathsCloudUploadRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
@@ -4550,255 +3078,6 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
-     * 取消请求会停止当前下载及后续更新；已提交的包会保留并完成运行时刷新。
-     */
-    "/api/bazaar/batchUpdatePackage": {
-        request: BatchUpdatePackageRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/getBazaarIcon": {
-        request: GetBazaarIconRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 在线包的 created 为集市索引记录的首次上架时间，缺失时省略，不使用 updated、installTime 或 updateTime 补齐。
-     * bazaarVersionUnsupported 为 true 表示在线包要求更高的应用版本，与 bazaarIncompatible 的平台兼容性独立。
-     * 这两个可选字段也适用于返回在线包的集市列表、安装和更新接口；本地清单不提供它们。
-     */
-    "/api/bazaar/getBazaarPackage": {
-        request: GetBazaarPackageRequestInput;
-        response: { "code": 0; "data": BazaarPackageDetail; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarPackageREADME": {
-        request: GetBazaarPackageREADMERequestInput;
-        response: { "code": 0; "data": BazaarREADMEData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarPackageRating": {
-        request: GetBazaarPackageRatingRequestInput;
-        response: { "code": 0; "data": BazaarRatingResult; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | BazaarRatingResult; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarPackageRatings": {
-        request: GetBazaarPackageRatingsRequestInput;
-        response: { "code": 0; "data": BazaarRatingsData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarPackageUserRatings": {
-        request: GetBazaarPackageUserRatingsRequestInput;
-        response: { "code": 0; "data": BazaarUserRatingsResult; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | BazaarUserRatingsResult; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarPlugin": {
-        request: GetBazaarPluginRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarTemplate": {
-        request: GetBazaarTemplateRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarTheme": {
-        request: GetBazaarThemeRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getBazaarWidget": {
-        request: GetBazaarWidgetRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledIcon": {
-        request: GetInstalledIconRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledPackageSize": {
-        request: GetInstalledPackageSizeRequestInput;
-        response: { "code": 0; "data": BazaarPackageSizeData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledPlugin": {
-        request: GetInstalledPluginRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledTemplate": {
-        request: GetInstalledTemplateRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledTheme": {
-        request: GetInstalledThemeRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getInstalledWidget": {
-        request: GetInstalledWidgetRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/getUpdatedPackage": {
-        request: GetUpdatedPackageRequestInput;
-        response: { "code": 0; "data": BazaarUpdatedData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；外观刷新事件仍广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的安装不会回滚，仍完成运行时刷新。
-     */
-    "/api/bazaar/installBazaarIcon": {
-        request: InstallBazaarIconRequestInput;
-        response: { "code": 0; "data": BazaarAppearancePackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；插件重载事件仍广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的安装不会回滚，仍完成运行时刷新。
-     */
-    "/api/bazaar/installBazaarPlugin": {
-        request: InstallBazaarPluginRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的安装不会回滚，仍完成运行时刷新。
-     */
-    "/api/bazaar/installBazaarTemplate": {
-        request: InstallBazaarTemplateRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；外观刷新事件仍广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的安装不会回滚，仍完成运行时刷新。
-     */
-    "/api/bazaar/installBazaarTheme": {
-        request: InstallBazaarThemeRequestInput;
-        response: { "code": 0; "data": BazaarAppearancePackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的安装不会回滚，仍完成运行时刷新。
-     */
-    "/api/bazaar/installBazaarWidget": {
-        request: InstallBazaarWidgetRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/installLocalBazaarPackage": {
-        request: InstallLocalBazaarPackageRequestInput;
-        response: { "code": 0; "data": BazaarLocalInstallResult; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | BazaarLocalInstallResult; "msg": string; };
-        body: "multipart";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/setBazaarPackageRating": {
-        request: SetBazaarPackageRatingRequestInput;
-        response: { "code": 0; "data": BazaarRatingResult; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null | BazaarRatingResult; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/bazaar/uninstallBazaarIcon": {
-        request: UninstallBazaarIconRequestInput;
-        response: { "code": 0; "data": BazaarAppearancePackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/uninstallBazaarPlugin": {
-        request: UninstallBazaarPluginRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/uninstallBazaarTemplate": {
-        request: UninstallBazaarTemplateRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/uninstallBazaarTheme": {
-        request: UninstallBazaarThemeRequestInput;
-        response: { "code": 0; "data": BazaarAppearancePackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/bazaar/uninstallBazaarWidget": {
-        request: UninstallBazaarWidgetRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 安装完成提示使用可选请求头 X-SiYuan-App-ID 定向；无标识时广播，离线目标不回退广播。
-     * 请求取消会中止下载、解压及尚未提交的替换；已提交的更新不会回滚。
-     */
-    "/api/bazaar/updateBazaarPackage": {
-        request: UpdateBazaarPackageRequestInput;
-        response: { "code": 0; "data": BazaarPackagesData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
      * 目标为原生页签或脑图容器时，只能插入各自的项目块。
      * 输入同类型容器片段时展开其直属项目，保留目标容器属性及项目 ID；非法子块由事务校验拒绝。
      * 原生页签和脑图的结构化编辑使用 getBlockDOM 和 dataType="dom"，并保留已有 ID 和属性。
@@ -5258,13 +3537,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
-    "/api/block/setBlockReminder": {
-        request: BlockReminderRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     /**
      * refID 指定引用块，defID 指定定义块；includeChildren 控制标题或列表的子块范围。
      * originalToEmbed 省略或为 false 时在原定义位置保留引用，为 true 时替换为查询已移动定义 ID 的嵌入块。
@@ -5396,20 +3668,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
     };
-    "/api/cloud/getCloudSpace": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": CloudSpaceData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/cloud/setCloudReminder": {
-        request: CloudReminderRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     "/api/convert/pandoc": {
         request: PandocRequestInput;
         response: { "code": 0; "data": PandocData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -5420,13 +3678,6 @@ export interface APIPOSTRoutes {
     "/api/export/copyExportFile": {
         request: CopyExportFileRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | -2; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/export/export2Liandi": {
-        request: ExportIDRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
@@ -5683,18 +3934,6 @@ export interface APIPOSTRoutes {
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 转换浏览器提交的页面内容，保留动态资源字段和部分上传失败时的 Markdown。
-     * 链滴、流云整页剪藏使用当前账号所属站点的登录 Cookie 获取原始 Markdown，不跟随重定向。
-     * 未登录、站点与账号区域不匹配或获取原文失败时，使用提交的 DOM 和上传资源；局部剪藏直接使用 DOM。
-     */
-    "/api/extension/copy": {
-        request: ({ "assets"?: string; "clipType"?: string; "dom": string; "href"?: string; "notebook"?: string; } & Record<string, string | Blob | Array<string | Blob>>);
-        response: { "code": 0; "data": ExtensionCopyData | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null | ExtensionCopyData | null; "msg": string; };
-        body: "multipart";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
      * 在写入前检查文档源格式及规范路径，预检失败返回 -1。
@@ -6589,27 +4828,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
-    "/api/inbox/getShorthand": {
-        request: TrimmedIDRequestInput;
-        response: { "code": 0; "data": Shorthand | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/inbox/getShorthands": {
-        request: ShorthandsRequestInput;
-        response: { "code": 0; "data": ShorthandsData | null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/inbox/removeShorthands": {
-        request: RemoveShorthandsRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     /**
      * 标准 Markdown 复制按文档标题编号开关和编辑器编号格式添加编号，局部导出保留原文档编号。
      */
@@ -6651,92 +4869,6 @@ export interface APIPOSTRoutes {
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 接收 name 和精确匹配的 redirectURI，返回客户端 id 及仅显示一次的 secret。
-     * 要求管理员权限并禁止只读模式；OAuth 令牌只用于 /mcp，不解锁加密笔记本。
-     */
-    "/api/mcp/addOAuthClient": {
-        request: MCPOAuthClientRequestInput;
-        response: { "code": 0; "data": MCPOAuthClientSecret; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 返回内置 MCP 服务端 OAuth 的公开地址、开关和预注册客户端列表，不返回凭证摘要或客户端密钥。
-     * 要求管理员权限；服务端 OAuth 与思源连接外部 MCP 的客户端 OAuth 配置相互独立，默认关闭。
-     * OAuth 使用授权码与 PKCE S256，支持 client_secret_basic 和 client_secret_post，不支持动态注册。
-     * 访问令牌最长有效一小时；offline_access 刷新令牌轮换并在授权后三十天过期，重放会撤销同一授权。
-     * OAuth 令牌只用于 /mcp，不能用于管理接口或其他内核 API，且不会解锁加密笔记本。
-     */
-    "/api/mcp/getOAuth": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": MCPOAuthStatus; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 接收 id 删除客户端并撤销授权，或传 all: true 撤销全部授权但保留注册。
-     * 要求管理员权限并禁止只读模式。
-     */
-    "/api/mcp/removeOAuthClient": {
-        request: MCPOAuthRemoveRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 接收 enabled 和不含路径的 HTTPS publicURL，要求管理员权限并禁止只读模式。
-     * 启用需要锁屏密码或 OIDC 登录；关闭、修改地址或管理员认证配置会撤销已有授权。
-     * 服务端 OAuth 与连接外部 MCP 的客户端 OAuth 配置相互独立，默认关闭；协议说明见 `/api/mcp/getOAuth`。
-     */
-    "/api/mcp/setOAuth": {
-        request: MCPOAuthConfigInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * URL、TLS 和 Cookie 诊断对象包含标准库的原始 JSON。
-     * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
-     */
-    "/api/network/echo": {
-        request: Blob;
-        response: { "code": 0; "data": NetworkEchoData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * URL、TLS 和 Cookie 诊断对象包含标准库的原始 JSON。
-     * 已声明字段及其类型保持稳定；工具链新增的诊断字段通过 JSONValue 索引读取，不保证跨版本存在。
-     */
-    "/api/network/echo/*path": {
-        request: Blob;
-        response: { "code": 0; "data": NetworkEchoData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/network/forwardProxy": {
-        request: NetworkForwardRequestInput;
-        response: { "code": 0; "data": NetworkForwardData; "msg": string; } | { "code": -1 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 10; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/network/proxy": {
-        request: Blob;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-        output: "proxy";
-        proxy: {"kind":"http","contentType":"application/octet-stream","upstreamStatuses":true};
     };
     /**
      * 改密恢复和密钥切换保留现存加密笔记本的认证、信封格式及中断恢复检查。
@@ -7021,98 +5153,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
     };
-    "/api/petal/getPluginPublishInfo": {
-        request: PluginPublishRequestInput;
-        response: { "code": 0; "data": PluginPublishInfo; "msg": string; } | { "code": -1 | 400 | 403 | 500; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * names 省略或为 null 时返回全部符合条件的插件；空数组返回空列表，其他值按安装名称精确筛选并去重。
-     * 名称筛选保留插件启用、信任、前端兼容、发布权限及 settingsWindow 声明检查。
-     */
-    "/api/petal/loadPetals": {
-        request: LoadPetalsRequestInput;
-        response: { "code": 0; "data": Array<Petal | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/petal/loadPluginPublishData": {
-        request: PluginPublishRequestInput;
-        response: { "code": 0; "data": Record<string, null | string | number | boolean>; "msg": string; } | { "code": -1 | 400 | 403 | 404 | 500; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/petal/savePluginPublishData": {
-        request: SavePluginPublishDataRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 400 | 403 | 500; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/petal/setPetalEnabled": {
-        request: SetPetalEnabledRequestInput;
-        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/petal/setPetalPublishEnabled": {
-        request: SetPetalPublishEnabledRequestInput;
-        response: { "code": 0; "data": Petal | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/petal/setPluginPublishDataGrant": {
-        request: SetPluginPublishDataGrantRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 400 | 403 | 500; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/plugin/getLoadedPlugin": {
-        request: LoadedPluginRequestInput;
-        response: { "code": 0; "data": LoadedPlugin | null; "msg": string; } | { "code": -1 | 1 | 2 | 3 | 4; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/plugin/listLoadedPlugins": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": Array<LoadedPlugin | null> | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    /**
-     * 实际 RPC 方法与通知在脚本执行至 Promise 完成期间保留工作空间写入租约，
-     * 取消 HTTP 等待者不会提前释放；准入失败沿用 -32603，通知仍不回复。
-     */
-    "/api/plugin/rpc": {
-        request: PluginRPCRequestFieldsInput | [PluginRPCRequestFieldsInput, ...Array<PluginRPCRequestFieldsInput>];
-        response: (PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }) | [(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }), ...Array<(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; })>] | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "directJSON";
-        noContent: true;
-    };
-    /**
-     * 与查询参数形式使用相同的逐方法写入准入规则。
-     */
-    "/api/plugin/rpc/:name": {
-        request: PluginRPCRequestFieldsInput | [PluginRPCRequestFieldsInput, ...Array<PluginRPCRequestFieldsInput>];
-        response: (PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }) | [(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; }), ...Array<(PluginRPCSuccess & { "error"?: never; }) | (PluginRPCFailure & { "result"?: never; })>] | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "directJSON";
-        noContent: true;
-    };
     /**
      * 执行全局派生索引库 SQL，要求管理员身份及可写运行环境。
      * mode 省略、null 或空字符串时允许单条读写语句；readonly 仅允许单条只读 SELECT 或 WITH 查询。
@@ -7238,36 +5278,10 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
     };
-    "/api/repo/downloadCloudSnapshot": {
-        request: DownloadCloudSnapshotRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     "/api/repo/exportRepoFile": {
         request: ExportRepoFileRequestInput;
         response: { "code": 0; "data": RepoExportData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 可选的 startTime、endTime 按创建时间筛选后分页，筛选遍历索引页。
-     * 时间为非负整数 Unix 毫秒时间戳，包含起点、不包含终点；省略或为 0 表示该端无界。
-     * 两端均非 0 时终点必须大于起点；读取失败返回错误，不返回部分结果。
-     */
-    "/api/repo/getCloudRepoSnapshots": {
-        request: GetCloudRepoSnapshotsRequestInput;
-        response: { "code": 0; "data": RepoCloudSnapshotsData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/repo/getCloudRepoTagSnapshots": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": RepoCloudTagsData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
     };
@@ -7346,24 +5360,10 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
     };
-    "/api/repo/purgeCloudRepo": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     "/api/repo/purgeRepo": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/repo/removeCloudRepoTagSnapshot": {
-        request: RemoveCloudRepoTagSnapshotRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
@@ -7418,13 +5418,6 @@ export interface APIPOSTRoutes {
     };
     "/api/repo/tagSnapshot": {
         request: TagSnapshotRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/repo/uploadCloudSnapshot": {
-        request: UploadCloudSnapshotRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
@@ -7694,13 +5687,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
-    "/api/search/semanticSearchBlock": {
-        request: SearchBlockRequestInput;
-        response: { "code": 0; "data": SearchBlocksData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
     "/api/search/updateEmbedBlock": {
         request: UpdateEmbedBlockRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -7741,32 +5727,12 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
     };
-    /**
-     * `cached: true` 仅返回内存中的账户，未登录时返回 null。
-     * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
-     * 省略 cached 或传入 false 时执行账户恢复和令牌刷新；非管理员在两种模式下均得到 null。
-     * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
-     */
-    "/api/setting/getCloudUser": {
-        request: SettingCloudUserRequestInput;
-        response: { "code": 0; "data": SettingUser | null; "msg": string; } | { "code": -1 | 1 | 255; "data": { "closeTimeout": number; } | null | SettingUser | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
     "/api/setting/getPandocBin": {
         request: EmptyRequestInput;
         response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/setting/getPublish": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SettingPublishData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
      * 读取单个配置段，字段与脱敏规则与 /api/system/getConf 一致，仅返回请求的配置段以减少传输量。
@@ -7778,21 +5744,6 @@ export interface APIPOSTRoutes {
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
-    };
-    "/api/setting/login2faCloudUser": {
-        request: SettingLogin2faRequestInput;
-        response: Login2faEnvelope | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "directJSON";
-    };
-    "/api/setting/logoutCloudUser": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
      * 保留省略字段，成功后客户端重新读取配置；通知不包含密码或密钥。
@@ -7835,47 +5786,12 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
-     * 使用共享规范化规则；智能体确认超时负数回退 600 秒，0 保留无限等待语义。
-     * web 初始搜索为 Exa、抓取为直接请求，可独立切换到共用 apiKey 的 DeepSeek。
-     * exaApiKey 是独立的 Exa 凭据，空值使用匿名模式；非空通过请求头认证，可能产生费用，失败不切换模式或服务。
-     * 工具调用轮数和输出 token 上限的负数归零；温度超出 0–2 回退 1。
-     * 嵌入并发数和批大小省略、null 或小于 1 时分别使用 8 和 10，超过上限时分别限制为 64 和 128。
-     * 旧客户端的平铺 decision.endpoint、apiKey、name、timeout 迁移到 profiles.typesafe；提交 profiles 时以该对象为准。
-     * ChatGPT 账户绑定变化时与主配置一起可恢复提交，失败时回滚且不发布新配置；未变化时不访问绑定存储。
-     */
-    "/api/setting/setAI": {
-        request: SetAIRequestInput;
-        response: { "code": 0; "data": SettingAI | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
      * 限定关闭按钮行为：closeButtonBehavior 仅接受 0、1，越界值回退 0。
      * entryVisibility 省略时保持当前方案，null 还原默认显隐方案。
      */
     "/api/setting/setAppearance": {
         request: SetAppearanceRequestInput;
         response: { "code": 0; "data": SettingAppearance | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * compatibilityFilters 按 plugins、themes、widgets、icons、templates 分别保存集市兼容性筛选，两个开关默认 false。
-     * 对象递归合并，省略的类型和开关保持当前值，null 恢复默认；未知类型忽略，不影响 trust 和 petalDisabled。
-     * batchUpdateExcluded 按相同类型和包名保存跳过开关，默认均为空对象，true 跳过、false 恢复；补丁按包名合并；仅跳过批量更新，仍提示更新并允许手动单项更新。
-     */
-    "/api/setting/setBazaar": {
-        request: SetBazaarRequestInput;
-        response: { "code": 0; "data": SettingBazaar | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/setting/setBazaarPetalDisabled": {
-        request: SettingPetalDisabledRequestInput;
-        response: { "code": 0; "data": SettingPetalDisabledData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
@@ -7908,6 +5824,12 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
+    /**
+     * `cached: true` 仅返回内存中的账户，未登录时返回 null。
+     * 此模式忽略 token，不联网、不等待同步或切换资源来源；缓存结果不代表云端凭据仍然有效。
+     * 省略 cached 或传入 false 时执行账户恢复和令牌刷新；非管理员在两种模式下均得到 null。
+     * 客户端可先读取缓存完成初始化，再刷新账户，并通过 setCloudUser 主通道事件接收账户变化。
+     */
     "/api/setting/setEmoji": {
         request: SettingEmojiRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -7979,16 +5901,6 @@ export interface APIPOSTRoutes {
         authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
-     * 认证账户须提交完整数组，传 null 或空数组表示清空账户。
-     */
-    "/api/setting/setPublish": {
-        request: SetPublishRequestInput;
-        response: { "code": 0; "data": SettingPublishData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
      * 使用与启动、导入相同的规范化规则；limit 小于 1 回退 64，1–31 提升至 32，大于 10240 时截断至 10240。
      * 反链提及关键词上限小于 1 回退 512。
      */
@@ -7999,6 +5911,15 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
+    /**
+     * SetAI 使用共享规范化规则；智能体确认超时负数回退 600 秒，0 保留无限等待语义。
+     * web 初始搜索为 Exa、抓取为直接请求，可独立切换到共用 apiKey 的 DeepSeek。
+     * exaApiKey 是独立的 Exa 凭据，空值使用匿名模式；非空通过请求头认证，可能产生费用，失败不切换模式或服务。
+     * 工具调用轮数和输出 token 上限的负数归零；温度超出 0–2 回退 1。
+     * 嵌入并发数和批大小省略、null 或小于 1 时分别使用 8 和 10，超过上限时分别限制为 64 和 128。
+     * 旧客户端的平铺 decision.endpoint、apiKey、name、timeout 迁移到 profiles.typesafe；提交 profiles 时以该对象为准。
+     * ChatGPT 账户绑定变化时与主配置一起可恢复提交，失败时回滚且不发布新配置；未变化时不访问绑定存储。
+     */
     "/api/setting/setSecrets": {
         request: SetSecretsRequestInput;
         response: { "code": 0; "data": SettingSecrets | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -8250,327 +6171,10 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
     };
-    /**
-     * 请求取消当前文件恢复任务，taskID 必须来自当前 syncProgress 消息。
-     * requested 只表示已接受取消请求，旧任务或已完成任务返回 false；可能先完成恢复，再收到请求。
-     * 取消同时传递到准备、云端请求和文件替换边界，保留已完成文件并清理当前临时文件。
-     * 解除界面编辑阻挡前同步已落盘变更的索引；不回滚已完成文件，不改变全部下载或按需下载设置。
-     * 只读模式可请求取消，不会更改同步配置；调用要求登录和管理员权限。
-     */
-    "/api/sync/cancelSyncCheckout": {
-        request: CancelSyncCheckoutRequestInput;
-        response: { "code": 0; "data": CancelSyncCheckoutData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 清除 provider 为 2（S3）、3（WebDAV）或 4（本地文件系统）的配置并同步落盘。
-     * 清除当前服务时先验证资源及历史快照完整性，再关闭同步；失败时保留原配置，不删除本地或云端数据。
-     * 响应包含当前同步开关及被清除服务的默认配置；其他服务配置、仓库密钥和下载模式保持不变。
-     */
-    "/api/sync/clearSyncProviderConfig": {
-        request: ClearSyncProviderConfigRequestInput;
-        response: { "code": 0; "data": ClearSyncProviderConfigData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 确认当前连接已停止新输入并提交既有编辑，saved 为 false 时本轮应用中止。
-     * token 仅来自该连接的 syncProgress 消息或状态查询，重复确认幂等，旧任务和未知令牌返回 requested 为 false。
-     * 必须确认全部既有连接，且等待期间没有新接入的连接，内核才会应用本地改动。
-     */
-    "/api/sync/confirmSyncCheckout": {
-        request: ConfirmSyncCheckoutRequestInput;
-        response: { "code": 0; "data": CancelSyncCheckoutData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/sync/createCloudSyncDir": {
-        request: SyncNameRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/exportSyncProviderS3": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SyncProviderExportData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/sync/exportSyncProviderWebDAV": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SyncProviderExportData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/sync/getBootSync": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    /**
-     * 查询当前同步任务及单调递增版本，空任务表示当前没有同步任务。
-     * 普通后台同步不阻断编辑；准备落盘、应用改动和恢复索引期间 blocking 为 true。
-     * 前端启动和重连时查询，以恢复错过的开始、取消或结束通知；appID 和 clientID 用于匹配当前主连接的准备令牌。
-     * phase 为 preparing 时先阻止新输入、提交既有编辑，再使用 token 确认保存结果；取消不计入自动同步失败。
-     */
-    "/api/sync/getSyncCheckout": {
-        request: SyncCheckoutClientRequestInput;
-        response: { "code": 0; "data": SyncCheckoutSnapshot; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated"];
-    };
-    "/api/sync/getSyncInfo": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SyncInfoData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/sync/getSyncLANStatus": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SyncLANStatus; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 返回服务类型 2（S3）、3（WebDAV）或 4（本地文件系统）的共用必填清单。
-     * endpoint、bucket 可省略；仅 S3 返回 Endpoint 可能让对象键多出前缀的提示，提示不阻断保存或同步。
-     * 此接口只做内存中的静态判定，不读取或保存用户配置，不接收凭据，不访问云端或文件系统。
-     * 未知服务返回 code -1；规则提示不替代保存时的完整校验和资源来源保护。只读模式下也可调用。
-     */
-    "/api/sync/getSyncProviderConfigRules": {
-        request: SyncProviderConfigRulesRequestInput;
-        response: { "code": 0; "data": SyncProviderConfigRulesData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * previews a changed, nonempty source after saving editors and indexing current data.
-     * It reads authenticated remote metadata without applying files. Empty targets need no direction choice.
-     * Counts describe one-way upload files and one-way download overwrites/removals; ignored assets are preserved.
-     * The returned source/localID/cloudID must accompany an explicit performSync direction; stale previews are rejected.
-     */
-    "/api/sync/getSyncSourceState": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": SyncSourceState; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/importSyncProviderS3": {
-        request: SyncProviderImportRequestInput;
-        response: { "code": 0; "data": SyncS3Data; "msg": string; } | { "code": -1; "data": ({ "closeTimeout": number; } & { "s3"?: never; }) | null | (SyncS3Data & { "closeTimeout"?: never; }); "msg": string; };
-        body: "multipart";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 导入后使用与保存接口相同的地址校验；空白或无效地址不覆盖原配置。
-     */
-    "/api/sync/importSyncProviderWebDAV": {
-        request: SyncProviderImportRequestInput;
-        response: { "code": 0; "data": SyncWebDAVData; "msg": string; } | { "code": -1; "data": ({ "closeTimeout": number; } & { "webdav"?: never; }) | null | (SyncWebDAVData & { "closeTimeout"?: never; }); "msg": string; };
-        body: "multipart";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/listCloudSyncDir": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": CloudSyncDirsData; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/sync/performBootSync": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * retains automatic and fully manual mode behavior when source is omitted.
-     * A source decision requires upload, localID and cloudID from getSyncSourceState and performs one-way sync in any mode.
-     * The source and both snapshot IDs are revalidated before applying files. A failed decision returns code -1.
-     * Automatic sync rejects a changed nonempty source until an explicit direction succeeds; empty sources use local data.
-     */
-    "/api/sync/performSync": {
-        request: PerformSyncRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/removeCloudSyncDir": {
-        request: SyncNameRequestInput;
-        response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setCloudSyncDir": {
-        request: SyncNameRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncAssetDownloadMode": {
-        request: SyncModeRequestInput;
-        response: { "code": 0; "data": SyncAssetDownloadModeData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncEnable": {
-        request: SyncEnabledRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncGenerateConflictDoc": {
-        request: SyncEnabledRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncInterval": {
-        request: SyncIntervalRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncLAN": {
-        request: SyncLANRequestInput;
-        response: { "code": 0; "data": SyncLANStatus; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncMode": {
-        request: SyncModeRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/sync/setSyncPerception": {
-        request: SyncEnabledRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * completeAssets 为 true 时，在切换来源前从原提供商下载缺失的当前资源和历史快照内容；
-     * 省略、null 与 false 保留只检查完整性的行为。补齐过程保留下载模式和恢复密钥，失败时保留原提供商。
-     * 确认后的操作通过全局进度遮罩显示检查与补齐阶段，成功或失败均关闭遮罩。
-     */
-    "/api/sync/setSyncProvider": {
-        request: SyncProviderRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 在解析绝对路径前拒绝空白地址，避免将其当作内核工作目录保存。
-     * 保留现有路径存在性及工作空间边界校验；失败不覆盖原配置，更换来源仍须补齐资源和历史快照。
-     */
-    "/api/sync/setSyncProviderLocal": {
-        request: SetSyncLocalRequestInput;
-        response: { "code": 0; "data": SyncLocalData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 保存同步配置；省略协议时含点域名使用 HTTPS，IP 和单标签主机使用 HTTP，显式协议保持不变。
-     */
-    "/api/sync/setSyncProviderS3": {
-        request: SetSyncS3RequestInput;
-        response: { "code": 0; "data": SyncS3Data; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 保存有效的 HTTP(S) 地址；地址不能为空，省略协议时含点域名使用 HTTPS，IP 和单标签主机使用 HTTP。
-     * 显式协议保持不变，保留协议占位符兼容。
-     * 用户名和密码允许为空以支持匿名访问；校验失败保留原配置，更换来源仍须补齐资源和历史快照。
-     */
-    "/api/sync/setSyncProviderWebDAV": {
-        request: SetSyncWebDAVRequestInput;
-        response: { "code": 0; "data": SyncWebDAVData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 只探测候选配置：端点必须是已有目录且不能与工作空间重叠。
-     * 在独占临时目录中写入、读回比对并尽力删除探针，不读取或保存同步配置；kind 沿用 S3 的 ok/config/network 语义。
-     * 只读模式可调用，不修改快照或同步开关。删除失败只记脱敏日志，不改变探测结果。
-     */
-    "/api/sync/testSyncProviderLocal": {
-        request: TestSyncProviderLocalRequestInput;
-        response: { "code": 0; "data": TestSyncProviderS3Data; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 使用请求中的候选配置探测云端：写入探针对象、按前缀列举并比对、尽力删除探针，不读取或保存用户配置。
-     * 请求字段与保存接口一致；缺少必填项或地址无效时同样返回 code 0，由 kind 为 config 表示，避免与网络故障混淆。
-     * kind 为 ok 表示写入与列举指向同一个对象键；config 表示可确定的配置错误；network 表示网络或服务端不可达，无法判定配置。
-     * 探测会在桶内创建再删除 repo/objects/.s/siyuan-probe-<随机值>-probe，需要该前缀的写入与列举权限；未删除的探针会作为未引用对象被云端清理回收。
-     * 只读模式下也可调用，不修改已有快照或同步开关。
-     */
-    "/api/sync/testSyncProviderS3": {
-        request: TestSyncProviderS3RequestInput;
-        response: { "code": 0; "data": TestSyncProviderS3Data; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    /**
-     * 只探测候选配置：验证端点为集合，创建独占探针目录并写入、读回比对，最后尽力删除。
-     * 不读取或保存同步配置，不修改快照或同步开关；只读模式可调用。kind 沿用 S3 的 ok/config/network 语义。
-     * cloudName 可省略；指定时在该云端目录的 siyuan/repo 下探测，省略时使用独占的随机云端目录并尽力删除。
-     * 上传失败后同样尝试清理；删除失败只记脱敏日志，不改变探测结果。需要集合查询、目录创建、读写和删除权限。
-     */
-    "/api/sync/testSyncProviderWebDAV": {
-        request: TestSyncProviderWebDAVRequestInput;
-        response: { "code": 0; "data": TestSyncProviderS3Data; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
     "/api/system/addCustomEmoji": {
         request: SystemCustomEmojiRequestInput;
         response: { "code": 0; "data": SystemPathData; "msg": string; } | { "code": -1 | 400 | 413; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "form";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/system/addMicrosoftDefenderExclusion": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
@@ -8594,13 +6198,6 @@ export interface APIPOSTRoutes {
         request: EmptyRequestInput;
         response: { "code": 0; "data": SystemFileTraversalData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin"];
-    };
-    "/api/system/checkUpdate": {
-        request: SystemCheckUpdateRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin"];
     };
@@ -8636,19 +6233,6 @@ export interface APIPOSTRoutes {
         request: EmptyRequestInput;
         response: { "code": 0; "data": SystemOnboarding | null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * 异步下载当前更新通道中指定版本的桌面安装包，不修改自动下载设置。
-     * version 必须与该通道当前可用的新版本完全一致；不接受下载 URL，不支持的运行环境或缺少校验值时返回 -1。
-     * 成功返回 null，进度和完成状态沿用更新通知；下载包通过校验后可供退出安装，自动下载关闭时仍可使用。
-     * 需要管理员和可写权限；已有下载任务时复用下载互斥保护，并通知正在下载。
-     */
-    "/api/system/downloadUpdate": {
-        request: SystemDownloadUpdateRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
@@ -8798,13 +6382,6 @@ export interface APIPOSTRoutes {
         body: "none";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated"];
-    };
-    "/api/system/ignoreAddMicrosoftDefenderExclusion": {
-        request: EmptyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "none";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
     };
     /**
      * 导入前按启动和设置接口的相同规则规范化编辑器、导出、文档树、搜索和闪卡偏好，并同步保存。
@@ -8978,13 +6555,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
-    "/api/system/setDownloadInstallPkg": {
-        request: DownloadInstallPkgRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     "/api/system/setFollowSystemLockScreen": {
         request: LockScreenRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -9032,13 +6602,6 @@ export interface APIPOSTRoutes {
     };
     "/api/system/setUILayout": {
         request: SystemUILayoutRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/system/setUpdateChannel": {
-        request: UpdateChannelRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
@@ -9131,13 +6694,6 @@ export interface APIPOSTRoutes {
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
     };
-    "/api/template/cancelHTTP": {
-        request: TemplateHTTPCancelRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
     "/api/template/docSaveAsTemplate": {
         request: SaveTemplateRequestInput;
         response: { "code": 0; "data": null; "msg": string; } | { "code": -1 | 1; "data": { "closeTimeout": number; } | null; "msg": string; };
@@ -9148,13 +6704,6 @@ export interface APIPOSTRoutes {
     "/api/template/getDocSaveAsTemplateInfo": {
         request: TemplateDocumentRequestInput;
         response: { "code": 0; "data": TemplateDocumentInfo; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/api/template/httpPermission": {
-        request: TemplateHTTPPermissionRequestInput;
-        response: { "code": 0; "data": TemplateHTTPPermissionData; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
@@ -9185,19 +6734,6 @@ export interface APIPOSTRoutes {
     "/api/template/renderSprig": {
         request: RenderSprigRequestInput;
         response: { "code": 0; "data": string; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "json";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-    };
-    /**
-     * HTTP 模板执行由 X-Siyuan-Template-Execution、X-Siyuan-Template-App、X-Siyuan-Template-Session 绑定。
-     * 执行 ID 为 16～128 字符的本次唯一标识，窗口必须为在线、已就绪的非发布主连接。
-     * 缺少可交互窗口时 httpGet 返回 interaction_required；本次许可只作用于当前执行的同来源版本。
-     * 持久许可仅通过有效确认签发，绑定内核识别的模板版本，保存在本地且不随模板同步或内置导出。
-     */
-    "/api/template/respondHTTP": {
-        request: TemplateHTTPReplyRequestInput;
-        response: { "code": 0; "data": null; "msg": string; } | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
         body: "json";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
@@ -9322,42 +6858,6 @@ export interface APIPOSTRoutes {
         body: "none";
         /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
         authorization?: readonly ["authenticated","admin","writable"];
-    };
-    "/oauth/mcp/consent": {
-        request: MCPOAuthConsentRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "form";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":302,"contentType":"text/html"},{"status":400,"contentType":"text/html"}];
-    };
-    "/oauth/mcp/revoke": {
-        request: MCPOAuthTokenRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "form";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"application/json"},{"status":400,"contentType":"application/json"},{"status":401,"contentType":"application/json"},{"status":404,"contentType":"application/json"},{"status":429,"contentType":"application/json"},{"status":500,"contentType":"application/json"}];
-    };
-    "/oauth/mcp/token": {
-        request: MCPOAuthTokenRequestInput;
-        response: Blob | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "form";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["public"];
-        output: "binary";
-        contentVariants: [{"status":200,"contentType":"application/json"},{"status":400,"contentType":"application/json"},{"status":401,"contentType":"application/json"},{"status":404,"contentType":"application/json"},{"status":429,"contentType":"application/json"},{"status":500,"contentType":"application/json"}];
-    };
-    "/plugin/private/:name/*path": {
-        request: Blob;
-        response: Blob | JSONValue | { "code": -1; "data": { "closeTimeout": number; } | null; "msg": string; };
-        body: "raw";
-        /** 服务器路由要求；资源权限与笔记本租约仍由内核校验 */
-        authorization?: readonly ["authenticated","admin","writable"];
-        output: "pluginService";
-        pluginService: {"variants":[{"mode":"JSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"JSONP","statusPolicy":"plugin","mediaTypes":["application/javascript","application/json"],"payload":"jsonp-or-json","headersOverrideMedia":true},{"mode":"AsciiJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"IndentedJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"PureJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"json","headersOverrideMedia":true},{"mode":"SecureJSON","statusPolicy":"plugin","mediaTypes":["application/json"],"payload":"secure-json","headersOverrideMedia":true},{"mode":"XML","statusPolicy":"plugin","mediaTypes":["application/xml"],"payload":"xml","headersOverrideMedia":true},{"mode":"YAML","statusPolicy":"plugin","mediaTypes":["application/yaml"],"payload":"yaml","headersOverrideMedia":true},{"mode":"TOML","statusPolicy":"plugin","mediaTypes":["application/toml"],"payload":"toml","headersOverrideMedia":true},{"mode":"ProtoBuf","statusPolicy":"plugin","mediaTypes":["application/x-protobuf"],"payload":"protobuf","headersOverrideMedia":true},{"mode":"file","statusPolicy":"file","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"string","statusPolicy":"plugin","mediaTypes":["text/plain"],"payload":"text","headersOverrideMedia":true},{"mode":"raw","statusPolicy":"plugin","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"stream","statusPolicy":"plugin","mediaTypes":["dynamic"],"payload":"bytes","headersOverrideMedia":true},{"mode":"redirect","statusPolicy":"redirect","mediaTypes":["text/html"],"payload":"redirect","headersOverrideMedia":true},{"mode":"proxy","statusPolicy":"proxy","mediaTypes":["upstream"],"payload":"bytes","headersOverrideMedia":true},{"mode":"empty","statusPolicy":"plugin","mediaTypes":["optional"],"payload":"none","headersOverrideMedia":true},{"mode":"websocket","statusPolicy":"websocket","mediaTypes":["upgrade-or-text"],"payload":"frames","headersOverrideMedia":false},{"mode":"sse","statusPolicy":"sse","mediaTypes":["text/event-stream"],"payload":"events","headersOverrideMedia":false},{"mode":"admission","statusPolicy":"admission","mediaTypes":["text/plain"],"payload":"text","headersOverrideMedia":true}],"admissionStatuses":[400,404,500,503],"webSocketFrames":["text","binary","close","ping","pong"],"sseEventNames":"dynamic","sseData":"json-or-text","sseEvent":{"type":"object","properties":{"data":{"$ref":"#/$defs/JSONValue"},"event":{"type":"string"},"id":{"type":"string"},"retry":{"type":"integer"}},"required":["data"],"additionalProperties":false}};
     };
 }
 

@@ -9,12 +9,10 @@ import {mountHelp, newDailyNote, newEncryptedNotebook, newNotebook} from "../../
 import {exitSiYuan, lockScreen} from "../../dialog/processSystem";
 import {openHistory} from "../../history/history";
 import {openCard} from "../../card/openCard";
-import {syncGuide} from "../../sync/syncGuide";
 import {commandPanel} from "../../boot/globalEvent/command/panel";
-import {openTopBarMenu} from "../../plugin/openTopBarMenu";
 import {openDataMigration} from "../../menus/dataMigration";
 import {openTemplateManager} from "../../template/manager";
-import {isDisabledFeature, isInMobileApp} from "../../protyle/util/compatibility";
+import {isInMobileApp} from "../../protyle/util/compatibility";
 import {getHostCapabilities} from "../../util/hostCapabilities";
 import {escapeAttr} from "../../util/escape";
 import {getSettingTabDefs, settingTabToMenuId, type ISettingTabShell, type TSettingTab} from "../../config/setting/tabs";
@@ -81,7 +79,6 @@ export const MOBILE_MAIN_MENU_GROUPS: IMobileMainMenuGroup[] = [{
         dockItem("menuBookmark", "bookmark", "iconBookmark", lang("bookmark")),
         dockItem("menuTag", "tag", "iconTag", lang("tag")),
         dockItem("menuBacklink", "backlink", "iconLink", lang("backlinks")),
-        dockItem("menuInbox", "inbox", "iconInbox", lang("inbox")),
         {
             id: "menuRecent",
             icon: "iconRecentDocs",
@@ -96,16 +93,6 @@ export const MOBILE_MAIN_MENU_GROUPS: IMobileMainMenuGroup[] = [{
             label: lang("search"),
             click(app) {
                 popSearch(app);
-            },
-        },
-        {
-            id: "menuAgentChat",
-            icon: "iconSparkles",
-            label: lang("agentChat"),
-            hidden: () => isReadonly() || window.siyuan.isPublish || isDisabledFeature("ai"),
-            trailingHTML: "<span data-type=\"agent-status\" class=\"b3-menu__accelerator fn__none\"></span>",
-            click(app) {
-                void import("../agent/MobileAgentChat").then(({openMobileAgent}) => openMobileAgent(app));
             },
         },
         {
@@ -201,13 +188,6 @@ export const MOBILE_MAIN_MENU_GROUPS: IMobileMainMenuGroup[] = [{
     title: lang("mobileMenuDataManagement"),
     hidden: isReadonly,
     entries: [{
-        id: "menuSyncNow",
-        icon: "iconCloudSucc",
-        label: lang("syncNow"),
-        click(app) {
-            syncGuide(app);
-        },
-    }, {
         id: "menuHistory",
         icon: "iconHistory",
         label: lang("dataHistory"),
@@ -224,17 +204,6 @@ export const MOBILE_MAIN_MENU_GROUPS: IMobileMainMenuGroup[] = [{
         },
     }],
 }, {
-    id: "extensions",
-    title: lang("extensions"),
-    entries: [{
-        id: "menuPlugin",
-        icon: "iconPlugin",
-        label: lang("plugin"),
-        click(app) {
-            openTopBarMenu(app);
-        },
-    }, "pluginTopBar", "pluginDocks"],
-}, {
     id: "settings",
     title: lang("mobileMenuSettingsAndHelp"),
     entries: ["settingTabs", {
@@ -245,12 +214,6 @@ export const MOBILE_MAIN_MENU_GROUPS: IMobileMainMenuGroup[] = [{
         click() {
             mountHelp();
         },
-    }, {
-        id: "menuFeedback",
-        icon: "iconFeedback",
-        label: lang("feedback"),
-        href: () => "zh-CN" === window.siyuan.config.lang ?
-            "https://ld246.com/article/1649901726096" : "https://liuyun.io/article/1686530886208",
     }],
 }];
 

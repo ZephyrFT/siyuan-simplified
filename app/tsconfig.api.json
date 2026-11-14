@@ -9,5 +9,5 @@
     "lib": ["ES2021", "DOM"],
     "types": []
   },
-  "files": ["src/types/api/index.d.ts", "tests/api-contract.types.ts"]
+  "files": ["src/types/api/index.d.ts"]
 }

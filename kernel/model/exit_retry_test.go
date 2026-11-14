@@ -21,7 +21,7 @@ import (
 )
 
 func TestFailedExitRestoresBackgroundServices(t *testing.T) {
-	for _, failure := range []string{"sync-lock", "sync-data"} {
+	for _, failure := range []string{"sync-lock"} {
 		t.Run(failure, func(t *testing.T) {
 			prepareSyncDirectoryTest(t)
 			previousExit, previousPending, previousExiting := exitFinished, pendingWorkspaceExit, util.IsExiting.Load()

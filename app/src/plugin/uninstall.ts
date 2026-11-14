@@ -9,7 +9,6 @@ import {setTabPosition} from "../layout/tabUtil";
 import {Constants} from "../constants";
 import {setStorageVal} from "../protyle/util/compatibility";
 import {getAllEditor} from "../layout/getAll";
-import {unregisterCapability} from "../layout/dock/agent/frontendCapabilities";
 import {cancelAssetUploadsByPlugin} from "../protyle/upload/pluginEvent";
 import {removeBreadcrumbButtons} from "./breadcrumbButton";
 import {refreshDockCatalog} from "../config/entryVisibility/catalog";
@@ -109,11 +108,6 @@ export const destroyPlugin = (app: App, plugin: Plugin, isUninstall: boolean) =>
         plugin.topBarIcons.length = 0;
     });
     runCleanup(plugin, "breadcrumb", () => removeBreadcrumbButtons(plugin.name));
-    // 移除插件注册的 Agent 能力。
-    runCleanup(plugin, "agent capability", () => {
-        plugin.agentCapabilities.forEach((capability) => runCleanup(plugin, "agent capability", () =>
-            unregisterCapability(capability.id, capability.generation)));
-    });
     /// #if !MOBILE
     // 移除状态栏元素。
     runCleanup(plugin, "status bar", () => {

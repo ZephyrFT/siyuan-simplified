@@ -6,7 +6,6 @@ import {focusByRange} from "../util/selectionOffsets";
 import {isDisabledFeature, writeText} from "../util/compatibility";
 import {isArrayEqual} from "../../util/functions";
 import {hasSameTextStyle} from "./Font";
-import {AIActions} from "../../ai/actions";
 import {
     hasSemanticInlineType,
     normalizeSemanticInlineElement,
@@ -229,19 +228,6 @@ export const toolbarKeyToMenu = (toolbar: Array<string | IMenuItem>) => {
         lang: "link",
         icon: "iconLink",
         tipPosition: "n",
-    }, {
-        name: "ai",
-        hotkey: window.siyuan.config.keymap.editor.general.ai.custom,
-        lang: "aiEdit",
-        icon: "iconSparkles",
-        tipPosition: "n",
-        click(protyle) {
-            const editor = protyle.protyle;
-            const range = editor.toolbar.range?.cloneRange();
-            if (range && !range.collapsed) {
-                AIActions([], editor, range, editor.toolbar.element.querySelector('[data-type="ai"]'));
-            }
-        },
     }, {
         name: "strong",
         lang: "bold",

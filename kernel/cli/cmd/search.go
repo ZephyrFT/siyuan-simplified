@@ -17,7 +17,7 @@ import (
 
 var searchCmd = &cobra.Command{
 	Use:   "search <query>",
-	Short: "Full-text search (blocks, semantic, or asset file contents with --asset)",
+	Short: "Full-text search (blocks or asset file contents with --asset)",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		query := args[0]
@@ -52,27 +52,23 @@ var searchCmd = &cobra.Command{
 		types := stringSliceToMap(typeFlags)
 		subTypes := stringSliceToMap(subtypeFlags)
 
-		var docMode bool
-		var blocks []*model.Block
-		var matchedBlockCount, matchedRootCount, pageCount int
 		if method == 4 {
-			blocks, matchedBlockCount, matchedRootCount, pageCount =
-				model.SemanticSearchBlock(query, notebooks, paths, types, subTypes, page, pageSize, nil, nil)
-		} else {
-			blocks, matchedBlockCount, matchedRootCount, pageCount, docMode =
-				model.FullTextSearchBlock(model.BlockSearchOptions{
-					Query:    query,
-					Boxes:    notebooks,
-					Paths:    paths,
-					Types:    types,
-					SubTypes: subTypes,
-					Method:   method,
-					OrderBy:  orderBy,
-					GroupBy:  groupBy,
-					Page:     page,
-					PageSize: pageSize,
-				})
+			method = 0
 		}
+		docMode := false
+		blocks, matchedBlockCount, matchedRootCount, pageCount, docMode :=
+			model.FullTextSearchBlock(model.BlockSearchOptions{
+				Query:    query,
+				Boxes:    notebooks,
+				Paths:    paths,
+				Types:    types,
+				SubTypes: subTypes,
+				Method:   method,
+				OrderBy:  orderBy,
+				GroupBy:  groupBy,
+				Page:     page,
+				PageSize: pageSize,
+			})
 
 		switch outputFormat {
 		case "json":

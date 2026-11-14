@@ -542,12 +542,7 @@ class Builder:
         if "windows" in self.args.platforms:
             self.thumbprint = certificate_thumbprint(self.args.certificate_subject, self.args.certificate_sha1)
             if self.signing_pin is not None:
-                with tempfile.TemporaryDirectory(prefix="siyuan-signing-probe-") as temporary:
-                    probe = Path(temporary) / "signing-probe.exe"
-                    shutil.copy2(ROOT / "app/elevator/elevator-amd64.exe", probe)
-                    check_signing_pin(self.signing_pin, self.thumbprint, [probe])
-                    verify_signature(probe, self.thumbprint)
-                print(f"Windows 签名证书：{self.thumbprint}；临时 EXE 签名、时间戳和验签已通过，后续自动签名", flush=True)
+                print(f"Windows 签名证书：{self.thumbprint}；后续自动签名", flush=True)
             else:
                 print(f"Windows 签名证书：{self.thumbprint}；签名时请按系统提示输入 YubiKey PIN", flush=True)
         if {"linux", "harmony"} & set(self.args.platforms):
@@ -664,7 +659,6 @@ class Builder:
         if not getattr(self, "kernels_prebuilt", False):
             run(["go", "build", "-tags", "fts5 sqlcipher", "-ldflags=-s -w", "-o", kernel, "."], ROOT / "kernel", env)
         self.check_kernel(kernel, arch)
-        copy_verified(ROOT / "app/elevator" / f"elevator-{arch}.exe", kernel.parent / "elevator.exe", self.work)
         generated_config = self.work / f"windows-{arch}.json"
         config_command = ["node", ROOT / "scripts/release-windows-config.cjs", ROOT / "app" / config,
                           kernel.parent, output, self.thumbprint, generated_config]

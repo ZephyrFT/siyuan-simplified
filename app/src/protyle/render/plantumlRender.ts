@@ -15,6 +15,10 @@ export const plantumlRender = (element: Element, cdn = Constants.PROTYLE_CDN) =>
     if (plantumlElements.length === 0) {
         return;
     }
+    const servePath = window.siyuan.config.editor.plantUMLServePath;
+    if (!servePath) {
+        return;
+    }
     addScript(`${cdn}/js/plantuml/plantuml-encoder.min.js?v=0.0.0`, "protylePlantumlScript").then(() => {
         const wysiswgElement = hasClosestByClassName(element, "protyle-wysiwyg", true);
         plantumlElements.forEach((e: HTMLDivElement) => {
@@ -28,7 +32,7 @@ export const plantumlRender = (element: Element, cdn = Constants.PROTYLE_CDN) =>
                 return;
             }
             try {
-                const url = `${window.siyuan.config.editor.plantUMLServePath}${window.plantumlEncoder.encode(Lute.UnEscapeHTMLStr(e.getAttribute("data-content")))}`;
+                const url = `${servePath}${window.plantumlEncoder.encode(Lute.UnEscapeHTMLStr(e.getAttribute("data-content")))}`;
                 const imageElement = document.createElement("img");
                 imageElement.src = url;
                 // 图片的双击事件由编辑器统一处理，跨域 SVG 不创建独立文档。

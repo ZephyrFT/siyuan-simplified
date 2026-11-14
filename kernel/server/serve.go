@@ -34,10 +34,7 @@ import (
 	"github.com/siyuan-note/siyuan/kernel/av"
 	"github.com/siyuan-note/siyuan/kernel/cmd"
 	"github.com/siyuan-note/siyuan/kernel/heif"
-	"github.com/siyuan-note/siyuan/kernel/mcp"
-	mcpclient "github.com/siyuan-note/siyuan/kernel/mcp/client"
 	"github.com/siyuan-note/siyuan/kernel/model"
-	"github.com/siyuan-note/siyuan/kernel/server/proxy"
 	"github.com/siyuan-note/siyuan/kernel/tiffpreview"
 	"github.com/siyuan-note/siyuan/kernel/util"
 	"github.com/soheilhy/cmux"
@@ -128,8 +125,6 @@ var (
 )
 
 func Serve(fastMode bool, cookieKey string) {
-	confAISnapshot := model.Conf.LoadAI()
-
 	confSystemSnapshot := model.Conf.LoadSystem()
 
 	gin.SetMode(gin.ReleaseMode)
@@ -167,10 +162,6 @@ func Serve(fastMode bool, cookieKey string) {
 	serveAppearance(ginServer)
 	serveBootAppearanceAssets(ginServer)
 	serveWebSocket(ginServer)
-	serveMCP(ginServer)
-	serveWebDAV(ginServer)
-	serveCalDAV(ginServer)
-	serveCardDAV(ginServer)
 	serveExport(ginServer)
 	serveWidgets(ginServer)
 	servePlugins(ginServer)
@@ -258,33 +249,6 @@ func Serve(fastMode bool, cookieKey string) {
 
 	go util.HookUILoaded()
 
-	// 启动后自动连接已配置的 MCP server，让用户首次使用 AI Agent 时工具已就绪。
-	// EnsureMCPConnected 是异步的，不阻塞 HTTP 监听；内置 mcpConnecting 标志防止重复连接。
-	if confAISnapshot != nil && confAISnapshot.MCP != nil {
-		go mcpclient.EnsureMCPConnected(confAISnapshot.MCP.Servers)
-	}
-
-	go func() {
-		time.Sleep(1 * time.Second)
-		// 反代服务器启动失败不影响核心服务器启动
-		go func() {
-			defer func() {
-				if e := recover(); nil != e {
-					logging.LogWarnf("boot fixed port service failed: %v", e)
-				}
-			}()
-			proxy.InitFixedPortService(host, certPath, keyPath)
-		}()
-		go func() {
-			defer func() {
-				if e := recover(); nil != e {
-					logging.LogWarnf("boot publish service failed: %v", e)
-				}
-			}()
-			proxy.InitPublishService()
-		}()
-	}()
-
 	httpHandler := ginServer.Handler()
 	util.HttpServer = &http.Server{
 		Handler: httpHandler,
@@ -338,7 +302,7 @@ func newSessionStore(cookieKey string) (cookie.Store, error) {
 }
 
 func rewritePortJSON(pid, port string) {
-	portJSON := filepath.Join(util.HomeDir, ".config", "siyuan", "port.json")
+	portJSON := filepath.Join(util.HomeDir, ".config", "siyuan-simplified", "port.json")
 	pidPorts := map[string]string{}
 	var data []byte
 	var err error
@@ -2395,10 +2359,6 @@ func jwtMiddleware(c *gin.Context) {
 	}
 	c.Set(model.RoleContextKey, model.RoleVisitor)
 	c.Next()
-}
-
-func serveMCP(ginServer *gin.Engine) {
-	mcp.Serve(ginServer)
 }
 
 func serveFixedStaticFiles(ginServer *gin.Engine) {

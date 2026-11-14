@@ -184,11 +184,11 @@ const chooseWorkspacePath = async (langData) => {
     const fs = require("fs");
     const {ipcRenderer} = require("electron");
 
-    let defaultWorkspace = path.join(decodeURIComponent(getSearch("home")), "SiYuan");
+    let defaultWorkspace = path.join(decodeURIComponent(getSearch("home")), "SiYuan-Simplified");
     if ("darwin" === process.platform) {
         // macOS 默认工作空间位于 ~/Library/Application Support/SiYuan
         // https://github.com/siyuan-note/siyuan/issues/17095
-        defaultWorkspace = path.join(decodeURIComponent(getSearch("home")), "Library", "Application Support", "SiYuan");
+        defaultWorkspace = path.join(decodeURIComponent(getSearch("home")), "Library", "Application Support", "SiYuan-Simplified");
     }
     if (!fs.existsSync(defaultWorkspace)) {
         fs.mkdirSync(defaultWorkspace, {mode: 0o755, recursive: true});

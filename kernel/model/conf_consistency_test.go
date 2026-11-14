@@ -167,9 +167,9 @@ func TestConfMigrationsAreVersioned(t *testing.T) {
 	if !applyConfMigrations(c, raw) || c.ConfVersion != CurrentConfVersion {
 		t.Fatal("legacy configuration was not migrated")
 	}
-	if c.AI.Load() == nil || c.Appearance.Load() == nil || c.Appearance.Load().EntryVisibility == nil ||
+	if c.Appearance.Load() == nil || c.Appearance.Load().EntryVisibility == nil ||
 		c.Appearance.Load().EntryVisibility.Active != conf.EntryVisibilityProfileFull {
-		t.Fatal("legacy AI or entry visibility migration was not applied")
+		t.Fatal("legacy entry visibility migration was not applied")
 	}
 	before, _ := json.Marshal(c)
 	if applyConfMigrations(c, raw) {
@@ -248,7 +248,7 @@ func TestConfSectionSnapshotsAreConsistent(t *testing.T) {
 			t.Fatalf("section %T cannot be copied losslessly", section)
 		}
 	}
-	if !reflect.DeepEqual(cloneConfSection(Conf.Search.Load()), Conf.Search.Load()) || !reflect.DeepEqual(cloneConfSection(Conf.AI.Load()), Conf.AI.Load()) {
+	if !reflect.DeepEqual(cloneConfSection(Conf.Search.Load()), Conf.Search.Load()) || !reflect.DeepEqual(cloneConfSection(Conf.Bazaar.Load()), Conf.Bazaar.Load()) {
 		t.Fatal("search or AI section cannot be copied losslessly")
 	}
 }

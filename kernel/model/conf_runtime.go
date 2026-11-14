@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"sync/atomic"
 
+	"github.com/88250/gulu"
 	"github.com/siyuan-note/logging"
 	"github.com/siyuan-note/siyuan/kernel/conf"
 	"github.com/siyuan-note/siyuan/kernel/sql"
@@ -89,17 +90,14 @@ func applySearchRuntime(current *AppConf) {
 // projectSystemEnvironment 将当前进程的运行环境投影到系统配置，这些字段每次启动都按运行环境重新赋值。
 func projectSystemEnvironment(system *conf.System) {
 	system.KernelVersion = util.Ver
-	system.UpdateChannel = loadGlobalUpdateChannel()
 	if system.ID == "" || util.ContainerStd == util.Container {
 		system.ID = util.GetDeviceID()
 	}
 	if system.Name == "" || util.ContainerStd == util.Container {
 		system.Name = util.GetDeviceName()
 	}
-	system.DisabledFeatures = util.DisabledFeatures
-	if 1 > len(system.DisabledFeatures) {
-		system.DisabledFeatures = []string{}
-	}
+	system.DisabledFeatures = append([]string{"ai", "bazaar"}, util.DisabledFeatures...)
+	system.DisabledFeatures = gulu.Str.RemoveDuplicatedElem(system.DisabledFeatures)
 	system.AppDir = util.WorkingDir
 	system.ConfDir = util.ConfDir
 	system.HomeDir = util.HomeDir

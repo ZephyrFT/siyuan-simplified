@@ -42,7 +42,7 @@ const fixture = () => {
 
 test("host fetch preserves input, response and abort signal, including SSE", async () => {
     const {calls, response, fetchWithAppId} = fixture();
-    const input = new URL("https://siyuan.test/api/ai/editor/chat");
+    const input = new URL("https://siyuan.test/api/system/bootProgressSSE");
     const signal = new AbortController().signal;
     const init = Object.freeze({method: "POST", signal, headers: {Accept: "text/event-stream"}, body: "{}"});
     assert.equal(await fetchWithAppId(input, init), response);
@@ -90,8 +90,8 @@ test("shared fetch helpers attach the caller and preserve payloads", async () =>
 });
 
 test("host API paths use scoped fetch, including dynamic RPC and clipboard URLs", () => {
-    const paths = ["ai/editorSSE.ts", "layout/dock/agent/agentSSE.ts", "layout/dock/agent/AgentChat.ts",
-        "config/tabs/accessTab.ts", "protyle/util/compatibility.ts", "protyle/util/richClipboard.ts", "plugin/kernel.ts"];
+    const paths = ["config/tabs/accessTab.ts", "protyle/util/compatibility.ts",
+        "protyle/util/richClipboard.ts", "plugin/kernel.ts"];
     for (const path of paths) {
         const source = readFileSync(`src/${path}`, "utf8");
         assert.match(source, /import \{fetchWithAppId\} from /, path);

@@ -108,7 +108,6 @@ func TestAPIContractImportedPortablePreferences(t *testing.T) {
 	source.FileTree.Load().RecentDocsSort = "updated"
 	source.Bazaar.Load().CompatibilityFilters["plugins"].HideUnsupportedVersion = true
 	source.Bazaar.Load().CompatibilityFilters["themes"].HideIncompatiblePlatform = true
-	source.AI.Load().Agent.StreamingMarkdown = true
 	appearance.GlobalFontFamilies = []*conf.EditorFont{{Family: "serif"}}
 	appearance.EntryVisibility = &conf.EntryVisibility{Version: conf.EntryVisibilityVersion, Active: "portable",
 		Profiles: []*conf.EntryVisibilityProfile{{ID: "portable", Name: "Portable", Defaults: conf.EntryVisibilityProfileFull,
@@ -150,7 +149,6 @@ func TestAPIContractImportedPortablePreferences(t *testing.T) {
 			target.NotebookCrypto.MasterSalt = []byte("local-master-salt")
 			target.NotebookCrypto.KEKVerifier = []byte("local-authenticated-verifier")
 			target.NotebookCrypto.HistoryKEKs = [][]byte{[]byte("local-recovery-material")}
-			target.System.Load().UpdateChannel = conf.UpdateChannelBeta
 			proxy := &conf.NetworkProxy{Scheme: "system"}
 			target.System.Load().NetworkProxy = proxy
 			crypto, sync, api, repo, secrets := target.NotebookCrypto, target.Sync.Load(), target.Api.Load(), target.Repo.Load(), target.Secrets.Load()
@@ -165,7 +163,7 @@ func TestAPIContractImportedPortablePreferences(t *testing.T) {
 			if actualAppearance.ShowFloatingDockBar == nil || *actualAppearance.ShowFloatingDockBar || !actualAppearance.CompactMode || !actualAppearance.MenuMouseScroll || !actualAppearance.OutlineKeepCurrentExpand ||
 				!reflect.DeepEqual(actualAppearance.PDFTheme, source.Appearance.Load().PDFTheme) ||
 				!reflect.DeepEqual(actualAppearance.MobileBars, source.Appearance.Load().MobileBars) ||
-				target.FileTree.Load().RecentDocsSort != "updated" || !target.AI.Load().Agent.StreamingMarkdown {
+				target.FileTree.Load().RecentDocsSort != "updated" {
 				t.Fatal("reader and control preferences did not survive configuration transfer")
 			}
 			if target.Lang != "ja" || actualAppearance.Lang != "ja" || !actualAppearance.HideStatusBar || actualAppearance.Mode != 1 || actualAppearance.ModeOS ||
@@ -185,7 +183,7 @@ func TestAPIContractImportedPortablePreferences(t *testing.T) {
 			if target.NotebookCrypto != crypto || !bytes.Equal(cryptoBefore, cryptoAfter) || target.Sync.Load() != sync || target.Api.Load() != api ||
 				target.Repo.Load() != repo || target.Secrets.Load() != secrets || target.Api.Load().Token != "local-api-token" ||
 				target.AccessAuthCode != "local-lock-password" || target.UserData != "local-account" ||
-				target.System.Load().UpdateChannel != conf.UpdateChannelBeta || target.System.Load().NetworkProxy != proxy {
+				target.System.Load().NetworkProxy != proxy {
 				t.Fatal("import replaced protected local configuration")
 			}
 			persisted, err := os.ReadFile(filepath.Join(util.ConfDir, "conf.json"))
@@ -203,8 +201,7 @@ func TestAPIContractImportedPortablePreferences(t *testing.T) {
 				!reflect.DeepEqual(saved.Appearance.Load().MobileBars, source.Appearance.Load().MobileBars) ||
 				saved.Appearance.Load().ShowFloatingDockBar == nil || *saved.Appearance.Load().ShowFloatingDockBar ||
 				!saved.Appearance.Load().CompactMode || !saved.Appearance.Load().MenuMouseScroll ||
-				!saved.Appearance.Load().OutlineKeepCurrentExpand || saved.FileTree.Load().RecentDocsSort != "updated" ||
-				!saved.AI.Load().Agent.StreamingMarkdown {
+				!saved.Appearance.Load().OutlineKeepCurrentExpand || saved.FileTree.Load().RecentDocsSort != "updated" {
 				t.Fatal("imported reader and control preferences were not persisted")
 			}
 		})

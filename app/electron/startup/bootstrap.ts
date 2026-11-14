@@ -128,7 +128,7 @@ const bootstrap = (): void => {
 
 // 全部路径与日志实例一次性写入 runtime；之后的调用方从 paths 读取。
 const installRuntime = (): void => {
-    const confDir = path.join(app.getPath("home"), ".config", "siyuan");
+    const confDir = path.join(app.getPath("home"), ".config", "siyuan-simplified");
     configureRuntime({
         appDir: path.dirname(app.getAppPath()), appVer: app.getVersion(), confDir,
         windowStatePath: path.join(confDir, "windowState.json"),
@@ -149,7 +149,8 @@ const resolveRemoteKernel = (launchArguments: string[]): {
     target?: KernelTarget;
     error?: {code?: string; message?: string};
 } => {
-    const arg = getArgFrom(launchArguments, "--remote");
+    // 本地版不连接远端内核，忽略 --remote 参数。
+    const arg: string | undefined = undefined;
     if (arg === undefined) {
         return {};
     }
@@ -166,12 +167,12 @@ const resolveRemoteKernel = (launchArguments: string[]): {
 
 const initializeProcessIdentity = (): void => {
     remote.initialize();
-    // userData 使用独立的 SiYuan-Electron 目录；getPath("userData") 会先创建空的 SiYuan 目录，因此从 appData 推算
+    // userData 使用独立的目录；getPath("userData") 会先创建空的应用名目录，因此从 appData 推算
     // https://github.com/siyuan-note/siyuan/issues/3349
-    app.setPath("userData", path.join(app.getPath("appData"), app.getName() + "-Electron"));
+    app.setPath("userData", path.join(app.getPath("appData"), "siyuan-simplified-Electron"));
     if (process.platform === "win32") {
         // Windows 需要设置 AppUserModelId 才能正确显示应用名称和应用图标 https://github.com/siyuan-note/siyuan/issues/17022
-        app.setAppUserModelId("org.b3log.siyuan");
+        app.setAppUserModelId("org.zephyrft.siyuan-simplified");
     }
 };
 
@@ -186,7 +187,7 @@ const ensureConfigDirectory = (confDir: string, remoteMode: boolean): boolean =>
     } catch (e) {
         console.error(e);
         writeLog("create config directory failed: " + toError(e).stack);
-        dialog.showErrorBox("创建配置目录失败 Failed to create config directory", "思源需要在用户家目录下创建配置文件夹（~/.config/siyuan），请确保该路径具有写入权限。\n\nSiYuan needs to create a configuration folder (~/.config/siyuan) in the user's home directory. Please make sure that the path has write permissions.");
+        dialog.showErrorBox("创建配置目录失败 Failed to create config directory", "思源简版需要在用户家目录下创建配置文件夹（~/.config/siyuan-simplified），请确保该路径具有写入权限。\n\nSiYuan Simplified needs to create a configuration folder (~/.config/siyuan-simplified) in the user's home directory. Please make sure that the path has write permissions.");
         app.exit(1);
     }
     return firstOpen;

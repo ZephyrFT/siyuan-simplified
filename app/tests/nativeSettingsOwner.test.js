@@ -116,8 +116,6 @@ test("host cleanup removes the token before throwing plugin callbacks and dispos
     owner.subscribePlugins(() => notifications++);
     subscriptions[0].throwOnDispose = true;
     owner.suspendShortcuts();
-    owner.openBazaarPath("plugins", "example", true);
-    assert.deepEqual(calls.find(item => item[0] === "openBazaarPath"), ["openBazaarPath", "plugins", "example", true]);
     ipcRenderer.emit("siyuan-settings-closed", {}, requests[0].data.token, false);
     assert.equal(owner.isActive(), false);
     assert.deepEqual(subscriptions.map(item => item.disposed), [1, 1]);
@@ -129,7 +127,7 @@ test("host cleanup removes the token before throwing plugin callbacks and dispos
     owner.dispose();
     assert.equal(calls.filter(item => item[0] === "closed").length, 1);
     assert.throws(() => owner.reload(), /no longer available/);
-    assert.throws(() => owner.openBazaarPath("plugins", "example"), /no longer available/);
+    assert.throws(() => owner.openBazaarPath("plugins", "example"));
     assert.throws(() => owner.plugin.mount(() => {}), /no longer available/);
     await assert.rejects(owner.loadPlugin({}), /no longer available/);
 });

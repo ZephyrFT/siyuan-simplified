@@ -34,7 +34,7 @@ import {initFramework} from "./util/initFramework";
 import {finishMobileSystemUris, processMobileSystemUri} from "./util/systemUri";
 import {saveMobileLayout} from "./util/saveLayout";
 import {initAssets} from "../util/assets";
-import {bootSync, lockScreen} from "../dialog/processSystem";
+import {lockScreen} from "../dialog/processSystem";
 import {initMessage, showMessage} from "../dialog/message";
 import {goBack} from "./util/MobileBackFoward";
 import {
@@ -57,16 +57,13 @@ import {getCurrentEditor, openMobileFileById} from "./editor";
 import {ensureOnboarding} from "../onboarding";
 import {checkPublishServiceClosed} from "../util/processMessage";
 import {initRightMenu} from "./menu";
-import {openChangelog} from "../boot/openChangelog";
 import {registerServiceWorker} from "../util/serviceWorker";
-import {loadPlugins} from "../plugin/loader";
 import {emitToPlugins} from "../plugin/EventBusCore";
 import {removeBlock} from "../protyle/wysiwyg/remove";
 import {isNotEditBlock} from "../protyle/wysiwyg/getBlock";
 import {updateCardHV} from "../card/util";
 import {mobileKeydown} from "./util/keydown";
 import {correctHotkey} from "../boot/globalEvent/commonHotkey";
-import {processIOSPurchaseResponse} from "../util/iOSPurchase";
 import {nbsp2space} from "../protyle/util/normalizeText";
 import {armKeyboardLock, callMobileAppShowKeyboard, canInput, setWebViewFocusable} from "./util/mobileAppUtil";
 import {hideAllElements} from "../protyle/ui/hideElements";
@@ -228,7 +225,6 @@ class App {
             applyPlatformClasses();
             correctHotkey(siyuanApp);
             setStartupStage("plugins");
-            await loadPlugins(this);
             setStartupStage("storage");
             getLocalStorage(guardStartup<void>(() => {
                 setStartupStage("language");
@@ -257,26 +253,21 @@ class App {
                     } else if (!isInIOS()) {
                         document.querySelector('meta[name="viewport"]').setAttribute("content", "width=device-width, height=device-height, interactive-widget=resizes-visual, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
                     }
-                    fetchPost("/api/setting/getCloudUser", {cached: true}, guardStartup<IWebSocketData>(async userResponse => {
-                        window.siyuan.user = userResponse.data && "userId" in userResponse.data ? userResponse.data : null;
-                        await ensureOnboarding();
-                        fetchPost("/api/system/getEmojiConf", {}, guardStartup<IWebSocketData>(async emojiResponse => {
-                            window.siyuan.emojis = emojiResponse.data as IEmoji[];
-                            await setNoteBook();
-                            await initMobileWithLoading(async () => {
-                                await appearanceConfigApi.apply(window.siyuan.config.appearance);
-                                initAssets(true);
-                                await initFramework(this, confResponse.data.start);
-                                initRightMenu(this);
-                                openChangelog();
-                            });
-                            window.siyuan.isReady = true;
-                            finishMobileSystemUris(this);
-                            mainWs.flushMainMessages();
-                            bootSync();
-                            completeStartup();
-                            fetchPost("/api/setting/getCloudUser", {});
-                        }), undefined, startupRequestFailed);
+                    window.siyuan.user = null;
+                    await ensureOnboarding();
+                    fetchPost("/api/system/getEmojiConf", {}, guardStartup<IWebSocketData>(async emojiResponse => {
+                        window.siyuan.emojis = emojiResponse.data as IEmoji[];
+                        await setNoteBook();
+                        await initMobileWithLoading(async () => {
+                            await appearanceConfigApi.apply(window.siyuan.config.appearance);
+                            initAssets(true);
+                            await initFramework(this, confResponse.data.start);
+                            initRightMenu(this);
+                        });
+                        window.siyuan.isReady = true;
+                        finishMobileSystemUris(this);
+                        mainWs.flushMainMessages();
+                        completeStartup();
                     }), undefined, startupRequestFailed);
                 }), reportStartupError);
             }), reportStartupError);
@@ -357,7 +348,6 @@ window.lockscreenByMode = () => {
 };
 window.goBack = goBack;
 window.showMessage = showMessage;
-window.processIOSPurchaseResponse = processIOSPurchaseResponse;
 window.showKeyboardToolbar = showKeyboardToolbar;
 window.hideKeyboardToolbar = hideKeyboardToolbarByApp;
 window.openFileByURL = (openURL) => {

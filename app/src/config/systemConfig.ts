@@ -166,4 +166,5 @@ export const systemConfigCollections = (value: Pick<SystemAppConf, "keymap" | "u
 };
 
 export const systemConfig = (value: SystemAppConf, defaultLayout?: () => Config.IUiLayout): Config.IConf =>
-    ({...value, ...systemConfigCollections(value, defaultLayout)});
+    // 内核返回的完整配置包含已停用段，前端配置接口只保留仍在界面中使用的字段。
+    ({...value, ...systemConfigCollections(value, defaultLayout)}) as unknown as Config.IConf;

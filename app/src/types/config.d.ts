@@ -9,7 +9,6 @@ declare namespace Config {
          */
         accessAuthCode: string;
         oidc: IOIDC;
-        ai: IAI;
         /**
          * 当前设备的 OCR 设置；阈值只影响后续 PaddleOCR 识别，空值使用模型检测参数和 0.5 的识别阈值。
          * provider 为 ai 时，手动和自动识别均使用独立的 aiModelId；失效时不回退到其他模型或提供商。
@@ -20,7 +19,6 @@ declare namespace Config {
         ocr: import("./api").SettingOCR;
         api: IAPI;
         appearance: IAppearance;
-        bazaar: IBazaar;
         /**
          * Cloud Service Provider Region
          * - `0`: Chinese mainland (LianDi)

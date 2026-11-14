@@ -33,8 +33,8 @@ describe("mobile side panel config", () => {
     it("migrates version 3 without changing positions or hiding docks", () => {
         const stored = {
             version: 3,
-            left: ["inbox", "pluginRight", "file", "bookmark", "tag"],
-            right: ["outline", "backlink", "agent"],
+            left: ["pluginRight", "file", "bookmark", "tag"],
+            right: ["outline", "backlink"],
             pluginDockIds: ["pluginRight"],
         };
         const config = normalizeMobileSidePanelConfig(stored);
@@ -55,8 +55,8 @@ describe("mobile side panel config", () => {
         assert.deepEqual(config.hidden, [...initial.left, ...initial.right]);
         assert.deepEqual(initial.hidden, []);
         config = normalizeMobileSidePanelConfig(JSON.stringify(config), pluginDocks);
-        config = reduceMobileSidePanelConfig(config, {type: "visibility", id: "inbox", visible: true}, pluginDocks);
-        assert.equal(config.hidden.includes("inbox"), false);
+        config = reduceMobileSidePanelConfig(config, {type: "visibility", id: "bookmark", visible: true}, pluginDocks);
+        assert.equal(config.hidden.includes("bookmark"), false);
         assert.deepEqual(config.left, initial.left);
         assert.deepEqual(reduceMobileSidePanelConfig(config, {type: "reset"}, pluginDocks), initial);
     });
@@ -101,12 +101,12 @@ describe("mobile side panel config", () => {
         const config = normalizeMobileSidePanelConfig(JSON.stringify({
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
             left: ["file", "pluginRight", "tag"],
-            right: ["backlink", "outline", "bookmark", "inbox", "pluginLeft"],
+            right: ["backlink", "outline", "bookmark", "pluginLeft"],
             pluginDockIds: ["pluginLeft", "pluginRight"],
         }), pluginDocks);
 
         assert.deepEqual(config.left, ["file", "pluginRight", "tag"]);
-        assert.deepEqual(config.right, ["backlink", "outline", "bookmark", "inbox", "pluginLeft", "agent"]);
+        assert.deepEqual(config.right, ["backlink", "outline", "bookmark", "pluginLeft"]);
         assert.deepEqual(config.pluginDockIds, ["pluginRight", "pluginLeft"]);
         assertCompleteConfig(config);
     });
@@ -115,12 +115,12 @@ describe("mobile side panel config", () => {
         [1, 2].forEach((version) => {
             const config = normalizeMobileSidePanelConfig({
                 version,
-                left: ["file", "bookmark", "tag", "inbox", "plugin"],
+                left: ["file", "bookmark", "tag", "plugin"],
                 right: ["backlink", "outline"],
             }, pluginDocks);
 
-            assert.deepEqual(config.left, ["file", "bookmark", "tag", "inbox", "pluginLeft"]);
-            assert.deepEqual(config.right, ["backlink", "outline", "agent", "pluginRight"]);
+            assert.deepEqual(config.left, ["file", "bookmark", "tag", "pluginLeft"]);
+            assert.deepEqual(config.right, ["backlink", "outline", "pluginRight"]);
             assert.deepEqual(config.pluginDockIds, ["pluginLeft", "pluginRight"]);
             assertCompleteConfig(config);
         });
@@ -142,15 +142,15 @@ describe("mobile side panel config", () => {
     it("inserts a newly registered plugin relative to existing plugin positions", () => {
         const config = normalizeMobileSidePanelConfig({
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
-            left: ["file", "pluginLater", "bookmark", "tag", "inbox"],
-            right: ["outline", "backlink", "agent"],
+            left: ["file", "pluginLater", "bookmark", "tag"],
+            right: ["outline", "backlink"],
             pluginDockIds: ["pluginLater"],
         }, [
             {id: "pluginEarlier", side: "left", index: 10},
             {id: "pluginLater", side: "left", index: 20},
         ]);
 
-        assert.deepEqual(config.left, ["file", "pluginEarlier", "pluginLater", "bookmark", "tag", "inbox"]);
+        assert.deepEqual(config.left, ["file", "pluginEarlier", "pluginLater", "bookmark", "tag"]);
         assert.deepEqual(config.pluginDockIds, ["pluginEarlier", "pluginLater"]);
         assertCompleteConfig(config);
     });
@@ -158,8 +158,8 @@ describe("mobile side panel config", () => {
     it("preserves missing plugin positions and restores them when the plugin returns", () => {
         const stored = {
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
-            left: ["file", "missingPlugin", "bookmark", "tag", "inbox"],
-            right: ["outline", "backlink", "agent"],
+            left: ["file", "missingPlugin", "bookmark", "tag"],
+            right: ["outline", "backlink"],
             pluginDockIds: ["missingPlugin"],
         };
         const missing = normalizeMobileSidePanelConfig(stored);
@@ -183,8 +183,8 @@ describe("mobile side panel config", () => {
             pluginDockIds: ["pluginLeft", "pluginLeft", ""],
         }, pluginDocks);
 
-        assert.deepEqual(config.left, ["tag", "outline", "pluginLeft", "bookmark", "inbox"]);
-        assert.deepEqual(config.right, ["file", "backlink", "agent", "pluginRight"]);
+        assert.deepEqual(config.left, ["tag", "outline", "pluginLeft", "bookmark"]);
+        assert.deepEqual(config.right, ["file", "backlink", "pluginRight"]);
         assert.deepEqual(config.pluginDockIds, ["pluginLeft", "pluginRight"]);
         assertCompleteConfig(config);
     });
@@ -218,7 +218,7 @@ describe("mobile side panel config", () => {
         }, pluginDocks);
 
         assert.deepEqual(config.left, DEFAULT_MOBILE_SIDE_PANEL_LEFT);
-        assert.deepEqual(config.right, ["outline", "pluginLeft", "backlink", "agent", "pluginRight"]);
+        assert.deepEqual(config.right, ["outline", "pluginLeft", "backlink", "pluginRight"]);
         assertCompleteConfig(config);
     });
 
@@ -226,7 +226,7 @@ describe("mobile side panel config", () => {
         const state = normalizeMobileSidePanelConfig({
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
             left: ["file", "missingPlugin"],
-            right: ["outline", "bookmark", "tag", "backlink", "inbox", "agent"],
+            right: ["outline", "bookmark", "tag", "backlink"],
             pluginDockIds: ["missingPlugin"],
         });
         const config = reduceMobileSidePanelConfig(state, {
@@ -242,8 +242,8 @@ describe("mobile side panel config", () => {
     it("reorders visible docks across a missing plugin slot", () => {
         const state = normalizeMobileSidePanelConfig({
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
-            left: ["file", "missingPlugin", "bookmark", "tag", "inbox"],
-            right: ["outline", "backlink", "agent"],
+            left: ["file", "missingPlugin", "bookmark", "tag"],
+            right: ["outline", "backlink"],
             pluginDockIds: ["missingPlugin"],
         });
         const config = reduceMobileSidePanelConfig(state, {
@@ -253,7 +253,7 @@ describe("mobile side panel config", () => {
             toIndex: 0,
         });
 
-        assert.deepEqual(config.left, ["bookmark", "missingPlugin", "file", "tag", "inbox"]);
+        assert.deepEqual(config.left, ["bookmark", "missingPlugin", "file", "tag"]);
         assertCompleteConfig(config);
     });
 
@@ -274,7 +274,7 @@ describe("mobile side panel config", () => {
         const customized = normalizeMobileSidePanelConfig({
             version: MOBILE_SIDE_PANEL_CONFIG_VERSION,
             left: ["file", "outline", "missingPlugin", "pluginRight"],
-            right: ["backlink", "bookmark", "tag", "inbox", "agent", "pluginLeft"],
+            right: ["backlink", "bookmark", "tag", "pluginLeft"],
             pluginDockIds: ["missingPlugin", "pluginLeft", "pluginRight"],
         }, pluginDocks);
         const config = reduceMobileSidePanelConfig(customized, {type: "reset"}, pluginDocks);

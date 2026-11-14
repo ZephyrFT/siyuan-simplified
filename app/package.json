@@ -1,9 +1,9 @@
 {
-  "name": "SiYuan",
-  "desktopName": "org.b3log.siyuan",
+  "name": "siyuan-simplified",
+  "desktopName": "org.zephyrft.siyuan-simplified",
   "version": "3.8.10",
-  "description": "From thought to insight, with agents",
-  "homepage": "https://b3log.org/siyuan",
+  "description": "A simplified, local-first note-taking app based on SiYuan",
+  "homepage": "https://github.com/ZephyrFT/siyuan-simplified",
   "main": "./electron-dist/main.js",
   "packageManager": "pnpm@12.6.0",
   "engines": {

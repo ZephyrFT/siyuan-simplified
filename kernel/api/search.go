@@ -433,26 +433,6 @@ func parseSearchBlockRequest(request apicontract.SearchBlockRequest) (page, page
 	return
 }
 
-var semanticSearchBlock = contractHandler(apicontract.SemanticSearchBlock, func(c *gin.Context, request apicontract.SearchBlockRequest) apicontract.Response[apicontract.SearchBlocksData] {
-	page, pageSize, query, paths, boxes, types, subTypes, _, _, _ := parseSearchBlockRequest(request)
-
-	var excludeBoxIDs, excludeDocIDs []string
-	if model.IsReadOnlyRoleContext(c) {
-		denyAll, deniedBoxIDs, deniedDocIDs := model.GetPublishAccessSearchExclusion(c)
-		if denyAll {
-			return apicontract.Success(apicontract.SearchBlocksData{Blocks: []*apicontract.SearchBlock{}})
-		}
-		excludeBoxIDs, excludeDocIDs = deniedBoxIDs, deniedDocIDs
-	}
-
-	blocks, matchedBlockCount, matchedRootCount, pageCount := model.SemanticSearchBlock(query, boxes, paths, types, subTypes, page, pageSize, excludeBoxIDs, excludeDocIDs)
-	if model.IsReadOnlyRoleContext(c) {
-		publishAccess := model.GetPublishAccess()
-		blocks = model.FilterBlocksByPublishAccess(c, publishAccess, blocks)
-	}
-	return apicontract.Success(apicontract.SearchBlocksData{Blocks: searchBlockContracts(blocks), MatchedBlockCount: matchedBlockCount, MatchedRootCount: matchedRootCount, PageCount: pageCount})
-})
-
 func embedBlockContracts(values []*model.EmbedBlock) []*apicontract.EmbedBlock {
 	if values == nil {
 		return nil

@@ -6,6 +6,5 @@ export const getImageOCRAvailability = (path: string, notebookId: string) => {
     const boxId = new URLSearchParams(query).get("box")?.trim();
     const text = !isEncryptedBox(notebookId) && !isEncryptedBox(boxId);
     const local = text && pathname.startsWith("assets/");
-    const ai = local && /\.(png|jpe?g|gif|webp|bmp|tiff?|heic|heif)$/i.test(pathname);
-    return {text, local, ai};
+    return {text, local};
 };

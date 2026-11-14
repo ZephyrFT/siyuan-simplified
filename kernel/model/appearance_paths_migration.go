@@ -12,7 +12,6 @@ import (
 	"sync"
 
 	"github.com/siyuan-note/filelock"
-	"github.com/siyuan-note/siyuan/kernel/bazaar"
 	"github.com/siyuan-note/siyuan/kernel/util"
 )
 
@@ -34,9 +33,18 @@ func MigrateAppearancePackages() error {
 		if err := os.MkdirAll(targetRoot, 0755); err != nil {
 			return err
 		}
-		entries, err := bazaar.ReadInstalledPackageDirs(filepath.Join(sourceRoot, kind))
-		if err != nil {
-			return err
+		var entries []os.DirEntry
+		packageRoot := filepath.Join(sourceRoot, kind)
+		if util.IsPathRegularDirOrSymlinkDir(packageRoot) {
+			listed, err := os.ReadDir(packageRoot)
+			if err != nil {
+				return err
+			}
+			for _, entry := range listed {
+				if util.IsDirRegularOrSymlink(entry) {
+					entries = append(entries, entry)
+				}
+			}
 		}
 		for _, entry := range entries {
 			name := entry.Name()
@@ -47,7 +55,7 @@ func MigrateAppearancePackages() error {
 			if target == "" || filepath.Clean(source) == filepath.Clean(target) {
 				continue
 			}
-			if err = moveAppearancePackage(source, target); err != nil {
+			if err := moveAppearancePackage(source, target); err != nil {
 				return err
 			}
 		}

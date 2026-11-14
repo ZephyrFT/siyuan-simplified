@@ -64,20 +64,6 @@ export const sendAppSetting = (controlId: string, value: unknown) => {
             });
             break;
         }
-        case "system.downloadInstallPkg": {
-            const downloadInstallPkg = Boolean(value) as Config.ISystem["downloadInstallPkg"];
-            configApi.set("system.downloadInstallPkg", downloadInstallPkg, () => {
-                window.siyuan.config.system.downloadInstallPkg = downloadInstallPkg;
-            });
-            break;
-        }
-        case "system.updateChannel": {
-            const updateChannel = value as Config.TUpdateChannel;
-            configApi.set("system.updateChannel", updateChannel, () => {
-                window.siyuan.config.system.updateChannel = updateChannel;
-            });
-            break;
-        }
         case "system.settingsWindow": {
             const settingsWindow = Boolean(value) as Config.ISystem["settingsWindow"];
             /// #if !BROWSER && !MOBILE

@@ -1542,16 +1542,22 @@ func CloseDatabase() {
 	diagnostic.Stage("remove encrypted block tree indexes")
 	treenode.RemoveAllEncryptedBlockTreeDBFiles()
 	diagnostic.Stage("close block database")
-	if err := db.Close(); err != nil {
-		logging.LogErrorf("close database failed: %s", err)
+	if nil != db {
+		if err := db.Close(); err != nil {
+			logging.LogErrorf("close database failed: %s", err)
+		}
 	}
 	diagnostic.Stage("close history database")
-	if err := historyDB.Close(); err != nil {
-		logging.LogErrorf("close history database failed: %s", err)
+	if nil != historyDB {
+		if err := historyDB.Close(); err != nil {
+			logging.LogErrorf("close history database failed: %s", err)
+		}
 	}
 	diagnostic.Stage("close asset content database")
-	if err := assetContentDB.Close(); err != nil {
-		logging.LogErrorf("close asset content database failed: %s", err)
+	if nil != assetContentDB {
+		if err := assetContentDB.Close(); err != nil {
+			logging.LogErrorf("close asset content database failed: %s", err)
+		}
 	}
 	diagnostic.Stage("close block tree database")
 	treenode.CloseDatabase()

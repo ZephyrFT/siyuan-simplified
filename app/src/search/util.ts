@@ -23,7 +23,7 @@ import {getIconByType} from "../editor/getIcon";
 import {unicode2Emoji} from "../emoji";
 import {getFileTreeIconHTML} from "../emoji/fileTreeIcon";
 import {hasClosestBlock, hasClosestByClassName, hasClosestByTag} from "../protyle/util/hasClosest";
-import {isDisabledFeature, isIPad, isNotCtrl, isPhablet, setStorageVal, updateHotkeyTip} from "../protyle/util/compatibility";
+import {isIPad, isNotCtrl, isPhablet, setStorageVal, updateHotkeyTip} from "../protyle/util/compatibility";
 import {newFile} from "../util/newFile";
 import {
     filterMenu,
@@ -116,7 +116,7 @@ export const openGlobalSearch = (app: App, text: string, replace: boolean, searc
             k: text,
             r: "",
             hasReplace: false,
-            method: searchData ? searchData.method : (localData.method === 4 && (isDisabledFeature("ai") || !window.siyuan.config.ai.embedding.enabled) ? 0 : localData.method),
+            method: searchData ? searchData.method : (localData.method === 4 ? 0 : localData.method),
             hPath: "",
             idPath: [],
             group: localData.group,
@@ -1598,7 +1598,7 @@ export const inputEvent = (element: Element, config: Config.IUILayoutTabSearchCo
             } else {
                 previousElement.setAttribute("disabled", "disabled");
             }
-            const endpoint = requestConfig.method === 4 ? "/api/search/semanticSearchBlock" : "/api/search/fullTextSearchBlock";
+            const endpoint = "/api/search/fullTextSearchBlock";
             const searchParam = buildSearchRequest(requestConfig);
             // 限定在单个加密 box 内搜索时带 notebook，让内核走加密 db；跨 box 或全局搜索走原函数
             const idPaths = requestConfig.idPath || [];
@@ -1610,7 +1610,7 @@ export const inputEvent = (element: Element, config: Config.IUILayoutTabSearchCo
             }
             return {
                 version,
-                abortable: requestConfig.method !== 4,
+                abortable: true,
                 run(signal: AbortSignal, isCurrent: () => boolean) {
                     return fetchPost(endpoint, searchParam, (response: APICallbackResponse<APIPOSTRoutes[typeof endpoint]["response"]>) => {
                         if (!isCurrent()) {

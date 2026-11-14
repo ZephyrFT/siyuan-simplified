@@ -1,8 +1,8 @@
 import {IMAGE_OCR_MENU} from "../../menus/declarations/imageOCRMenu";
 import {createDeclaredMenu} from "../../menus/declarations/menuDeclaration";
 const imageOCRContext = {
-    textAvailable: true, localAvailable: true, aiAvailable: true,
-    getStatus: async () => false, openResult: () => {}, copyText: () => {}, clearText: () => {}, runLocal: () => {}, runAI: () => {},
+    textAvailable: true, localAvailable: true,
+    getStatus: async () => false, openResult: () => {}, copyText: () => {}, clearText: () => {}, runLocal: () => {},
 };
 import * as assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
@@ -93,14 +93,12 @@ test("image OCR actions retain their configurable paths and order", t => {
     assert.equal(copyImage.sortable, false);
     assert.equal(getEntryParentPath("editor.image.copyAsPNG"), "editor.image");
     assert.deepEqual(getEntryCatalogChildren("inline.image.ocr").map(item => item.key), [
-        "ocrResult", "copyOCRText", "clearOCRText", "separator_reOCR", "reOCR", "reAIOCR",
+        "ocrResult", "copyOCRText", "clearOCRText", "separator_reOCR", "reOCR",
     ]);
     assert.equal(getEntryCatalogNode("inline.image.ocr.copyOCRText").simple, false);
     assert.equal(getEntryParentPath("inline.image.ocr.copyOCRText"), "inline.image.ocr");
     assert.equal(getEntryCatalogNode("inline.image.ocr.clearOCRText").simple, false);
     assert.equal(getEntryParentPath("inline.image.ocr.clearOCRText"), "inline.image.ocr");
-    assert.equal(getEntryCatalogNode("inline.image.ocr.reAIOCR").simple, false);
-    assert.equal(getEntryParentPath("inline.image.ocr.reAIOCR"), "inline.image.ocr");
     assert.deepEqual(createDeclaredMenu(IMAGE_OCR_MENU, imageOCRContext).submenu.map(item => item.id),
         getEntryCatalogChildren("inline.image.ocr").map(item => item.key));
 });
@@ -284,15 +282,11 @@ test("entry catalog paths are unique and indexed", () => {
 test("top bar catalog includes a fixed drag boundary in built-in DOM order", () => {
     assert.equal(TOP_BAR_ROOT_PATH, "topBar");
     assert.deepEqual(getEntryCatalogChildren(TOP_BAR_ROOT_PATH).map((item) => item.key), [
-        "barSync",
         "barDailyNote",
         "barRiffCard",
         "barBack",
         "barForward",
         "drag",
-        "toolbarVIP",
-        "toolbarTitle",
-        "barPlugins",
         "barCommand",
         "barSearch",
         "barZoom",
@@ -371,13 +365,8 @@ test("top bar catalog inserts plugin entries on their declared side of the fixed
         }]);
         const children = getEntryCatalogChildren(TOP_BAR_ROOT_PATH);
         const keys = children.map((item) => item.key);
-        assert.deepEqual(keys.slice(0, 7), ["barSync", "barDailyNote", "barRiffCard", "barBack", "barForward", leftKey, "drag"]);
-        assert.deepEqual(keys.slice(keys.indexOf("toolbarTitle"), keys.indexOf("barCommand")), [
-            "toolbarTitle",
-            rightKey,
-            legacyKey,
-            "barPlugins",
-        ]);
+        assert.deepEqual(keys.slice(0, 6), ["barDailyNote", "barRiffCard", "barBack", "barForward", leftKey, "drag"]);
+        assert.deepEqual(keys.slice(keys.indexOf("barExit") + 1), [rightKey, legacyKey]);
         assert.equal(getEntryCatalogNode(`${TOP_BAR_ROOT_PATH}.${leftKey}`)?.label(),
             "Plugin One - Left Item");
         assert.equal(getEntryCatalogNode(`${TOP_BAR_ROOT_PATH}.${rightKey}`)?.label(),
@@ -565,8 +554,6 @@ test("dock catalog exposes the built-in default positions", () => {
         bookmark: "LeftBottom",
         tag: "LeftBottom",
         backlink: "RightBottom",
-        agentChat: "RightTop",
-        inbox: "LeftTop",
         graph: "RightTop",
         globalGraph: "RightTop",
     };
@@ -1452,7 +1439,6 @@ test("simple profile follows the reviewed defaults", () => {
         "gutter.single.addToDatabase",
         "gutter.single.enterBack",
         "gutter.single.jumpTo",
-        "gutter.single.wechatReminder",
         "document.more.netAssets2LocalAssets",
         "document.more.fullWidth",
         "docTree.notebook.sort.fileNameASC",

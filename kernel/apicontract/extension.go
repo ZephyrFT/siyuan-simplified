@@ -45,10 +45,3 @@ func extensionCopyRequestSchema() *Schema {
 	result.AdditionalProperties = &Schema{AnyOf: []*Schema{field, {Type: "array", Items: field}}}
 	return result
 }
-
-func init() {
-	// 表单解析失败时仍返回既有空成功信封，不开始资源写入。
-	ExtensionCopy.decodeFailure = func(err error) Response[*ExtensionCopyData] {
-		return Success[*ExtensionCopyData](nil)
-	}
-}

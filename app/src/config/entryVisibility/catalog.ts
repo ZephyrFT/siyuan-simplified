@@ -504,7 +504,6 @@ const gutterSingle = () => [
     gutterWidth(),
     gutterHeight(),
     separator("separator_4"),
-    node("wechatReminder", lang("wechatReminder"), false),
     node("quickMakeCard", lang("quickMakeCard"), false),
     node("removeCard", lang("removeCard"), false),
     node("addToDeck", lang("addToDeck"), false),
@@ -674,7 +673,6 @@ const statusBarCatalogSection: IEntryCatalogSection = {
 };
 
 const topBarBuiltinChildren = [
-    node("barSync", lang("syncNow")),
     node("barDailyNote", lang("dailyNote"), true, undefined, undefined, {
         defaultVisible: () => typeof window === "undefined" || !window.siyuan.mobile,
         simpleDefaultVisible: true,
@@ -688,9 +686,6 @@ const topBarBuiltinChildren = [
     node("barBack", lang("goBack")),
     node("barForward", lang("goForward")),
     fixed("drag", lang("entryTopBarDrag")),
-    node("toolbarVIP", lang("accountDisplayVIP")),
-    node("toolbarTitle", lang("accountDisplayTitle")),
-    node("barPlugins", lang("plugin")),
     node("barCommand", lang("commandPanel")),
     node("barSearch", lang("globalSearch")),
     node("barZoom", lang("zoom")),
@@ -711,8 +706,6 @@ const dockBuiltinChildren = [
     node("bookmark", lang("bookmark")),
     node("tag", lang("tag")),
     node("backlink", lang("backlinks")),
-    node("agentChat", lang("ai")),
-    node("inbox", lang("inbox"), false),
     node("graph", lang("graphView"), false),
     node("globalGraph", lang("globalGraph"), false),
 ];
@@ -723,8 +716,6 @@ const dockBuiltinPositions = new Map<string, TPluginDockPosition>([
     ["bookmark", "LeftBottom"],
     ["tag", "LeftBottom"],
     ["backlink", "RightBottom"],
-    ["agentChat", "RightTop"],
-    ["inbox", "LeftTop"],
     ["graph", "RightTop"],
     ["globalGraph", "RightTop"],
 ]);
@@ -868,7 +859,6 @@ export const entryCatalog: IEntryCatalogSection[] = [
             node("graphView", lang("graphView")),
             separator("separator_2"),
             node("attr", lang("attr")),
-            node("wechatReminder", lang("wechatReminder"), false),
             node("riffCard", lang("riffCard"), false, [
                 node("spaceRepetition", lang("spaceRepetition"), false),
                 node("manage", lang("manage"), false),
@@ -1297,14 +1287,12 @@ export const refreshTopBarCatalog = (plugins: ITopBarCatalogPlugin[]) => {
         });
     });
     const dragIndex = topBarBuiltinChildren.findIndex((item) => item.key === "drag");
-    const pluginMenuIndex = topBarBuiltinChildren.findIndex((item) => item.key === "barPlugins");
     topBarCatalogSection.children = [
         ...topBarBuiltinChildren.slice(0, dragIndex),
         ...leftPluginNodes,
         topBarBuiltinChildren[dragIndex],
-        ...topBarBuiltinChildren.slice(dragIndex + 1, pluginMenuIndex),
+        ...topBarBuiltinChildren.slice(dragIndex + 1),
         ...rightPluginNodes,
-        ...topBarBuiltinChildren.slice(pluginMenuIndex),
     ];
     topBarCatalogSignature = signature;
     rebuildCatalogIndexes();

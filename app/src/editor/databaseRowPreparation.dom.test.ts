@@ -11,14 +11,15 @@ import {compile} from "sass";
 const cases = async (source: string, css: string) => {
     const check: typeof assert = require("node:assert/strict");
     const deadline = Date.now() + 5000;
-    while (window.innerWidth !== 800 || window.innerHeight !== 600) {
+    // Windows 按 DPI 取整内容区，setContentSize 可能得到 800x601。
+    while (Math.abs(window.innerWidth - 800) > 1 || Math.abs(window.innerHeight - 600) > 1) {
         check.ok(Date.now() < deadline, `Unexpected test viewport: ${window.innerWidth}x${window.innerHeight}`);
         await new Promise(resolve => setTimeout(resolve, 25));
     }
     await new Promise(requestAnimationFrame);
     await new Promise(requestAnimationFrame);
-    check.equal(window.innerWidth, 800);
-    check.equal(window.innerHeight, 600);
+    check.ok(Math.abs(window.innerWidth - 800) <= 1);
+    check.ok(Math.abs(window.innerHeight - 600) <= 1);
     const style = document.createElement("style");
     style.textContent = css + "html {height: 100vh} body {width: 100%; display: flex; flex-direction: column}";
     document.head.append(style);

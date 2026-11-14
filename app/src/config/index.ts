@@ -8,16 +8,9 @@ import {Constants} from "../constants";
 import {focusByRange} from "../protyle/util/selectionOffsets";
 import {initSettingDrag} from "./setting/drag";
 /// #endif
-import {unmountBazaarTab, withMountedBazaar} from "./bazaarTab";
-import {fetchSyncPost} from "../util/fetch";
-import {getFrontend} from "../util/functions";
-import {showMessage} from "../dialog/message";
-import {escapeHtml, escapeHtmlTextAndAttr} from "../util/escape";
-import {isBazaarAvailable} from "../util/bazaarAvailability";
+import {escapeHtmlTextAndAttr} from "../util/escape";
 import {getSettingTabDefs} from "./setting/tabs";
 import {clearAccessTabElement} from "./tabs/accessRuntime";
-import {clearSyncTabElement} from "./tabs/syncRuntime";
-import {openChatGPTProvider} from "./tabs/ai/aiProviderUi";
 import type {TSettingTab} from "./setting/tabs";
 import type {App} from "../index";
 import {unmountAssetsTab} from "./assets";
@@ -73,17 +66,12 @@ export const openSettingDialog = (app: App, initialTab: TSettingTab = "editor") 
         height: "90vh",
         destroyCallback() {
             disposeDrag?.();
-            const bazaarRoot = settingDialogRef.element?.querySelector('.config__tab-container[data-name="bazaar"]') as HTMLElement | null;
-            if (bazaarRoot) {
-                unmountBazaarTab(bazaarRoot);
-            }
             const assetsRoot = settingDialogRef.element?.querySelector('.config__tab-container[data-name="assets"]');
             if (assetsRoot) {
                 unmountAssetsTab(assetsRoot);
             }
             const ocrRoot = settingDialogRef.element?.querySelector<HTMLElement>('.config__tab-container[data-name="ocr"]');
             if (ocrRoot) unmountOCRTab(ocrRoot);
-            clearSyncTabElement();
             clearAccessTabElement();
             const appRoot = settingDialogRef.element?.querySelector<HTMLElement>('.config__tab-container[data-name="app"]');
             if (appRoot) {
@@ -135,9 +123,8 @@ export const openPluginSetting = (app: App) => {
     /// #endif
 };
 
-export const openSetting = (app: App, tab?: TSettingTab, options?: {aiProvider?: "chatgpt"}) => {
-    const aiProvider = options?.aiProvider;
-    if (tab === "bazaar" && !isBazaarAvailable()) {
+export const openSetting = (app: App, tab?: TSettingTab | "sync" | "bazaar" | "ai") => {
+    if (tab === "sync" || tab === "bazaar" || tab === "ai") {
         return;
     }
     if (tab === "export" && !getHostCapabilities().documentImportExport) {
@@ -145,13 +132,12 @@ export const openSetting = (app: App, tab?: TSettingTab, options?: {aiProvider?:
     }
     /// #if MOBILE
     openMobileSetting(app, tab);
-    if (aiProvider === "chatgpt") { openChatGPTProvider(); }
     /// #else
     /// #if !BROWSER
     // 是否在独立窗口中打开设置界面，仅桌面端 Electron 客户端生效
     if (!isSettingsWindow() && window.siyuan.config.system.settingsWindow) {
         closeSettingDialog();
-        void openNativeSettings(app, {tab, ...options});
+        void openNativeSettings(app, {tab});
         return;
     }
     /// #endif
@@ -159,71 +145,10 @@ export const openSetting = (app: App, tab?: TSettingTab, options?: {aiProvider?:
         const dialog = window.siyuan.dialogs.find(item => item.element.getAttribute("data-key") === Constants.DIALOG_SETTING);
         if (dialog) {
             switchSettingTab(dialog.element, app, tab || "editor");
-            if (aiProvider === "chatgpt") { openChatGPTProvider(); }
-            return dialog;
+                    return dialog;
         }
     }
     const dialog = openSettingDialog(app, tab);
-    if (aiProvider === "chatgpt") { openChatGPTProvider(); }
     return dialog;
     /// #endif
-};
-
-
-export const openBazaarReadme = async (app: App, bazaarType: TBazaarType, itemName: string, from: "bazaar" | "downloaded") => {
-    if (!isBazaarAvailable()) {
-        return;
-    }
-    if (!window.siyuan.config.bazaar.trust) {
-        openSetting(app, "bazaar");
-        return;
-    }
-
-    const isDownloaded = from === "downloaded";
-    let getResourcesUrl: string;
-    switch (bazaarType) {
-        case "templates":
-            getResourcesUrl = isDownloaded ? "/api/bazaar/getInstalledTemplate" : "/api/bazaar/getBazaarTemplate";
-            break;
-        case "icons":
-            getResourcesUrl = isDownloaded ? "/api/bazaar/getInstalledIcon" : "/api/bazaar/getBazaarIcon";
-            break;
-        case "widgets":
-            getResourcesUrl = isDownloaded ? "/api/bazaar/getInstalledWidget" : "/api/bazaar/getBazaarWidget";
-            break;
-        case "themes":
-            getResourcesUrl = isDownloaded ? "/api/bazaar/getInstalledTheme" : "/api/bazaar/getBazaarTheme";
-            break;
-        case "plugins":
-            getResourcesUrl = isDownloaded ? "/api/bazaar/getInstalledPlugin" : "/api/bazaar/getBazaarPlugin";
-            break;
-        default:
-            return;
-    }
-
-    const response = await fetchSyncPost(getResourcesUrl, {
-        frontend: getFrontend(),
-        // 完整包名作 keyword 可缩小请求响应列表；最终仍按 name 精确匹配
-        keyword: itemName,
-    });
-    if (response.code !== 0) return;
-
-    const resource = (response.data.packages as IBazaarItem[]).find((item: IBazaarItem) => item.name === itemName);
-    if (!resource) {
-        showMessage(window.siyuan.languages.bazaarPackageNotFound.replace("${name}", escapeHtml(itemName)));
-        return;
-    }
-
-    /// #if !BROWSER && !MOBILE
-    if (!isSettingsWindow() && window.siyuan.config.system.settingsWindow) {
-        closeSettingDialog();
-        await openNativeSettings(app, {tab: "bazaar", readme: {type: bazaarType, from, resource}});
-        return;
-    }
-    /// #endif
-    openSetting(app, "bazaar");
-    await withMountedBazaar(({bazaar, renderReadme}) => {
-        bazaar.switchBazaarTab(app, bazaarType, from);
-        renderReadme(bazaarType, from, resource);
-    });
 };

@@ -19,10 +19,9 @@ const getCoordinator = (app: App) => {
         return coordinator;
     }
     coordinator = new GlobalPluginStateCoordinator<TGlobalPluginReloadData>({
-        initialPetalDisabled: window.siyuan.config.bazaar.petalDisabled,
+        initialPetalDisabled: false,
         applyLifecycle: (payload) => reloadPlugin(app, payload),
-        applyConfig: (petalDisabled) => {
-            window.siyuan.config.bazaar.petalDisabled = petalDisabled;
+        applyConfig: () => {
         },
     });
     coordinators.set(app, coordinator);

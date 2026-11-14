@@ -34,14 +34,6 @@ const resetTrayMenu = (tray: Tray, lang: TrayMenuLabels, mainWindow: BrowserWind
             showHideWindow(tray, lang, mainWindow);
         },
     }, {
-        label: lang.officialWebsite, click: () => {
-            electron.shell.openExternal("https://b3log.org/siyuan/");
-        },
-    }, {
-        label: lang.openSource, click: () => {
-            electron.shell.openExternal("https://github.com/siyuan-note/siyuan");
-        },
-    }, {
         label: lang.resetWindow, type: "checkbox", click: (v: {checked: boolean}) => {
             state.exit.resetWindowStateOnRestart = v.checked;
             requestWindowClose(mainWindow, true);

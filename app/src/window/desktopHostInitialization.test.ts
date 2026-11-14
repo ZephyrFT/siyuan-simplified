@@ -9,7 +9,7 @@ describe("desktop host initialization", () => {
             const source = readFileSync(resolve(process.cwd(), file), "utf8");
             const connectionIndex = source.indexOf("await loadDesktopHostConnection();");
             assert.ok(connectionIndex > source.indexOf("window.siyuan.config = response.data.conf;"));
-            assert.ok(connectionIndex < source.indexOf("await loadPlugins(this);"));
+            assert.equal(source.includes("await loadPlugins(this);"), false);
         }
     });
 

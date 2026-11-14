@@ -4,7 +4,6 @@ import {destroyFoldedRender} from "./foldedRender";
 import {cancelLegacyMindmapMigration} from "../render/listMindmap/migrate";
 import {hideElements} from "../ui/hideElements";
 import {isSupportCSSHL} from "../render/searchMarkRender";
-import {destroyAIEditor} from "../../ai/editor";
 import {cancelAssetUploads} from "../upload/pluginEvent";
 import {unmountBreadcrumbButtons} from "../../plugin/breadcrumbButton";
 import {forEachPluginSubscriber} from "../../plugin/EventBusCore";
@@ -35,7 +34,6 @@ export const destroy = (protyle: IProtyle) => {
     cancelAssetUploads(protyle);
     unmountBreadcrumbButtons(protyle);
     hideElements(["util"], protyle, true);
-    destroyAIEditor(protyle);
     protyle.hint?.destroy();
     protyle.preview?.destroy();
     if (isSupportCSSHL()) {

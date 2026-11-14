@@ -1,6 +1,6 @@
 extends: "./electron-builder-common.yml"
-productName: "SiYuan"
-appId: "org.b3log.siyuan"
+productName: "SiYuan Simplified"
+appId: "org.zephyrft.siyuan-simplified"
 publish: null
 asar: false
 compression: "normal"
@@ -8,7 +8,7 @@ toolsets:
   # 静态运行时无需目标系统安装 libfuse2。
   appimage: "1.0.3"
 copyright: "© 2020-present Yunnan Liandi Technology Co., Ltd."
-artifactName: "siyuan-${version}-${os}-arm64.${ext}"
+artifactName: "siyuan-simplified-${version}-${os}-arm64.${ext}"
 extraMetadata:
   main: "electron-dist/main.js"
 directories:
@@ -26,11 +26,11 @@ extraFiles:
 linux:
   icon: "src/assets/icon/"
   category: "Utility"
-  executableName: "siyuan"
+  executableName: "siyuan-simplified"
   desktop: {
     entry: {
-      Name: "SiYuan",
-      Comment: "From thought to insight, with agents",
+      Name: "SiYuan Simplified",
+      Comment: "A simplified, local-first note-taking app based on SiYuan",
       Type: "Application",
       Categories: "Utility;"
     }
