@@ -92,6 +92,7 @@ PlantUML 仍然使用在线渲染服务。除 PlantUML 外，本分支不包含�
 D:\Library\siyuan-tools\nodejs-24.22.3
 D:\Library\siyuan-tools\pnpm-12.6.0
 D:\Library\siyuan-tools\w64devkit
+D:\Library\siyuan-tools\gh\bin        # 可选，--publish 使用
 ```
 
 ### 构建
@@ -125,6 +126,38 @@ git push origin v3.8.10-simplified.1
 ```
 
 工作流会下载依赖、准备 OCR 资源、编译前端与内核，然后上传 `siyuan-simplified-*-win.exe`。
+
+### 本地构建与发布
+
+GitHub Actions 不可用时，可以在 Windows 上直接生成 release 安装包：
+
+```bash
+cd app
+pnpm release:local
+```
+
+脚本会依次构建前端产物、准备 OCR 资源、编译内核、生成 NSIS 安装包，并在 `app/build/` 写入 `siyuan-simplified-<version>-win.exe` 和对应的 `.sha256` 文件。
+
+常用参数：
+
+```bash
+pnpm release:local -- --skip-install   # 依赖已安装时跳过 pnpm install
+pnpm release:local -- --dry-run        # 只打印步骤
+pnpm release:local -- --publish --tag v3.8.10-simplified.2  # 用 gh 创建 GitHub Release
+```
+
+`--publish` 需要先安装 GitHub CLI 并登录：
+
+```bash
+gh auth login
+```
+
+清理构建产物：
+
+```bash
+pnpm clean:build   # 删除安装包、前端构建、内核和缓存
+pnpm clean:all     # 额外删除 node_modules、OCR 资源和 pnpm store
+```
 
 ## 测试
 
