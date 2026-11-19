@@ -118,7 +118,7 @@ pnpm exec electron-builder --config electron-builder.yml --publish=never
 
 ### 发布
 
-本仓库不包含自动发布工作流。安装包按下一节在本地生成后，手动创建 GitHub Release 并上传。生成的安装包和 SHA256 校验文件位于 `app/build/`，发布时把 `siyuan-simplified-<version>-win.exe` 与对应的 `.sha256` 文件一起上传即可，标签建议使用 `v<version>-simplified.N`，例如 `v3.8.11-simplified.1`。
+本仓库不包含自动发布工作流。安装包按下一节在本地生成后，手动创建 GitHub Release 并上传。生成的安装包和 SHA256 校验文件位于 `app/build/`，发布时把 `siyuan-simplified-<version>-win.exe` 与对应的 `.sha256` 文件一起上传即可，标签建议使用 `v<version>-simplified.N`，例如 `v3.8.12-simplified.1`。
 
 ### 本地构建与发布
 
@@ -136,7 +136,7 @@ pnpm release:local
 ```bash
 pnpm release:local -- --skip-install   # 依赖已安装时跳过 pnpm install
 pnpm release:local -- --dry-run        # 只打印步骤
-pnpm release:local -- --publish --tag v3.8.11-simplified.1  # 用 gh 创建并上传 GitHub Release
+pnpm release:local -- --publish --tag v3.8.12-simplified.1  # 用 gh 创建并上传 GitHub Release
 ```
 
 `--publish` 需要先安装 GitHub CLI 并登录：
