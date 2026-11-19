@@ -20,7 +20,6 @@ import {hideElements} from "../../protyle/ui/hideElements";
 import {softEnter} from "../../protyle/wysiwyg/enter";
 import {endTrackedRangeInsertion, prepareTrackedRangeInsertion} from "../../protyle/util/trackedRange";
 import {
-    isDisabledFeature,
     isInAndroid,
     isInEdge,
     isInHarmony,
@@ -789,7 +788,6 @@ const renderSlashMenu = (protyle: IProtyle, toolbarElement: Element) => {
     ${getSlashItem("assets", Constants.ZWSP + 2, "iconImage", window.siyuan.languages.assets)}
     ${getSlashItem("ref", "((", "iconRef", window.siyuan.languages.ref, "true")}
     ${getSlashItem("blockEmbed", "{{", "iconSQL", window.siyuan.languages.blockEmbed, "true")}
-    ${isDisabledFeature("ai") ? "" : getSlashItem("aiWriting", Constants.ZWSP + 5, "iconSparkles", window.siyuan.languages.aiWriting)}
     ${getSlashItem("database", '<div data-type="NodeAttributeView" data-av-type="table"></div>', "iconDatabase", window.siyuan.languages.database, "true")}
     ${getSlashItem("newSubDocRef", Constants.ZWSP + 6, "iconFile", window.siyuan.languages.newSubDocRef)}
 </div>

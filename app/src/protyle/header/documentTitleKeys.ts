@@ -7,7 +7,7 @@ const inlineInsertKeys = new Set([
 ]);
 const blockGeneralKeys = [
     "insertBefore", "insertAfter", "insertSuperBlockLeft", "insertSuperBlockRight", "moveToUp", "moveToDown",
-    "vLayout", "hLayout", "newNameFile", "newNameSettingFile", "newContentFile", "ai", "aiWriting", "attr",
+    "vLayout", "hLayout", "newNameFile", "newNameSettingFile", "newContentFile", "attr",
     "alignLeft", "alignCenter", "alignRight", "rtl", "ltr", "collapse", "expand", "foldChildHeadings",
     "foldSiblingHeadings", "foldRecursive", "expandUp", "expandDown", "rename",
 ];

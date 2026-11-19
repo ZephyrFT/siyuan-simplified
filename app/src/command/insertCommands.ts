@@ -4,7 +4,7 @@ import type {ICommandContextSnapshot, ICommandDefinition, TCommandKeymapPath} fr
 import {getBuiltinSlashMenuItems} from "../protyle/hint/extend";
 import {isBuiltinInlineStyleVisible, type TBuiltinInlineStyleID} from "../protyle/toolbar/inlineStyle";
 import {focusByRange} from "../protyle/util/selectionOffsets";
-import {isDisabledFeature, isInAndroid} from "../protyle/util/compatibility";
+import {isInAndroid} from "../protyle/util/compatibility";
 import {getHostCapabilities} from "../util/hostCapabilities";
 /// #if MOBILE
 import {callMobileAppShowKeyboard} from "../mobile/util/mobileAppUtil";
@@ -14,7 +14,7 @@ const initializedApps = new WeakSet<object>();
 
 // 与加号菜单的内置插入项保持一致，具体插入值仍由斜杠菜单提供。
 const INSERT_IDS = [
-    "template", "widget", "assets", "ref", "blockEmbed", "aiWriting", "database", "newSubDocRef",
+    "template", "widget", "assets", "ref", "blockEmbed", "database", "newSubDocRef",
     "insertAsset", "insertIframeURL", "insertImgURL", "insertVideoURL", "insertAudioURL", "emoji",
     "heading1", "heading2", "heading3", "heading4", "heading5", "heading6",
     "list", "orderedList", "check", "quote", "tabs", "mindmap",
@@ -34,9 +34,6 @@ const INSERT_KEYMAP_IDS = new Set(["ref", "list", "orderedList", "check", "mindm
 const keymapPath = (id: string): TCommandKeymapPath | undefined => {
     if (/^heading[1-6]$/.test(id)) {
         return ["editor", "heading", id];
-    }
-    if (id === "aiWriting") {
-        return ["editor", "general", id];
     }
     if (INSERT_KEYMAP_IDS.has(id)) {
         return ["editor", "insert", id === "orderedList" ? "ordered-list" : id];
@@ -64,9 +61,6 @@ const available = (context: ICommandContextSnapshot, id: string) => {
     }
     if (id === "widget") {
         return getHostCapabilities().widgets;
-    }
-    if (id === "aiWriting") {
-        return !isDisabledFeature("ai");
     }
     if (id === "insertIframeURL") {
         return !getHostCapabilities().remoteKernel;

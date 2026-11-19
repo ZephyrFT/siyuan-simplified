@@ -33,19 +33,18 @@ describe("text input hotkey policy", () => {
         });
     });
 
-    it("allows Enter only for the agent send shortcut", () => {
-        assert.equal(isReservedKeymap("↩", ["general", "agentSend"]), false);
-        assert.equal(isReservedKeymap("↩", ["general", "agentChat"]), true);
-        assert.equal(isReservedKeymap("↩", ["editor", "general", "insertAfter"]), true);
-        assert.equal(isReservedKeymap("⇧↩", ["general", "agentSend"]), true);
+    it("reserves Enter for every shortcut", () => {
+        assert.equal(isReservedKeymap("↩"), true);
+        assert.equal(isReservedKeymap("⇧↩"), true);
+        assert.equal(isReservedKeymap("⌘↩"), false);
     });
 
     it("allows configurable document boundary shortcuts", () => {
         ["Home", "End", "⌘Home", "⌘End"].forEach(hotkey => {
-            assert.equal(isReservedKeymap(hotkey, ["editor", "general", "goToDocumentStart"]), false);
+            assert.equal(isReservedKeymap(hotkey), false);
             assert.equal(isDisallowedTextInputHotkey(hotkey), false);
         });
-        assert.equal(isReservedKeymap("PageUp", ["editor", "general", "goToDocumentStart"]), true);
+        assert.equal(isReservedKeymap("PageUp"), true);
     });
 
     it("clears only disallowed text input hotkeys", () => {

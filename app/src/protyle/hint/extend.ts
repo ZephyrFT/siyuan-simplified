@@ -6,7 +6,7 @@ import {getSuperBlockCommand} from "../../block/superBlock";
 import {insertHTML} from "../util/insertHTML";
 import {TABLE_CELL_SLASH_IDS} from "../util/tableCellRichMenu";
 import {getIconByType} from "../../editor/getIcon";
-import {isDisabledFeature, updateHotkeyTip} from "../util/compatibility";
+import {updateHotkeyTip} from "../util/compatibility";
 import {blockRender} from "../render/blockRender";
 import {Constants} from "../../constants";
 import {searchRef} from "./searchRef";
@@ -143,13 +143,7 @@ export const getBuiltinSlashMenuItems = (protyle: IProtyle): IHintData[] => {
         value: "{{",
         icon: "iconSQL",
         marker: "{{",
-    }, ...(isDisabledFeature("ai") ? [] : [{
-        filter: [window.siyuan.languages.aiWriting, "ai writing", "ai编写", "aibianxie", "aibx", "人工智能", "rengongzhineng", "rgzn"],
-        id: "aiWriting",
-        value: Constants.ZWSP + 5,
-        icon: "iconSparkles",
-        hotkey: window.siyuan.config.keymap.editor.general.aiWriting.custom,
-    }]), {
+    }, {
         filter: [window.siyuan.languages.database, "database", "db", "数据库", "shujuku", "sjk", "视图", "view"],
         id: "database",
         value: '<div data-type="NodeAttributeView" data-av-type="table"></div>',

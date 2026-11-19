@@ -629,8 +629,7 @@ test("slash menu catalog stays aligned with the built-in hint declarations", () 
     assert.notEqual(start, -1);
     assert.notEqual(end, -1);
     const hintOrder = Array.from(source.slice(start, end).matchAll(/\bid: "([^"]+)"/g), (match) => match[1]);
-    // 斜杠菜单目录不登记仅在 AI 启用时出现的 aiWriting 声明。
-    assert.deepEqual(hintOrder.filter(id => id !== "aiWriting"), [...slashMenuBuiltinOrder, "separator_6"]);
+    assert.deepEqual(hintOrder, [...slashMenuBuiltinOrder, "separator_6"]);
 });
 
 test("slash menu entries are indexed below their total switch", () => {

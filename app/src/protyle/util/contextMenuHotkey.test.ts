@@ -97,7 +97,7 @@ for (const mac of [false, true]) {
 }
 
 test("context menu shortcut is assignable while slash text remains protected", () => {
-    assert.equal(isReservedKeymap("⌘/", ["editor", "general", "undo"]), false);
+    assert.equal(isReservedKeymap("⌘/"), false);
     assert.equal(isDisallowedTextInputHotkey("⌘/"), false);
     assert.equal(isDisallowedTextInputHotkey("/"), true);
 });
