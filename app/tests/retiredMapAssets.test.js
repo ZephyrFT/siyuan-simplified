@@ -36,10 +36,3 @@ test("no packaging path special-cases the withdrawn map output", () => {
     assert.doesNotMatch(read("../scripts/android-dev-run.mjs"), /stage\/build\/map/);
     assert.doesNotMatch(read("../scripts/build-release.py"), /"build", "map"/);
 });
-
-test("the release pipeline rebuilds generated bundles instead of enumerating stale map output", () => {
-    const ci = read("../.github/workflows/cd.yml");
-    // 移动端 app.zip 前的聚合构建会先清理 stage/build，因此无需再逐个排除已撤回的地图产物。
-    assert.match(ci, /run: pnpm run build\s*\n/);
-    assert.doesNotMatch(ci, /stage\/build\/map/);
-});

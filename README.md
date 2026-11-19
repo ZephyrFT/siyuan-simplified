@@ -116,20 +116,13 @@ pnpm exec electron-builder --config electron-builder.yml --publish=never
 
 产物位于 `app/build/`。安装包的 OCR 资源由 `scripts/prepare-ocr.py` 在打包前准备，Electron 主进程由 `scripts/build-electron.mjs` 编译。
 
-### 自动发布
+### 发布
 
-`.github/workflows/release-windows.yml` 会在推送 `v*` 标签时构建 Windows 安装包并创建 GitHub Release。标签需要与 `app/package.json` 的版本一致：
-
-```bash
-git tag v3.8.10-simplified.1
-git push origin v3.8.10-simplified.1
-```
-
-工作流会下载依赖、准备 OCR 资源、编译前端与内核，然后上传 `siyuan-simplified-*-win.exe`。
+本仓库不包含自动发布工作流。安装包按下一节在本地生成后，手动创建 GitHub Release 并上传。生成的安装包和 SHA256 校验文件位于 `app/build/`，发布时把 `siyuan-simplified-<version>-win.exe` 与对应的 `.sha256` 文件一起上传即可，标签建议使用 `v<version>-simplified.N`，例如 `v3.8.11-simplified.1`。
 
 ### 本地构建与发布
 
-GitHub Actions 不可用时，可以在 Windows 上直接生成 release 安装包：
+可以在 Windows 上直接生成 release 安装包：
 
 ```bash
 cd app
@@ -143,7 +136,7 @@ pnpm release:local
 ```bash
 pnpm release:local -- --skip-install   # 依赖已安装时跳过 pnpm install
 pnpm release:local -- --dry-run        # 只打印步骤
-pnpm release:local -- --publish --tag v3.8.10-simplified.2  # 用 gh 创建 GitHub Release
+pnpm release:local -- --publish --tag v3.8.11-simplified.1  # 用 gh 创建并上传 GitHub Release
 ```
 
 `--publish` 需要先安装 GitHub CLI 并登录：

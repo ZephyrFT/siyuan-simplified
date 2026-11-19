@@ -147,8 +147,8 @@ Align current guides/unreleased prose with code, including removals/reversions; 
 
 ## 7. Toolchain and repository reference
 
-- Versions: Go directive in `kernel/go.mod`; Node/pnpm from `.github/workflows/cd.yml` and `app/package.json` (`packageManager`). Product versions also appear in `kernel/util/working.go`
-- Architecture: Go kernel (`kernel/`) + TypeScript/Electron/web frontend (`app/`). `app/appearance/`: themes/icons/i18n (`appearance/langs/*.json`); `app/stage/`: kernel-served builds; `app/changelogs/`: version Markdown; `.github/`: contribution/security/templates/CI; `scripts/`: release packaging/changelog/language checks
+- Versions: Go directive in `kernel/go.mod`; Node from `app/package.json` (`engines`) and pnpm from its `packageManager`. Product versions also appear in `kernel/util/working.go`
+- Architecture: Go kernel (`kernel/`) + TypeScript/Electron/web frontend (`app/`). `app/appearance/`: themes/icons/i18n (`appearance/langs/*.json`); `app/stage/`: kernel-served builds; `app/changelogs/`: version Markdown; `.github/`: contribution/security/templates; `scripts/`: release packaging/changelog/language checks
 
 | Kernel path (under `kernel/`) | Role |
 |---|---|

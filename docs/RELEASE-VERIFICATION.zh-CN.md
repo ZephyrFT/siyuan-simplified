@@ -4,6 +4,8 @@
 
 > **使用范围：`scripts/build-release.py` 是思源官方打包脚本，仅供官方发布环境使用，其他环境请勿使用。脚本依赖官方构建机器的目录结构、工具链、WSL 配置和签名环境，不是通用打包工具。**
 
+> **本分支已删除发布相关的工作流，以下涉及 GitHub Actions 自动发布的步骤仅保留上游说明，不适用于本分支。本分支使用 `pnpm release:local` 在本地生成安装包并手动上传，见 [README](../README.md)。**
+
 需要 Python 3.11 或更新版本。安装包检查不需要更改打包流程，也不需要从其他机器带回基准文件。EXE、DMG、AppImage、DEB、RPM 等格式还需要 7-Zip，可用 `--sevenzip` 指定路径。
 
 ## 发布分工
@@ -13,7 +15,7 @@
 
 ## 开发版发布步骤
 
-alpha、beta、rc 使用语义化预发布版本号，例如 `3.8.10-alpha.1`、`3.8.10-beta.1`、`3.8.10-rc.1`。以下以 `3.8.10-beta.1` 为例，执行时替换为本次版本。自动发布由 [CD 工作流](../.github/workflows/cd.yml) 执行，无需运行本地四平台构建脚本。
+alpha、beta、rc 使用语义化预发布版本号，例如 `3.8.10-alpha.1`、`3.8.10-beta.1`、`3.8.10-rc.1`。以下以 `3.8.10-beta.1` 为例，执行时替换为本次版本。自动发布由 CD 工作流执行（本分支已移除该工作流），无需运行本地四平台构建脚本。
 
 ### 1. 准备版本并同步代码
 
@@ -32,7 +34,7 @@ git tag v3.8.10-beta.1
 git push origin v3.8.10-beta.1
 ```
 
-推送包含 `-alpha`、`-beta` 或 `-rc` 的标签会触发 `CD For SiYuan`，以及 [Release Docker Image](../.github/workflows/dockerimage.yml) 的预发行镜像构建。标签去掉开头的 `v` 后必须与 `app/package.json` 版本完全一致，Android 版本也必须匹配，否则准备阶段会失败。预发行镜像只发布 `v` 加版本号的标签，不更新 `latest`。
+推送包含 `-alpha`、`-beta` 或 `-rc` 的标签会触发 `CD For SiYuan`，以及 Release Docker Image 的预发行镜像构建（两个工作流均已从本分支移除）。标签去掉开头的 `v` 后必须与 `app/package.json` 版本完全一致，Android 版本也必须匹配，否则准备阶段会失败。预发行镜像只发布 `v` 加版本号的标签，不更新 `latest`。
 
 ### 3. 等待自动构建与发布
 
@@ -220,7 +222,7 @@ git diff --exit-code $releaseCommit origin/master
 在 GitHub 创建 Release 时输入新标签 `v3.8.10`，选择创建新标签，目标分支选择 `master`，核对目标提交。发布 Release 时由 GitHub 创建标签，无需在本地手动打标签或推送标签。已有同名标签时先核对其指向，不覆盖或重复创建。
 
 - 将公开分发的安装包和最终的 `SHA256SUMS.txt` 上传至 `siyuan-note/siyuan` 的 GitHub Release，核对版本、目标提交和文件名后公开正式版
-- 确认正式版标签已创建，并检查 [Release Docker Image](../.github/workflows/dockerimage.yml) 的运行状态；该工作流监听 `v*` 标签推送，正式版同时更新 `latest`，预发行版只发布版本标签，仅合并分支不会触发
+- 确认正式版标签已创建，并检查 Release Docker Image（本分支已移除该工作流）的运行状态；该工作流监听 `v*` 标签推送，正式版同时更新 `latest`，预发行版只发布版本标签，仅合并分支不会触发
 - 通过下载域名下载安装包并核对摘要
 - 上传百度网盘
 - 链滴登录 `siyuan` 账号发布公告
