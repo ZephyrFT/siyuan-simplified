@@ -9,7 +9,7 @@ export const getDocumentTitleUnsupportedPasteBlocks = (blockDOM: string) => {
     const blocks = Array.from(template.content.querySelectorAll<HTMLElement>('[data-type^="Node"]'));
     if (blocks.some(block => block.dataset.type !== "NodeParagraph") ||
         blocks.length > 1 || (blocks.length === 1 && blocks[0].parentNode !== template.content)) {
-        return [window.siyuan.languages.block];
+        return [window.siyuan.languages.agentCatBlock];
     }
     return [];
 };

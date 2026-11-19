@@ -36,10 +36,6 @@ export const DESKTOP_TOOLBAR_ENTRIES: IToolbarEntry[] = [{
     name: "a",
     lang: "link",
 }, {
-    key: "ai",
-    name: "ai",
-    lang: "aiEdit",
-}, {
     key: "separator_1",
     name: "|",
     separator: true,

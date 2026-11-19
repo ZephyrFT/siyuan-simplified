@@ -22,6 +22,13 @@ test("mobile toolbar shares desktop identifiers and declaration order", () => {
         DESKTOP_TOOLBAR_ENTRIES.filter(item => item.name !== "format-painter").map(item => item.key));
 });
 
+test("built-in toolbars exclude the removed AI entry", () => {
+    for (const mobile of [false, true]) {
+        const names = getDefaultToolbar(mobile).map(item => typeof item === "string" ? item : item.name);
+        assert.equal(names.includes("ai"), false);
+    }
+});
+
 test("block type enters old orders without disturbing hidden entries or plugin slots", () => {
     const defaults = DESKTOP_TOOLBAR_ENTRIES.map(item => item.key);
     const saved = defaults.filter(key => key !== "block-type");

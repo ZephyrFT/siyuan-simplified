@@ -353,12 +353,10 @@ const gutterBase = (multi: boolean) => [
         node("hLayout", lang("hLayout")),
         node("vLayout", lang("vLayout")),
     ])] : []),
-    node("ai", lang("aiEdit")),
     node("copy", lang("copy"), true, gutterCopyChildren(!multi)),
     node("cut", lang("cut")),
     node("move", lang("move")),
     node("addToDatabase", lang("addToDatabase"), false),
-    node("addToAgent", lang("addToAgent")),
     node("delete", lang("delete")),
 ];
 
@@ -554,7 +552,6 @@ const slashMenuBuiltinChildren = [
     node("assets", lang("assets")),
     node("ref", lang("ref")),
     node("blockEmbed", lang("blockEmbed")),
-    node("aiWriting", lang("aiWriting")),
     node("database", lang("database")),
     node("newFileRef", lang("newFileRef")),
     node("newSubDocRef", lang("newSubDocRef")),

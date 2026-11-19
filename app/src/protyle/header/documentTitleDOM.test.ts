@@ -10,7 +10,7 @@ import {compile} from "sass";
 
 const browserCases = async (sources: string[], lutePath: string, styles: string[]) => {
     const check: typeof assert = require("node:assert/strict");
-    Object.assign(window, {siyuan: {languages: {block: "Block", documentTitleInlineOnly: "Inline only", settingsPendingSaveError: "Save failed",
+    Object.assign(window, {siyuan: {languages: {agentCatBlock: "Block", documentTitleInlineOnly: "Inline only", settingsPendingSaveError: "Save failed",
         _kernel: {16: "Untitled document"}}}});
     const unwrap = new Function(sources[0] + "\nreturn unwrapLongTextRuns;")();
     const restore = new Function("unwrapLongTextRuns", sources[1] + "\nreturn restoreInlineElementBoundaries;")(unwrap);

@@ -176,7 +176,6 @@ const slashMenuBuiltinOrder = [
     "assets",
     "ref",
     "blockEmbed",
-    "aiWriting",
     "database",
     "newFileRef",
     "newSubDocRef",
@@ -618,7 +617,7 @@ test("slash menu catalog follows the built-in hint order", () => {
     assert.deepEqual(section?.children.map((item) => item.key), ["menu"]);
     const children = getEntryCatalogChildren(SLASH_MENU_ROOT_PATH);
     assert.deepEqual(children.map((item) => item.key), ["frequent", ...slashMenuBuiltinOrder]);
-    assert.equal(children.filter((item) => item.type === "entry").length, 70);
+    assert.equal(children.filter((item) => item.type === "entry").length, 69);
     assert.equal(children.filter((item) => item.type === "separator").length, 5);
     assert.equal(children.filter(item => item.key !== "frequent").every((item) => item.simple), true);
 });
@@ -630,7 +629,8 @@ test("slash menu catalog stays aligned with the built-in hint declarations", () 
     assert.notEqual(start, -1);
     assert.notEqual(end, -1);
     const hintOrder = Array.from(source.slice(start, end).matchAll(/\bid: "([^"]+)"/g), (match) => match[1]);
-    assert.deepEqual(hintOrder, [...slashMenuBuiltinOrder, "separator_6"]);
+    // 斜杠菜单目录不登记仅在 AI 启用时出现的 aiWriting 声明。
+    assert.deepEqual(hintOrder.filter(id => id !== "aiWriting"), [...slashMenuBuiltinOrder, "separator_6"]);
 });
 
 test("slash menu entries are indexed below their total switch", () => {
@@ -1409,7 +1409,6 @@ test("simple profile follows the reviewed defaults", () => {
         "document.title.copy.copyAsPNG",
         "document.title.export.exportTemplate",
         "document.title.export.exportImage",
-        "gutter.single.addToAgent",
         "gutter.single.copy.copyAsPNG",
         "gutter.single.turnInto.code",
         "gutter.single.layout.alignTop",
