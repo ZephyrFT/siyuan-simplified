@@ -34,7 +34,7 @@ if (has("--help") || has("-h")) {
   --skip-install    跳过 pnpm install
   --dry-run         只打印将执行的步骤
   --publish         构建后用 gh 创建/更新 GitHub Release（需要 --tag）
-  --tag <tag>       发布标签，例如 v3.8.10-simplified.2
+  --tag <tag>       发布标签，例如 v3.8.11-simplified.1
   --prerelease      将 GitHub Release 标记为预发布
   -h, --help        显示帮助
 

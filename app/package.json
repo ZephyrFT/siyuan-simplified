@@ -1,7 +1,7 @@
 {
   "name": "siyuan-simplified",
   "desktopName": "org.zephyrft.siyuan-simplified",
-  "version": "3.8.10",
+  "version": "3.8.11",
   "description": "A simplified, local-first note-taking app based on SiYuan",
   "homepage": "https://github.com/ZephyrFT/siyuan-simplified",
   "main": "./electron-dist/main.js",
